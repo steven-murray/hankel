@@ -22,7 +22,7 @@ This implementation is set up to allow more efficient calculation of multiple
 functions f(x). To do this, the format is class-based, with the main object 
 taking as arguments the order of the bessel function, and the number and size
 of the integration steps. For example, to integrate the function J_0(x) (ie.
-f(x) = 1, cf. Ogata's paper) one would do the following:
+f(x) = 1, cf. Ogata's paper) one would do the following::
    
    from hankel import HankelTransform
    f = lambda x: 1  #Define the input function f(x)
@@ -41,7 +41,7 @@ Also included in the module is a subclass called ``SphericalHankelTransform``.
 This is dedicated to integrating functions of the form f(x)j(x), where j(x) is 
 a *spherical* Bessel function of arbitrary order. It is called in exactly the
 same way. Note that currently, *only zeroth order is implemented* for this class.
-An example:
+An example::
 
 	from hankel import SphericalHankelTransform
 	f = lambda x: x/(x**3+1)  #Define the input function f(x)
@@ -70,14 +70,14 @@ function chosen. Notably, functions which tend to infinity at x=0 will be poorly
 approximated in this method, and will be highly dependent on the step-size
 parameter, as the information at low-x will be lost between 0 and the first step.
 As an example consider the simple function f(x) = 1 with a zeroth order spherical
-bessel function. This tends to 1 at x=0, rather than 0. 
+bessel function. This tends to 1 at x=0, rather than 0:: 
 
    f = lambda x: 1
    h = SphericalHankelTransform(0,120,0.03)
    h.transform(f) #[1.5461236955707951, -3.5905712375161296e-16] 
    
 The true answer is pi/2, which is a difference of about 3%. Modifying the step
-size and number of steps to gain accuracy we find
+size and number of steps to gain accuracy we find::
 
    h = SphericalHankelTransform(0,10000,0.0001)
    h.transform(f) #[1.5706713512229455, -0.00010492204442285768]   
@@ -90,12 +90,12 @@ infinity at x=0, rather than a finite positive number, such as f(x) = 1/x.
 
 References
 ----------
-Based on the algorithm provided in 
-H. Ogata, A Numerical Integration Formula Based on the Bessel Functions,
-Publications of the Research Institute for Mathematical Sciences, 
-vol. 41, no. 4, pp. 949-970, 2005.
+   Based on the algorithm provided in 
+   H. Ogata, A Numerical Integration Formula Based on the Bessel Functions,
+   Publications of the Research Institute for Mathematical Sciences, 
+   vol. 41, no. 4, pp. 949-970, 2005.
 
-Also draws inspiration from 
-Fast Edge-corrected Measurement of the Two-Point Correlation Function and the Power Spectrum
-Szapudi,  Istvan;  Pan,  Jun;  Prunet,  Simon;  Budavari,  Tamas (2005)
-The Astrophysical Journal	vol. 631 (1)
+   Also draws inspiration from 
+   Fast Edge-corrected Measurement of the Two-Point Correlation Function and the Power Spectrum
+   Szapudi,  Istvan;  Pan,  Jun;  Prunet,  Simon;  Budavari,  Tamas (2005)
+   The Astrophysical Journal	vol. 631 (1)
