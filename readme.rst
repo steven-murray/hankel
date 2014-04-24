@@ -90,12 +90,14 @@ infinity at x=0, rather than a finite positive number, such as f(x) = 1/x.
 
 References
 ----------
-   Based on the algorithm provided in 
+Based on the algorithm provided in 
+
    H. Ogata, A Numerical Integration Formula Based on the Bessel Functions,
    Publications of the Research Institute for Mathematical Sciences, 
    vol. 41, no. 4, pp. 949-970, 2005.
 
-   Also draws inspiration from 
+Also draws inspiration from 
+
    Fast Edge-corrected Measurement of the Two-Point Correlation Function and the Power Spectrum
    Szapudi,  Istvan;  Pan,  Jun;  Prunet,  Simon;  Budavari,  Tamas (2005)
    The Astrophysical Journal	vol. 631 (1)
