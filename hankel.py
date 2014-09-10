@@ -5,17 +5,14 @@ Based on the algorithm provided in
 H. Ogata, A Numerical Integration Formula Based on the Bessel Functions,
 Publications of the Research Institute for Mathematical Sciences, 
 vol. 41, no. 4, pp. 949-970, 2005.
-
-Note that currently only integer orders of the bessel function are implemented,
-along with the zeroth order spherical hankel transform. The general case will 
-hopefully come soon.
-
-TODO: General case for order
-TODO: Suppress warnings on overflows
-TODO: Write tests
-TODO: Profile.
 '''
+
+# TODO: Suppress warnings on overflows
+# TODO: Write tests
+# TODO: Profile.
+
 import numpy as np
+from mpmath import fp as mpm
 from scipy.special import j0, j1, jn_zeros, jn, yv, jv
 
 class HankelTransform(object):
@@ -52,7 +49,10 @@ class HankelTransform(object):
         self.dpsi = self._d_psi(h * self._zeros)
 
     def _psi(self, t):
-        return t * np.tanh(np.pi * np.sinh(t) / 2)
+        print t
+        y = np.sinh(t)
+        print y
+        return t * np.tanh(np.pi * y / 2)
 
     def _d_psi(self, t):
         a = (np.pi * t * np.cosh(t) + np.sinh(np.pi * np.sinh(t))) / (1.0 + np.cosh(np.pi * np.sinh(t)))
@@ -66,7 +66,7 @@ class HankelTransform(object):
         if isinstance(self._nu, int):
             return jn_zeros(self._nu, N) / np.pi
         else:
-            raise NotImplementedError("Non-integer orders other than 1/2 not implemented yet")
+            return np.array([mpm.besseljzero(self._nu, i + 1) for i in range(N)]) / np.pi
 
     def _j(self, x):
         if self._nu == 0:
@@ -128,16 +128,9 @@ class SphericalHankelTransform(HankelTransform):
     
     .. Note :: Only does 0th-order transforms currently.
     """
-    def __init__(self, nu=0, N=200, h=0.05):
-        if nu != 0:
-            raise ValueError("Non-0 nu not implemented yet")
-        self._nu = nu + 0.5
-        self._h = h
-        self._zeros = self._roots(N)
-        self.x = self._x(h)
-        self.j = self._j(self.x)
-        self.w = self._weight()
-        self.dpsi = self._d_psi(h * self._zeros)
+    def __init__(self, nu=0, *args, **kwargs):
+        nu += 0.5
+        super(SphericalHankelTransform, self).__init__(nu, *args, **kwargs)
 
     def _f(self, f, x):
         return np.sqrt(np.pi / (2 * x)) * f(x)
@@ -145,6 +138,7 @@ class SphericalHankelTransform(HankelTransform):
     def _roots(self, N):
         if self._nu == 0.5:
             return (np.arange(N) + 1)
-
+        else:
+            return super(SphericalHankelTransform, self)._roots(N)
 
 

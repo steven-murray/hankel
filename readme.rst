@@ -18,9 +18,9 @@ The only dependencies are numpy and scipy.
 
 Usage
 -----
-This implementation is set up to allow more efficient calculation of multiple
+This implementation is set up to allow efficient calculation of multiple
 functions f(x). To do this, the format is class-based, with the main object 
-taking as arguments the order of the bessel function, and the number and size
+taking as arguments the order of the Bessel function, and the number and size
 of the integration steps. For example, to integrate the function J_0(x) (ie.
 f(x) = 1, cf. Ogata's paper) one would do the following::
    
@@ -31,38 +31,30 @@ f(x) = 1, cf. Ogata's paper) one would do the following::
    
 The correct answer is 1, so we have done quite well. The second element of the 
 returned result is an estimate of the error (it is the last term in the
-summation). Here we used 120 steps of size 0.03. Difference applications will
+summation). Here we used 120 steps of size 0.03. Different applications will
 need to tune these parameters to get best results. In the above example, one
-may modify the function f and recall ``h.transform(f)`` without re-instantiating.
-This avoids unnecessary recalculation. Note that currently *only integer orders
-are implemented!*
+may modify the function ``f`` and re-call ``h.transform(f)`` without re-instantiating.
+This avoids unnecessary recalculation.
 
 Also included in the module is a subclass called ``SphericalHankelTransform``.
 This is dedicated to integrating functions of the form f(x)j(x), where j(x) is 
 a *spherical* Bessel function of arbitrary order. It is called in exactly the
-same way. Note that currently, *only zeroth order is implemented* for this class.
-An example::
+same way. An example::
 
 	from hankel import SphericalHankelTransform
 	f = lambda x: x/(x**3+1)  #Define the input function f(x)
    	h = SphericalHankelTransform(nu=0,N=500,h=0.005)  #Create the HankelTransform instance
    	h.transform(f)  #Should give [0.61092293340214776, -1.4163951324130801e-14]
    	
-Mathematica gives the answer as 0.610913. Note that the zeroth order spherical
-bessel function is just sin(x)/x.
+Mathematica gives the answer as 0.610913.
 
 Limitations
 -----------
-In terms of the implementation, the main limitation is that not any arbitrary
-order is supported (only integer orders for the standard case, and only zeroth
-order for the spherical case). This is due to a limitation in scipy, but may
-be addressed at some point.
-
-Another implementation-specific limitation is that the method is not perfectly
+An implementation-specific limitation is that the method is not perfectly
 efficient in all cases. Care has been taken to make it efficient in the general 
 sense. However, for specific orders and functions, simplifications may be made
 which reduce the number of trigonometric functions evaluated. For instance,
-for an order 0 spherical transform, the weights are analytically always identically
+for a zeroth-order spherical transform, the weights are analytically always identically
 1. 
 
 In terms of limitations of the method, they are very dependent on the form of the
@@ -87,6 +79,12 @@ of steps. The key here is the reduction of h to "get inside" the low-x informati
 This limitation is amplified for cases where the function really does tend to
 infinity at x=0, rather than a finite positive number, such as f(x) = 1/x.
 
+History
+-------
+v0.2.0 -- 10 Sep 2014. 
+		  Non-integer orders supported through mpmath.
+		  
+v0.1.0 -- First working version. Only integer orders (and 1/2) supported.
 
 References
 ----------
