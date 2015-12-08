@@ -109,11 +109,11 @@ class HankelTransform(object):
         """
         fres = self._f(f, self.x)
         summation = np.pi * self.w * fres * self.j * self.dpsi
-        ret = [np.sum(summation)]
+        ret = [np.sum(summation, axis=-1)]
         if ret_err:
-            ret.append(summation[-1])
+            ret.append(np.take(summation, -1, axis=-1))
         if ret_cumsum:
-            ret.append(np.cumsum(summation))
+            ret.append(np.cumsum(summation, axis=-1))
 
         return ret
 
