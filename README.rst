@@ -14,7 +14,7 @@ Installation
 Either clone the repository at github.com/steven-murray/hankel and use
 ``python setup.py install``, or simply install using ``pip install hankel``.
 
-The only dependencies are numpy and scipy.
+The only dependencies are numpy, scipy and mpmath (as of v0.2.0).
 
 Usage
 -----
@@ -81,10 +81,18 @@ infinity at x=0, rather than a finite positive number, such as f(x) = 1/x.
 
 History
 -------
-v0.2.0 -- 10 Sep 2014. 
-		  Non-integer orders supported through mpmath.
+v0.2.1 (18 Feb 2016)
+++++++++++++++++++++
+* Fixed pip install by changing readme --> README
+* updated docs to show dependence on mpmath
+
+v0.2.0 (10 Sep 2014)
+++++++++++++++++++++
+* Non-integer orders supported through mpmath.
 		  
-v0.1.0 -- First working version. Only integer orders (and 1/2) supported.
+v0.1.0
+++++++
+* First working version. Only integer orders (and 1/2) supported.
 
 References
 ----------

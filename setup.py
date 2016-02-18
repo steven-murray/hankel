@@ -6,10 +6,10 @@ def read(fname):
 
 setup(name='hankel',
       install_requires=['numpy', 'scipy', 'mpmath'],
-      version='0.2.0',
+      version='0.2.1',
       py_modules=['hankel'],
       description='Hankel Transformations using method of Ogata 2005',
-      long_description=read('readme.rst'),
+      long_description=read('README.rst'),
       author='Steven Murray',
-      author_email='steven.murray@uwa.edu.au',
+      author_email='steven.murray@curtin.edu.au',
       url='https://github.com/steven-murray/hankel')
