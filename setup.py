@@ -6,7 +6,7 @@ def read(fname):
 
 setup(name='hankel',
       install_requires=['numpy', 'scipy', 'mpmath'],
-      version='0.2.1',
+      version='0.2.2',
       py_modules=['hankel'],
       description='Hankel Transformations using method of Ogata 2005',
       long_description=read('README.rst'),
