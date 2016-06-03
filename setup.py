@@ -1,8 +1,14 @@
 from setuptools import setup
 import os
+import sys
+
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+if sys.argv[-1] == "publish":
+    os.system("python setup.py sdist upload")
+    os.system("python setup.py bdist_wheel upload")
+    sys.exit()
 
 setup(name='hankel',
       install_requires=['numpy', 'scipy', 'mpmath'],
