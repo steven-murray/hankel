@@ -35,7 +35,7 @@ Alternatively, each of the parameters has defaults, so you needn't pass any. The
 
 A Hankel-type integral is the integral
 
-<p align="center"><img src="https://rawgit.com/steven-murray/hankel/master/svgs/de0f311f07c2e7b1634b56eef090e0b2.svg?invert_in_darkmode" align=middle width=126.78105pt height=38.2239pt/></p>
+$$ \int_0^\infty f(x) J_\nu(x) dx. $$
 
 Having set up our transform with `nu = 0`, we may wish to perform this integral for *f(x) = 1*. To do this, we do the following:
 
