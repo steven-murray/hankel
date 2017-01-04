@@ -27,6 +27,7 @@ install:
   - pip install python-coveralls
 #  conda install -c dan_blanchard python-coveralls nose-cov
   - pip install coveralls
+  - cd hankel; python setup.py install ; cd ../
 
 script:
   - nosetests --with-coverage --cover-package=hankel
