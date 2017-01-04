@@ -5,6 +5,7 @@ Development Version
 -------------------
 
 **Features**
+
 - New class `SymmetricFourierTransform` which makes it incredibly easy to do arbitrary n-dimensional
   fourier transforms when the function is radially symmetric (includes inverse transform).
 - Addition of `integrate` method to base class to perform Hankel-type integrals, which were previously
@@ -12,6 +13,7 @@ Development Version
 - Documentation!
 
 **Enhancements**
+
 - Addition of many tests against known integrals.
 - Continuous integration
 - Restructuring of package for further flexibility in the future.
@@ -27,6 +29,7 @@ v0.2.2
 29 April 2016
 
 **Enhancements**
+
 - Compatibility with Python 3 (thanks to @diazona)
 - Can now use with array-value functions (thanks to @diazona)
 
@@ -37,9 +40,11 @@ v0.2.1
 18 Feb 2016
 
 **Bugfixes**
+
 - Fixed pip install by changing readme --> README
 
 **Enhancements**
+
 - updated docs to show dependence on mpmath
 
 ---------
@@ -49,6 +54,7 @@ v0.2.0
 10 Sep 2014
 
 **Features**
+
 * Non-integer orders supported through mpmath.
 
 ---------
