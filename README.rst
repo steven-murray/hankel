@@ -52,7 +52,10 @@ Integration
 +++++++++++
 A Hankel-type integral is the integral
 
-<p align="center"><img src="https://rawgit.com/steven-murray/hankel/None/svgs/de0f311f07c2e7b1634b56eef090e0b2.svg?invert_in_darkmode" align=middle width=126.78105pt height=38.2239pt/></p>
+.. image:: https://rawgit.com/steven-murray/hankel/None/svgs/de0f311f07c2e7b1634b56eef090e0b2.svg?invert_in_darkmode
+    :align: middle
+    :width: 126.78105pt
+    :height: 38.2239pt
 
 Having set up our transform with `nu = 0`, we may wish to perform this integral for *f(x) = 1*.
 To do this, we do the following:
