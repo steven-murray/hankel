@@ -35,7 +35,7 @@ Alternatively, each of the parameters has defaults, so you needn't pass any. The
 
 A Hankel-type integral is the integral
 
-![image](docimages/integrate.svg)
+![image](docimages/integrate.svg?raw=true)
 
 Having set up our transform with `nu = 0`, we may wish to perform this integral for *f(x) = 1*. To do this, we do the following:
 
@@ -59,7 +59,7 @@ The analytic answer here is *K\_0(1) = 0.4210*. The accuracy could be increased 
 
 The Hankel transform is defined as
 
-![image](docimages/transform.svg)
+![image](docimages/transform.svg?raw=true)
 
 We see that the Hankel-type integral is the Hankel transform of *f(r)/r* with *k=1*. To perform this more general transform, we must supply the *k* values. Again, let's use our previous function, *x/(x^2 + 1)*:
 
@@ -73,7 +73,7 @@ ht.transform(f,k,ret_err=False) # Return the transform of f at k.
 
 One of the most common applications of the Hankel transform is to solve the [radially symmetric n-dimensional Fourier transform](https://en.wikipedia.org/wiki/Hankel_transform#Relation_to_the_Fourier_transform_.28radially_symmetric_case_in_n-dimensions.29):
 
-![image](docimages/fourier.svg)
+![image](docimages/fourier.svg?raw=true)
 
 We provide a specific class to do this transform, which takes into account the various normalisations and substitutions required, and also provides the inverse transform. The procedure is similar to the basic `HankelTransform`, but we provide the number of dimensions, rather than the Bessel order directly. Say we wish to find the Fourier transform of *f(r) = 1/r* in 3 dimensions:
 
