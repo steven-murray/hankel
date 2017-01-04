@@ -52,7 +52,7 @@ Integration
 +++++++++++
 A Hankel-type integral is the integral
 
-$$ \int_0^\infty f(x) J_\nu(x) dx. $$
+.. image:: docimages/integrate.svg
 
 Having set up our transform with `nu = 0`, we may wish to perform this integral for *f(x) = 1*.
 To do this, we do the following:
@@ -68,7 +68,7 @@ returned result is an estimate of the error (it is the last term in the
 summation). The error estimate can be omitted using the argument
 ``ret_err=False``.
 
-We may now wish to integrate a different function, say $x/(x^2 + 1)$. We can do this
+We may now wish to integrate a different function, say *x/(x^2 + 1)*. We can do this
 directly with the same object, without re-instantiating (avoiding unnecessary recalculation):
 
 .. code:: python
@@ -83,12 +83,12 @@ Transforms
 ++++++++++
 The Hankel transform is defined as
 
-$$ F(k) = \int_0^\infty f(r) J_\nu(kr) r dr. $$
+.. image:: docimages/transform.svg
 
 
-We see that the Hankel-type integral is the Hankel transform of $f(r)/r$ with $k=1$.
+We see that the Hankel-type integral is the Hankel transform of *f(r)/r* with *k=1*.
 To perform this more general transform, we must supply the $k$ values. Again, let's
-use our previous function, $x/(x^2 + 1)$:
+use our previous function, *x/(x^2 + 1)*:
 
 .. code:: python
 
@@ -101,12 +101,12 @@ Fourier Transforms
 One of the most common applications of the Hankel transform is to solve the `radially symmetric
 *n*-dimensional Fourier transform <https://en.wikipedia.org/wiki/Hankel_transform#Relation_to_the_Fourier_transform_.28radially_symmetric_case_in_n-dimensions.29>`_:
 
-$$ F(k) = \frac{(2\pi)^{n/2}}{k^{n/2-1}} \int_0^\infty r^{n/2-1} f(r) J_{n/2-1}(kr)r dr. $$
+.. image:: docimages/fourier.svg
 
 We provide a specific class to do this transform, which takes into account the various normalisations and substitutions
 required, and also provides the inverse transform. The procedure is similar to the basic `HankelTransform`, but
 we provide the number of dimensions, rather than the Bessel order directly. Say we wish to find the Fourier transform
-of $f(r) = 1/r$ in 3 dimensions:
+of *f(r) = 1/r* in 3 dimensions:
 
 .. code:: python
 
@@ -137,7 +137,7 @@ In terms of limitations of the method, they are very dependent on the form of th
 function chosen. Notably, functions which tend to infinity at x=0 will be poorly
 approximated in this method, and will be highly dependent on the step-size
 parameter, as the information at low-x will be lost between 0 and the first step.
-As an example consider the simple function $f(x) = 1/\sqrt{x}$ with a 1/2 order bessel function.
+As an example consider the simple function *f(x) = 1/sqrt(x)* with a 1/2 order bessel function.
 The total integrand tends to 1 at x=0, rather than 0:
 
 .. code:: python
@@ -146,7 +146,7 @@ The total integrand tends to 1 at x=0, rather than 0:
     h = HankelTransform(0.5,120,0.03)
     h.integrate(f)  #(1.2336282286725169, 9.1467916948046785e-17)
 
-The true answer is $\sqrt{pi/2}, which is a difference of about 1.6%. Modifying the step
+The true answer is *sqrt(pi/2)*, which is a difference of about 1.6%. Modifying the step
 size and number of steps to gain accuracy we find:
 
 .. code:: python
@@ -168,8 +168,8 @@ of the Bessel function will be required to capture the convergence. Often, it wi
 amplitude of the function is low at low *x*, so that the step-size `h` can be increased to facilitate this. Otherwise,
 the number of steps `N` can be increased.
 
-For example, the 1/2-order integral supports functions that are increasing up to $f(x) = x^{1/2}$ and no more
-(otherwise they diverge). Let's use $f(x) = x^{0.4}$ as an example of a slowly converging function, and use our "hi-res"
+For example, the 1/2-order integral supports functions that are increasing up to *f(x) = x^0.5* and no more
+(otherwise they diverge). Let's use *f(x) = x^0.4* as an example of a slowly converging function, and use our "hi-res"
 setup from the previous section:
 
 .. code:: python
