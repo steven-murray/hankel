@@ -52,10 +52,7 @@ Integration
 +++++++++++
 A Hankel-type integral is the integral
 
-.. image:: https://rawgit.com/steven-murray/hankel/None/svgs/de0f311f07c2e7b1634b56eef090e0b2.svg?invert_in_darkmode
-    :align: middle
-    :width: 126.78105pt
-    :height: 38.2239pt
+$$ \int_0^\infty f(x) J_\nu(x) dx. $$
 
 Having set up our transform with `nu = 0`, we may wish to perform this integral for *f(x) = 1*.
 To do this, we do the following:
@@ -71,7 +68,7 @@ returned result is an estimate of the error (it is the last term in the
 summation). The error estimate can be omitted using the argument
 ``ret_err=False``.
 
-We may now wish to integrate a different function, say <img src="https://rawgit.com/steven-murray/hankel/None/svgs/ab2aba38e3df024ffc0b7418ccede184.svg?invert_in_darkmode" align=middle width=75.252375pt height=26.70657pt/>. We can do this
+We may now wish to integrate a different function, say $x/(x^2 + 1)$. We can do this
 directly with the same object, without re-instantiating (avoiding unnecessary recalculation):
 
 .. code:: python
@@ -79,19 +76,19 @@ directly with the same object, without re-instantiating (avoiding unnecessary re
     f = lambda x : x/(x**2 + 1)
     ht.integrate(f)               # Should give (0.42098875721567186, -2.6150757700135774e-17)
 
-The analytic answer here is <img src="https://rawgit.com/steven-murray/hankel/None/svgs/19f9b8feb2c5698a0de2d8df238db319.svg?invert_in_darkmode" align=middle width=109.57122pt height=24.56553pt/>. The accuracy could be increased by
+The analytic answer here is $K_0(1) = 0.4210$. The accuracy could be increased by
 creating `ht` with a higher number of steps `N`, and lower stepsize `h` (see Limitations_).
 
 Transforms
 ++++++++++
 The Hankel transform is defined as
 
-<p align="center"><img src="https://rawgit.com/steven-murray/hankel/None/svgs/c26683fe1415e9a3ac048789dbb84a86.svg?invert_in_darkmode" align=middle width=194.67855pt height=38.2239pt/></p>
+$$ F(k) = \int_0^\infty f(r) J_\nu(kr) r dr. $$
 
 
-We see that the Hankel-type integral is the Hankel transform of <img src="https://rawgit.com/steven-murray/hankel/None/svgs/a5c3ca476cddee18a9f95b93ee03a74e.svg?invert_in_darkmode" align=middle width=46.40229pt height=24.56553pt/> with <img src="https://rawgit.com/steven-murray/hankel/None/svgs/7eb22be4bf74527b54b6d60938478147.svg?invert_in_darkmode" align=middle width=39.101865pt height=22.74591pt/>.
-To perform this more general transform, we must supply the <img src="https://rawgit.com/steven-murray/hankel/None/svgs/63bb9849783d01d91403bc9a5fea12a2.svg?invert_in_darkmode" align=middle width=9.041505pt height=22.74591pt/> values. Again, let's
-use our previous function, <img src="https://rawgit.com/steven-murray/hankel/None/svgs/ab2aba38e3df024ffc0b7418ccede184.svg?invert_in_darkmode" align=middle width=75.252375pt height=26.70657pt/>:
+We see that the Hankel-type integral is the Hankel transform of $f(r)/r$ with $k=1$.
+To perform this more general transform, we must supply the $k$ values. Again, let's
+use our previous function, $x/(x^2 + 1)$:
 
 .. code:: python
 
@@ -104,12 +101,12 @@ Fourier Transforms
 One of the most common applications of the Hankel transform is to solve the `radially symmetric
 *n*-dimensional Fourier transform <https://en.wikipedia.org/wiki/Hankel_transform#Relation_to_the_Fourier_transform_.28radially_symmetric_case_in_n-dimensions.29>`_:
 
-<p align="center"><img src="https://rawgit.com/steven-murray/hankel/None/svgs/a406d349d3c2e83a25072dc0dd3c3e52.svg?invert_in_darkmode" align=middle width=332.3529pt height=40.66128pt/></p>
+$$ F(k) = \frac{(2\pi)^{n/2}}{k^{n/2-1}} \int_0^\infty r^{n/2-1} f(r) J_{n/2-1}(kr)r dr. $$
 
 We provide a specific class to do this transform, which takes into account the various normalisations and substitutions
 required, and also provides the inverse transform. The procedure is similar to the basic `HankelTransform`, but
 we provide the number of dimensions, rather than the Bessel order directly. Say we wish to find the Fourier transform
-of <img src="https://rawgit.com/steven-murray/hankel/None/svgs/3967151b686bd92ca565ce7ca2ef9f14.svg?invert_in_darkmode" align=middle width=76.46067pt height=24.56553pt/> in 3 dimensions:
+of $f(r) = 1/r$ in 3 dimensions:
 
 .. code:: python
 
@@ -140,7 +137,7 @@ In terms of limitations of the method, they are very dependent on the form of th
 function chosen. Notably, functions which tend to infinity at x=0 will be poorly
 approximated in this method, and will be highly dependent on the step-size
 parameter, as the information at low-x will be lost between 0 and the first step.
-As an example consider the simple function <img src="https://rawgit.com/steven-murray/hankel/None/svgs/c67b8cebef81aeb9e88f320fe5a22d6d.svg?invert_in_darkmode" align=middle width=93.225495pt height=24.99552pt/> with a 1/2 order bessel function.
+As an example consider the simple function $f(x) = 1/\sqrt{x}$ with a 1/2 order bessel function.
 The total integrand tends to 1 at x=0, rather than 0:
 
 .. code:: python
@@ -149,7 +146,30 @@ The total integrand tends to 1 at x=0, rather than 0:
     h = HankelTransform(0.5,120,0.03)
     h.integrate(f)  #(1.2336282286725169, 9.1467916948046785e-17)
 
-The true answer is <img src="https://rawgit.com/steven-murray/hankel/None/svgs/3547c67a9cab7f8c7104501d28de4874.svg?invert_in_darkmode" align=middle width=723.97545pt height=521.06472pt/>f(x) = x^{1/2}<img src="https://rawgit.com/steven-murray/hankel/None/svgs/c2749a6ad216bc00145da6f496de7a25.svg?invert_in_darkmode" align=middle width=319.159995pt height=24.66849pt/>f(x) = x^{0.4}$ as an example of a slowly converging function, and use our "hi-res"
+The true answer is $\sqrt{pi/2}, which is a difference of about 1.6%. Modifying the step
+size and number of steps to gain accuracy we find:
+
+.. code:: python
+
+    h = HankelTransform(0.5,700,0.001)
+    h.integrate(f)   #(1.2523045156429067, -0.0012281146007910256)
+
+This has much better than percent accuracy, but uses 5 times the amount
+of steps. The key here is the reduction of h to "get inside" the low-x information.
+This limitation is amplified for cases where the function really does tend to
+infinity at x=0, rather than a finite positive number, such as f(x) = 1/x.
+Clearly the integral becomes non-convergent for some *f(x)*, in which case
+the numerical approximation can never be correct.
+
+Upper-Bound Convergence
++++++++++++++++++++++++
+If the function *f(x)* is monotonically increasing, or at least very slowly decreasing, then higher and higher zeros
+of the Bessel function will be required to capture the convergence. Often, it will be the case that if this is so, the
+amplitude of the function is low at low *x*, so that the step-size `h` can be increased to facilitate this. Otherwise,
+the number of steps `N` can be increased.
+
+For example, the 1/2-order integral supports functions that are increasing up to $f(x) = x^{1/2}$ and no more
+(otherwise they diverge). Let's use $f(x) = x^{0.4}$ as an example of a slowly converging function, and use our "hi-res"
 setup from the previous section:
 
 .. code:: python
