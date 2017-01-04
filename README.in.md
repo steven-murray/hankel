@@ -1,5 +1,9 @@
 hankel
 ======
+[![Build Status](https://travis-ci.org/steven-murray/hankel.svg?branch=master)](https://travis-ci.org/steven-murray/hankel)
+[![Coverage Status](https://coveralls.io/repos/github/steven-murray/hankel/badge.svg?branch=master)](https://coveralls.io/github/steven-murray/hankel?branch=master)
+[![PyPI](https://img.shields.io/pypi/v/hankel.svg)]()
+[![PyPI](https://img.shields.io/pypi/dm/hankel.svg)]()
 
 Perform simple and accurate Hankel transformations using the method of Ogata 2005.
 
@@ -33,7 +37,7 @@ Usage
 
 This implementation is set up to allow efficient calculation of multiple functions $f(x)$. To do this, the format is 
 class-based, with the main object taking as arguments the order of the Bessel function, and the number and size of the 
-integration steps (see Limitations\_ for discussion about how to choose these key parameters).
+integration steps (see [Limitations](#Limitations) for discussion about how to choose these key parameters).
 
 For any general integration or transform of a function, we perform the following setup:
 
