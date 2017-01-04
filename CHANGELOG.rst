@@ -22,6 +22,7 @@ Enhancements
 - Some notebooks in the devel/ directory which show how various integrals/transforms behave under
   different choices of integration steps.
 
+---------
 
 v0.2.2
 ------
@@ -31,6 +32,8 @@ Enhancements
 ++++++++++++
 - Compatibility with Python 3 (thanks to @diazona)
 - Can now use with array-value functions (thanks to @diazona)
+
+---------
 
 v0.2.1
 ------
@@ -44,6 +47,8 @@ Enhancements
 ++++++++++++
 - updated docs to show dependence on mpmath
 
+---------
+
 v0.2.0
 ------
 10 Sep 2014
@@ -51,6 +56,8 @@ v0.2.0
 Features
 ++++++++
 * Non-integer orders supported through mpmath.
+
+---------
 
 v0.1.0
 ------
