@@ -14,6 +14,8 @@ Ogata's quadrature method used in this package
 provides a fast and accurate way of performing the integration based on locating
 the zeros of the Bessel function.
 
+
+
 Installation
 ------------
 Either clone the repository at github.com/steven-murray/hankel and use
@@ -54,7 +56,7 @@ A Hankel-type integral is the integral
 
 .. image:: docimages/integrate.svg
 
-Having set up our transform with `nu = 0`, we may wish to perform this integral for *f(x) = 1*.
+Having set up our transform with ``nu = 0``, we may wish to perform this integral for *f(x) = 1*.
 To do this, we do the following:
 
 .. code:: python
@@ -76,8 +78,8 @@ directly with the same object, without re-instantiating (avoiding unnecessary re
     f = lambda x : x/(x**2 + 1)
     ht.integrate(f)               # Should give (0.42098875721567186, -2.6150757700135774e-17)
 
-The analytic answer here is $K_0(1) = 0.4210$. The accuracy could be increased by
-creating `ht` with a higher number of steps `N`, and lower stepsize `h` (see Limitations_).
+The analytic answer here is *K_0(1) = 0.4210*. The accuracy could be increased by
+creating ``ht`` with a higher number of steps ``N``, and lower stepsize ``h`` (see Limitations_).
 
 Transforms
 ++++++++++
@@ -87,7 +89,7 @@ The Hankel transform is defined as
 
 
 We see that the Hankel-type integral is the Hankel transform of *f(r)/r* with *k=1*.
-To perform this more general transform, we must supply the $k$ values. Again, let's
+To perform this more general transform, we must supply the *k* values. Again, let's
 use our previous function, *x/(x^2 + 1)*:
 
 .. code:: python
@@ -99,12 +101,12 @@ use our previous function, *x/(x^2 + 1)*:
 Fourier Transforms
 ++++++++++++++++++
 One of the most common applications of the Hankel transform is to solve the `radially symmetric
-*n*-dimensional Fourier transform <https://en.wikipedia.org/wiki/Hankel_transform#Relation_to_the_Fourier_transform_.28radially_symmetric_case_in_n-dimensions.29>`_:
+n-dimensional Fourier transform <https://en.wikipedia.org/wiki/Hankel_transform#Relation_to_the_Fourier_transform_.28radially_symmetric_case_in_n-dimensions.29>`_:
 
 .. image:: docimages/fourier.svg
 
 We provide a specific class to do this transform, which takes into account the various normalisations and substitutions
-required, and also provides the inverse transform. The procedure is similar to the basic `HankelTransform`, but
+required, and also provides the inverse transform. The procedure is similar to the basic ``HankelTransform``, but
 we provide the number of dimensions, rather than the Bessel order directly. Say we wish to find the Fourier transform
 of *f(r) = 1/r* in 3 dimensions:
 
@@ -116,8 +118,8 @@ of *f(r) = 1/r* in 3 dimensions:
     f = lambda r : 1./r
     ft.transform(f,k, ret_err=False)
 
-To do the inverse transformation (which is different by a normalisation constant), merely supply `inverse=True` to the
-`.transform()` method.
+To do the inverse transformation (which is different by a normalisation constant), merely supply ``inverse=True`` to the
+``.transform()`` method.
 
 
 Limitations
@@ -165,8 +167,8 @@ Upper-Bound Convergence
 +++++++++++++++++++++++
 If the function *f(x)* is monotonically increasing, or at least very slowly decreasing, then higher and higher zeros
 of the Bessel function will be required to capture the convergence. Often, it will be the case that if this is so, the
-amplitude of the function is low at low *x*, so that the step-size `h` can be increased to facilitate this. Otherwise,
-the number of steps `N` can be increased.
+amplitude of the function is low at low *x*, so that the step-size ``h`` can be increased to facilitate this. Otherwise,
+the number of steps ``N`` can be increased.
 
 For example, the 1/2-order integral supports functions that are increasing up to *f(x) = x^0.5* and no more
 (otherwise they diverge). Let's use *f(x) = x^0.4* as an example of a slowly converging function, and use our "hi-res"
@@ -179,14 +181,14 @@ setup from the previous section:
     h.integrate(f)   # (0.53678277933471386, -1.0590954621246349)
 
 The analytic result is 0.8421449 -- very far from our result. Note that in this case, the error estimate itself is a
-good indication that we haven't reached convergence. We could try increasing `N`:
+good indication that we haven't reached convergence. We could try increasing ``N``:
 
 .. code:: python
 
     h = HankelTransform(0.5,10000,0.001)
     h.integrate(f,ret_err=False)/0.8421449 -1     ## 7.128e-07
 
-This is very accurate, but quite slow. Alternatively, we could try increasing `h`:
+This is very accurate, but quite slow. Alternatively, we could try increasing ``h``:
 
 .. code:: python
 
@@ -196,7 +198,7 @@ This is very accurate, but quite slow. Alternatively, we could try increasing `h
 Not quite as accurate, but still far better than a percent for a hundredth of the cost!
 
 There are some notebooks in the devel/ directory which toy with some known integrals, and show how accurate different
-choices of `N` and `h` are. They are interesting to view to see some of the patterns.
+choices of ``N`` and ``h`` are. They are interesting to view to see some of the patterns.
 
 
 References
