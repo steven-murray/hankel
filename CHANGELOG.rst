@@ -24,7 +24,7 @@ Development Version
 
 ---------
 
-v0.2.2, *29 April 2016*
+v0.2.2, [29 April 2016]
 ---------------------
 
 **Enhancements**
