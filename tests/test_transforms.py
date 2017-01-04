@@ -39,7 +39,7 @@ class TestAnalyticTransforms(object):
 
         anl = 2**(s+1) * gamma(0.5*(2+nu+s))/k**(s+2)/gamma(0.5*(nu-s))
 
-        print "Numerical Result: ", ans, " (required %s)"%anl
+        print("Numerical Result: ", ans, " (required %s)"%anl)
         assert np.isclose(ans,anl,rtol=1e-3)
 
     def test_powerlaw(self):

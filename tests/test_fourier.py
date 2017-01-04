@@ -42,7 +42,7 @@ class TestSymmetricFourierTransforms(object):
 
         anl = (2*np.pi)**(ndim/2.) * 2**(s+1) * gamma(0.5*(2+nu+s))/k**(s+2)/gamma(0.5*(nu-s))/ k**nu
 
-        print "Numerical Result: ", ans, " (required %s)"%anl
+        print("Numerical Result: ", ans, " (required %s)"%anl)
         assert np.isclose(ans,anl,rtol=1e-3)
 
     def test_powerlaw(self):

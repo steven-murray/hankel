@@ -34,7 +34,7 @@ class TestAnalyticIntegrals_Order0(object):
 
         ht = HankelTransform(nu=0, N=50, h=0.1)
         ans = ht.integrate(lambda x: 1, False, False)
-        print "Numerical Result: ", ans, " (required %s)"%1
+        print("Numerical Result: ", ans, " (required %s)"%1)
         assert np.isclose(ans,1,rtol=1e-3)
 
     def test_f_x_on_x2(self):
@@ -47,7 +47,7 @@ class TestAnalyticIntegrals_Order0(object):
 
 
         ans = ht.integrate(lambda x: x/(x**2+1), False, False)
-        print "Numerical Result: ", ans, " (required %s)"%k0(1)
+        print("Numerical Result: ", ans, " (required %s)"%k0(1))
         assert np.isclose(ans,k0(1),rtol=1e-3)
 
     # The following tests follow from the table on Wikipedia
@@ -58,13 +58,13 @@ class TestAnalyticIntegrals_Order0(object):
         ht = HankelTransform(nu=0, N=100, h=10**-1.5)
 
         ans = ht.integrate(lambda x: x**2, False, False)
-        print "Numerical Result: ", ans, " (required -1)"
+        print("Numerical Result: ", ans, " (required -1)")
         assert np.isclose(ans,-1,rtol=1e-3)
 
     def test_x4(self):
         ht = HankelTransform(nu=0, N=150, h=10**-1.5)
         ans = ht.integrate(lambda x: x**4, False, False)
-        print "Numerical Result: ", ans, " (required 9)"
+        print("Numerical Result: ", ans, " (required 9)")
         assert np.isclose(ans,9,rtol=1e-3)
 
     def test_1_on_sqrt_x(self):
@@ -74,7 +74,7 @@ class TestAnalyticIntegrals_Order0(object):
         m = -1.5
         anl = 2**(m+1)*gamma(m/2+1)/gamma(-m/2)
 
-        print "Numerical Result: ", ans, " (required %s)"%anl
+        print("Numerical Result: ", ans, " (required %s)"%anl)
         assert np.isclose(ans,anl,rtol=1e-3)
 
     def test_x_on_sqrt_x2_pz2(self):
@@ -84,7 +84,7 @@ class TestAnalyticIntegrals_Order0(object):
         z = 1
         ans = ht.integrate(lambda x: x/np.sqrt(x**2+z**2), False, False)
         anl = np.exp(-z)
-        print "Numerical Result: ", ans, " (required %s)"%anl
+        print("Numerical Result: ", ans, " (required %s)"%anl)
         assert np.isclose(ans,anl,rtol=1e-3)
 
     def test_gauss(self):
@@ -93,7 +93,7 @@ class TestAnalyticIntegrals_Order0(object):
 
         ans = ht.integrate(lambda x: x*np.exp(-0.5*z**2*x**2), False, False)
         anl = 1./z**2 * np.exp(-0.5/z**2)
-        print "Numerical Result: ", ans, " (required %s)"%anl
+        print("Numerical Result: ", ans, " (required %s)"%anl)
         assert np.isclose(ans,anl,rtol=1e-3)
 
 
@@ -104,7 +104,7 @@ class TestAnalyticIntegrals_VaryingOrder(object):
         ans = ht.integrate(lambda x: x**(s+1), False, False)
         anl = 2**(s+1)*gamma(0.5*(2+nu+s))/gamma(0.5*(nu-s))
 
-        print "Numerical Result: ", ans, " (required %s)"%anl
+        print("Numerical Result: ", ans, " (required %s)"%anl)
         assert np.isclose(ans,anl,rtol=1e-3)
 
     def test_powerlaw(self):
@@ -123,7 +123,7 @@ class TestAnalyticIntegrals_VaryingOrder(object):
         ans = ht.integrate(lambda x: x**(nu-2*s + 1)*gammainc_(s,x**2), False, False)
         anl = 0.5 ** (2*s-nu-1) * gammaincc_(1-s+nu,0.25)
 
-        print "Numerical Result: ", ans, " (required %s)"%anl
+        print("Numerical Result: ", ans, " (required %s)"%anl)
         assert np.isclose(ans,anl,rtol=1e-3)
 
     def test_gamma_mod(self):
