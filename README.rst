@@ -35,13 +35,13 @@ these key parameters).
 For any general integration or transform of a function, we perform the following
 setup:
 
-```python
-from hankel import HankelTransform     # Import the basic class
+.. code:: python
 
-ht = HankelTransform(nu= 0,            # The order of the bessel function
-                     N = 120,          # Number of steps in the integration
-                     h = 0.03)         # Proxy for "size" of steps in integration
-```
+    from hankel import HankelTransform     # Import the basic class
+
+    ht = HankelTransform(nu= 0,            # The order of the bessel function
+                         N = 120,          # Number of steps in the integration
+                         h = 0.03)         # Proxy for "size" of steps in integration
 
 Alternatively, each of the parameters has defaults, so you needn't pass any.
 The order of the bessel function will be defined by the problem at hand, while the other
