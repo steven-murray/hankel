@@ -85,6 +85,7 @@ The Hankel transform is defined as
 
 $$ F(k) = \int_0^\infty f(r) J_\nu(kr) r dr. $$
 
+
 We see that the Hankel-type integral is the Hankel transform of $f(r)/r$ with $k=1$.
 To perform this more general transform, we must supply the $k$ values. Again, let's
 use our previous function, $x/(x^2 + 1)$:
