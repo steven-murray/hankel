@@ -79,25 +79,6 @@ of steps. The key here is the reduction of h to "get inside" the low-x informati
 This limitation is amplified for cases where the function really does tend to
 infinity at x=0, rather than a finite positive number, such as f(x) = 1/x.
 
-History
--------
-v0.2.2 (29 April 2016)
-++++++++++++++++++++++
-* Compatibility with Python 3 (thanks to @diazona)
-* Can now use with array-value functions (thanks to @diazona)
-
-v0.2.1 (18 Feb 2016)
-++++++++++++++++++++
-* Fixed pip install by changing readme --> README
-* updated docs to show dependence on mpmath
-
-v0.2.0 (10 Sep 2014)
-++++++++++++++++++++
-* Non-integer orders supported through mpmath.
-		  
-v0.1.0
-++++++
-* First working version. Only integer orders (and 1/2) supported.
 
 References
 ----------
