@@ -108,6 +108,7 @@ we provide the number of dimensions, rather than the Bessel order directly. Say 
 of $f(r) = 1/r$ in 3 dimensions:
 
 .. code:: python
+
     from hankel import SymmetricFourierTransform
     ft = SymmetricFourierTransform(ndim=3, N = 200, h = 0.03)
 
@@ -139,6 +140,7 @@ As an example consider the simple function $f(x) = 1/\sqrt{x}$ with a 1/2 order 
 The total integrand tends to 1 at x=0, rather than 0:
 
 .. code:: python
+
     f = lambda x: 1/np.sqrt(x)
     h = HankelTransform(0.5,120,0.03)
     h.integrate(f)  #(1.2336282286725169, 9.1467916948046785e-17)
@@ -147,6 +149,7 @@ The true answer is $\sqrt{pi/2}, which is a difference of about 1.6%. Modifying 
 size and number of steps to gain accuracy we find:
 
 .. code:: python
+
     h = HankelTransform(0.5,700,0.001)
     h.integrate(f)   #(1.2523045156429067, -0.0012281146007910256)
 
@@ -169,6 +172,7 @@ For example, the 1/2-order integral supports functions that are increasing up to
 setup from the previous section:
 
 .. code:: python
+
     h = HankelTransform(0.5,700,0.001)
     f = lambda x : x**0.4
     h.integrate(f)   # (0.53678277933471386, -1.0590954621246349)
@@ -177,12 +181,14 @@ The analytic result is 0.8421449 -- very far from our result. Note that in this 
 good indication that we haven't reached convergence. We could try increasing `N`:
 
 .. code:: python
+
     h = HankelTransform(0.5,10000,0.001)
     h.integrate(f,ret_err=False)/0.8421449 -1     ## 7.128e-07
 
 This is very accurate, but quite slow. Alternatively, we could try increasing `h`:
 
 .. code:: python
+
     h = HankelTransform(0.5,700,0.03)
     h.integrate(f,ret_err=False)/0.8421449 -1     ## 0.00045616
 
