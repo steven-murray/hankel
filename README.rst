@@ -57,10 +57,11 @@ $$ \int_0^\infty f(x) J_\nu(x) dx. $$
 Having set up our transform with `nu = 0`, we may wish to perform this integral for *f(x) = 1*.
 To do this, we do the following:
 
-```python
-f = lambda x : 1   # Create a function which identically 1.
-ht.integrate(f)    # Should give (1.0000000000003544, -9.8381428368537518e-15)
-```
+.. code:: python
+
+    f = lambda x : 1   # Create a function which identically 1.
+    ht.integrate(f)    # Should give (1.0000000000003544, -9.8381428368537518e-15)
+
 
 The correct answer is 1, so we have done quite well. The second element of the 
 returned result is an estimate of the error (it is the last term in the
@@ -70,10 +71,10 @@ summation). The error estimate can be omitted using the argument
 We may now wish to integrate a different function, say $x/(x^2 + 1)$. We can do this
 directly with the same object, without re-instantiating (avoiding unnecessary recalculation):
 
-```python
-f = lambda x : x/(x**2 + 1)
-ht.integrate(f)               # Should give (0.42098875721567186, -2.6150757700135774e-17)
-```
+.. code:: python
+
+    f = lambda x : x/(x**2 + 1)
+    ht.integrate(f)               # Should give (0.42098875721567186, -2.6150757700135774e-17)
 
 The analytic answer here is $K_0(1) = 0.4210$. The accuracy could be increased by
 creating `ht` with a higher number of steps `N`, and lower stepsize `h` (see Limitations_).
@@ -88,11 +89,11 @@ We see that the Hankel-type integral is the Hankel transform of $f(r)/r$ with $k
 To perform this more general transform, we must supply the $k$ values. Again, let's
 use our previous function, $x/(x^2 + 1)$:
 
-```python
-import numpy as np              # Import numpy
-k = np.logspace(-1,1,50)        # Create a log-spaced array of k from 0.1 to 10.
-ht.transform(f,k,ret_err=False) # Return the transform of f at k.
-```
+.. code:: python
+
+    import numpy as np              # Import numpy
+    k = np.logspace(-1,1,50)        # Create a log-spaced array of k from 0.1 to 10.
+    ht.transform(f,k,ret_err=False) # Return the transform of f at k.
 
 Fourier Transforms
 ++++++++++++++++++
@@ -106,13 +107,12 @@ required, and also provides the inverse transform. The procedure is similar to t
 we provide the number of dimensions, rather than the Bessel order directly. Say we wish to find the Fourier transform
 of $f(r) = 1/r$ in 3 dimensions:
 
-```python
-from hankel import SymmetricFourierTransform
-ft = SymmetricFourierTransform(ndim=3, N = 200, h = 0.03)
+.. code:: python
+    from hankel import SymmetricFourierTransform
+    ft = SymmetricFourierTransform(ndim=3, N = 200, h = 0.03)
 
-f = lambda r : 1./r
-ft.transform(f,k, ret_err=False)
-```
+    f = lambda r : 1./r
+    ft.transform(f,k, ret_err=False)
 
 To do the inverse transformation (which is different by a normalisation constant), merely supply `inverse=True` to the
 `.transform()` method.
@@ -138,19 +138,18 @@ parameter, as the information at low-x will be lost between 0 and the first step
 As an example consider the simple function $f(x) = 1/\sqrt{x}$ with a 1/2 order bessel function.
 The total integrand tends to 1 at x=0, rather than 0:
 
-```python
-f = lambda x: 1/np.sqrt(x)
-h = HankelTransform(0.5,120,0.03)
-h.integrate(f)  #(1.2336282286725169, 9.1467916948046785e-17)
-```
+.. code:: python
+    f = lambda x: 1/np.sqrt(x)
+    h = HankelTransform(0.5,120,0.03)
+    h.integrate(f)  #(1.2336282286725169, 9.1467916948046785e-17)
 
 The true answer is $\sqrt{pi/2}, which is a difference of about 1.6%. Modifying the step
-size and number of steps to gain accuracy we find::
+size and number of steps to gain accuracy we find:
 
-```python
-h = HankelTransform(0.5,700,0.001)
-h.integrate(f)   #(1.2523045156429067, -0.0012281146007910256)
-```
+.. code:: python
+    h = HankelTransform(0.5,700,0.001)
+    h.integrate(f)   #(1.2523045156429067, -0.0012281146007910256)
+
 This has much better than percent accuracy, but uses 5 times the amount
 of steps. The key here is the reduction of h to "get inside" the low-x information.
 This limitation is amplified for cases where the function really does tend to
@@ -169,26 +168,23 @@ For example, the 1/2-order integral supports functions that are increasing up to
 (otherwise they diverge). Let's use $f(x) = x^{0.4}$ as an example of a slowly converging function, and use our "hi-res"
 setup from the previous section:
 
-```python
-h = HankelTransform(0.5,700,0.001)
-f = lambda x : x**0.4
-h.integrate(f)   # (0.53678277933471386, -1.0590954621246349)
-```
+.. code:: python
+    h = HankelTransform(0.5,700,0.001)
+    f = lambda x : x**0.4
+    h.integrate(f)   # (0.53678277933471386, -1.0590954621246349)
 
 The analytic result is 0.8421449 -- very far from our result. Note that in this case, the error estimate itself is a
 good indication that we haven't reached convergence. We could try increasing `N`:
 
-```python
-h = HankelTransform(0.5,10000,0.001)
-h.integrate(f,ret_err=False)/0.8421449 -1     ## 7.128e-07
-```
+.. code:: python
+    h = HankelTransform(0.5,10000,0.001)
+    h.integrate(f,ret_err=False)/0.8421449 -1     ## 7.128e-07
 
 This is very accurate, but quite slow. Alternatively, we could try increasing `h`:
 
-```python
-h = HankelTransform(0.5,700,0.03)
-h.integrate(f,ret_err=False)/0.8421449 -1     ## 0.00045616
-```
+.. code:: python
+    h = HankelTransform(0.5,700,0.03)
+    h.integrate(f,ret_err=False)/0.8421449 -1     ## 0.00045616
 
 Not quite as accurate, but still far better than a percent for a hundredth of the cost!
 
