@@ -57,6 +57,11 @@ class HankelTransform(object):
         self.w = self._weight()
         self.dpsi = self._d_psi(h*self._zeros)
 
+        # Some quantities only useful in the FourierTransform
+        self._x_power = 1
+        self._norm = 1
+        self._k_power = 2
+
     def _psi(self, t):
         y = np.sinh(t)
         return t*np.tanh(np.pi*y/2)
@@ -118,15 +123,19 @@ class HankelTransform(object):
         ret_cumsum : boolean, optional, default = False
             Whether to return the cumulative sum
         """
-        fres = self._f(f, np.divide.outer(self.x, k).T)*self.x
+        if inverse:
+            norm = 1./self._norm
+        else:
+            norm = self._norm
 
+        fres = self._f(f, np.divide.outer(self.x, k).T)*self.x**self._x_power
         summation = np.pi*self.w*fres*self.j*self.dpsi
-        ret = np.sum(summation, axis=-1)/k ** 2
+        ret = norm * np.sum(summation, axis=-1)/k ** self._k_power
 
         if ret_err:
-            err = np.take(summation, -1, axis=-1)/k ** 2
+            err = norm * np.take(summation, -1, axis=-1)/k ** self._k_power
         if ret_cumsum:
-            cumsum = np.divide.outer(np.cumsum(summation, axis=-1), k ** 2)
+            cumsum = norm * np.divide.outer(np.cumsum(summation, axis=-1), k ** self._k_power)
 
         if ret_err and ret_cumsum:
             return ret, err, cumsum
@@ -181,44 +190,48 @@ class SymmetricFourierTransform(HankelTransform):
 
         super(SymmetricFourierTransform, self).__init__(nu=nu, N=N, h=h)
 
-    def transform(self, f, k=1, ret_err=True, ret_cumsum=False, inverse=False):
-        """
-        Do the fourier transform of f, where f is radially symmetric.
+        self._x_power = self.ndim/2.
+        self._k_power = self.ndim
+        self._norm = (2*np.pi) ** (self.ndim/2.)
 
-        Parameters
-        ----------
-        f : callable
-            A function of one variable, representing :math:`f(x)`
-
-        ret_err : boolean, optional, default = True
-            Whether to return the estimated error
-
-        ret_cumsum : boolean, optional, default = False
-            Whether to return the cumulative sum
-        """
-        fres = self._f(f, np.divide.outer(self.x, k).T)*self.x ** (self.ndim/2.)
-
-        summation = np.pi*self.w*fres*self.j*self.dpsi
-
-        norm = (2*np.pi) ** (self.ndim/2.)
-        if inverse:
-            norm = 1./norm
-
-        ret = norm*np.sum(summation, axis=-1)/k ** self.ndim
-
-        if ret_err:
-            err = norm*np.take(summation, -1, axis=-1)/k ** self.ndim
-        if ret_cumsum:
-            cumsum = norm*np.divide.outer(np.cumsum(summation, axis=-1), k ** self.ndim)
-
-        if ret_err and ret_cumsum:
-            return ret, err, cumsum
-        elif ret_err:
-            return ret, err
-        elif ret_cumsum:
-            return ret, cumsum
-        else:
-            return ret
+    # def transform(self, f, k=1, ret_err=True, ret_cumsum=False, inverse=False):
+    #     """
+    #     Do the fourier transform of f, where f is radially symmetric.
+    #
+    #     Parameters
+    #     ----------
+    #     f : callable
+    #         A function of one variable, representing :math:`f(x)`
+    #
+    #     ret_err : boolean, optional, default = True
+    #         Whether to return the estimated error
+    #
+    #     ret_cumsum : boolean, optional, default = False
+    #         Whether to return the cumulative sum
+    #     """
+    #     fres = self._f(f, np.divide.outer(self.x, k).T)*self.x ** (self.ndim/2.)
+    #
+    #     summation = np.pi*self.w*fres*self.j*self.dpsi
+    #
+    #     norm = (2*np.pi) ** (self.ndim/2.)
+    #     if inverse:
+    #         norm = 1./norm
+    #
+    #     ret = norm*np.sum(summation, axis=-1)/k ** self.ndim
+    #
+    #     if ret_err:
+    #         err = norm*np.take(summation, -1, axis=-1)/k ** self.ndim
+    #     if ret_cumsum:
+    #         cumsum = norm*np.divide.outer(np.cumsum(summation, axis=-1), k ** self.ndim)
+    #
+    #     if ret_err and ret_cumsum:
+    #         return ret, err, cumsum
+    #     elif ret_err:
+    #         return ret, err
+    #     elif ret_cumsum:
+    #         return ret, cumsum
+    #     else:
+    #         return ret
 
 # class SphericalHankelTransform(HankelTransform):
 #     """
