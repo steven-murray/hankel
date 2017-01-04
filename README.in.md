@@ -18,6 +18,14 @@ using `pip install hankel`.
 
 The only dependencies are numpy, scipy and mpmath (as of v0.2.0).
 
+Features
+--------
+
+* Accurate and fast solutions to many Hankel integrals
+* Easy to use and re-use
+* Arbitrary order transforms
+* Built-in support for radially symmetric Fourier Transforms
+
 Usage
 -----
 
@@ -121,7 +129,7 @@ to make it efficient in the general sense. However, for specific orders and func
 In terms of limitations of the method, they are very dependent on the form of the function chosen. Notably, functions 
 which tend to infinity at x=0 will be poorly approximated in this method, and will be highly dependent on the step-size
  parameter, as the information at low-x will be lost between 0 and the first step. As an example consider the simple 
- function $f(x) = 1/sqrt(x)$ with a 1/2 order bessel function. The total integrand tends to 1 at $x=0$, rather than 0:
+ function $f(x) = 1/\sqrt{x}$ with a 1/2 order bessel function. The total integrand tends to 1 at $x=0$, rather than 0:
 
 ``` python
 f = lambda x: 1/np.sqrt(x)
