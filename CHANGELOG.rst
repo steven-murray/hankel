@@ -2,7 +2,7 @@ Changelog
 =========
 
 Development Version
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 Features
 ++++++++
@@ -23,8 +23,6 @@ Enhancements
   different choices of integration steps.
 
 
-Releases
-~~~~~~~~
 v0.2.2
 ------
 29 April 2016
