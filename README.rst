@@ -5,7 +5,7 @@ hankel
 Perform simple and accurate Hankel transformations using the method of Ogata 2005.
 
 Hankel transforms and integrals are commonplace in any area in which Fourier Transforms
-are required over fields that are radially symmetric (see [Wikipedia](https://en.wikipedia.org/wiki/Hankel_transform)
+are required over fields that are radially symmetric (see `Wikipedia <https://en.wikipedia.org/wiki/Hankel_transform>`_
 for a thorough description). They involve integrating an arbitrary function
 multiplied by a Bessel function of arbitrary order (of the first kind).
 Typical integration schemes often fall over
@@ -96,8 +96,8 @@ ht.transform(f,k,ret_err=False) # Return the transform of f at k.
 
 Fourier Transforms
 ++++++++++++++++++
-One of the most common applications of the Hankel transform is to solve the [radially symmetric
-*n*-dimensional Fourier transform][https://en.wikipedia.org/wiki/Hankel_transform#Relation_to_the_Fourier_transform_.28radially_symmetric_case_in_n-dimensions.29):
+One of the most common applications of the Hankel transform is to solve the `radially symmetric
+*n*-dimensional Fourier transform <https://en.wikipedia.org/wiki/Hankel_transform#Relation_to_the_Fourier_transform_.28radially_symmetric_case_in_n-dimensions.29>`_:
 
 $$ F(k) = \frac{(2\pi)^{n/2}}{k^{n/2-1}} \int_0^\infty r^{n/2-1} f(r) J_{n/2-1}(kr)r dr. $$
 
