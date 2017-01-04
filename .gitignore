@@ -4,3 +4,4 @@ dist
 hankel.egg-info
 *idea
 *.pyc
+devel/.ipynb_checkpoints/*
