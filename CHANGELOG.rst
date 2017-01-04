@@ -6,7 +6,7 @@ Development Version
 
 **Features**
 
-- New class `SymmetricFourierTransform` which makes it incredibly easy to do arbitrary n-dimensional
+- New class `SymmetricFourierTransform` which makes it incredibly easy to do arbitrary *n*-dimensional
   fourier transforms when the function is radially symmetric (includes inverse transform).
 - Addition of `integrate` method to base class to perform Hankel-type integrals, which were previously
   handled by the `transform` method. This latter method is now used for actual Hankel transforms.
@@ -24,9 +24,8 @@ Development Version
 
 ---------
 
-v0.2.2
-------
-29 April 2016
+v0.2.2, *29 April 2016*
+---------------------
 
 **Enhancements**
 
