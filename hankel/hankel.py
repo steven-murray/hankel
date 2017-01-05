@@ -28,6 +28,9 @@ class HankelTransform(object):
     H. Ogata, A Numerical Integration Formula Based on the Bessel Functions,
     Publications of the Research Institute for Mathematical Sciences, vol. 41, no. 4, pp. 949-970, 2005.
 
+    This class provides a method for directly performing this integration, and also
+    for doing a Hankel Transform.
+
     Parameters
     ----------
     nu : int or 0.5, optional, default = 0
@@ -130,6 +133,30 @@ class HankelTransform(object):
 
         ret_cumsum : boolean, optional, default = False
             Whether to return the cumulative sum
+
+        Returns
+        -------
+        ret : array-like
+            The Hankel-transform of f(x) at the provided k. If
+            `k` is scalar, then this will be scalar.
+
+        err : array-like
+            The estimated error of the approximate integral, at every `k`.
+            It is merely the last term in the sum. Only returned if `ret_err=True`.
+
+        cumsum : array-like
+            The total cumulative sum, for which the last term is itself the transform.
+            One can use this to check whether the integral is converging.
+            Only returned if `ret_cumsum=True`
+
+
+        Notes
+        -----
+        The Hankel transform is defined as
+
+        .. math:: F(k) = \int_0^\infty r f(r) J_\nu(kr) dr.
+
+        The inverse transform is identical (swapping *k* and *r* of course).
         """
         # The following allows for a re-scaling of k when doing FT's.
         k = self._k(k)
@@ -139,7 +166,6 @@ class HankelTransform(object):
         norm = self._norm(inverse)
 
         # The following renormalises by the fourier dual to some power
-        # For the standard transform, this is 1, but for FT's, depends on the dimensionality
         knorm = k ** self._k_power
 
         fres = self._f(f, np.divide.outer(self.x, k).T)*self.x**self._x_power
@@ -166,7 +192,7 @@ class HankelTransform(object):
 
         This is *not* the Hankel transform, but rather the simplified
         integral, :math:`\int_0^\infty f(x) J_\nu(x) dx`, equivalent to the
-        transform of :math:`f(r)/r` at k=1.
+        transform of :math:`f(r)/r` at *k=1*.
 
         Parameters
         ----------
@@ -186,12 +212,42 @@ class SymmetricFourierTransform(HankelTransform):
     """
     Determine the Fourier Transform of a radially symmetric function in arbitrary dimensions.
 
-    See :class:`HankelTransform` for descriptions of inputs. Additional parameters noted below.
-
     Parameters
     ----------
     ndim : int
         Number of dimensions the transform is in.
+
+    a, b : float, default 1
+        This pair of values defines the Fourier convention used (see Notes below for details)
+
+    N : int, optional
+        The number of nodes in the calculation. Generally this must increase
+        for a smaller value of the step-size h.
+
+    h : float, optional
+        The step-size of the integration.
+
+    Notes
+    -----
+    We allow for arbitrary Fourier convention, according to the scheme in http://mathworld.wolfram.com/FourierTransform.html.
+    That is, we define the forward and inverse *n*-dimensional transforms respectively as
+
+    .. math:: F(k) = \sqrt{\frac{|b|}{(2\pi)^{1-a}}}^n \int f(r) e^{i \mathbf{k}\cdot\mathbf{r}} d^n\mathbf{r}
+
+    and
+
+    .. math:: f(r) = \sqrt{\frac{|b|}{(2\pi)^{1+a}}}^n \int F(k) e^{-i \mathbf{k}\cdot\mathbf{r}} d^n \mathbf{k}.
+
+    By default, we set both *a* and *b* to 1, so that the forward transform has a normalisation of unity.
+
+    In this general sense, the forward and inverse Hankel transforms are respectively
+
+    .. math:: F(k) = \sqrt{\frac{|b|}{(2\pi)^{1-a}}}^n \frac{(2\pi)^{n/2}}{(bk)^{n/2-1}} \int_0^\infty r^{n/2-1} f(r) J_{n/2-1}(bkr) r dr
+
+    and
+
+    .. math:: f(r) = \sqrt{\frac{|b|}{(2\pi)^{1+a}}}^n \frac{(2\pi)^{n/2}}{(br)^{n/2-1}} \int_0^\infty k^{n/2-1} f(k) J_{n/2-1}(bkr) k dk.
+
     """
 
     def __init__(self, ndim=2, a = 1, b = 1, N=200, h=0.05):
@@ -226,64 +282,3 @@ class SymmetricFourierTransform(HankelTransform):
         The scalar normalisation of the transform, taking into account Fourier conventions and a possible inversion.
         """
         return (2*np.pi) ** (self.ndim/2.) * self._fourier_norm(inverse)
-
-    # def transform(self, f, k=1, ret_err=True, ret_cumsum=False, inverse=False):
-    #     """
-    #     Do the fourier transform of f, where f is radially symmetric.
-    #
-    #     Parameters
-    #     ----------
-    #     f : callable
-    #         A function of one variable, representing :math:`f(x)`
-    #
-    #     ret_err : boolean, optional, default = True
-    #         Whether to return the estimated error
-    #
-    #     ret_cumsum : boolean, optional, default = False
-    #         Whether to return the cumulative sum
-    #     """
-    #     fres = self._f(f, np.divide.outer(self.x, k).T)*self.x ** (self.ndim/2.)
-    #
-    #     summation = np.pi*self.w*fres*self.j*self.dpsi
-    #
-    #     norm = (2*np.pi) ** (self.ndim/2.)
-    #     if inverse:
-    #         norm = 1./norm
-    #
-    #     ret = norm*np.sum(summation, axis=-1)/k ** self.ndim
-    #
-    #     if ret_err:
-    #         err = norm*np.take(summation, -1, axis=-1)/k ** self.ndim
-    #     if ret_cumsum:
-    #         cumsum = norm*np.divide.outer(np.cumsum(summation, axis=-1), k ** self.ndim)
-    #
-    #     if ret_err and ret_cumsum:
-    #         return ret, err, cumsum
-    #     elif ret_err:
-    #         return ret, err
-    #     elif ret_cumsum:
-    #         return ret, cumsum
-    #     else:
-    #         return ret
-
-# class SphericalHankelTransform(HankelTransform):
-#     """
-#     Perform spherical hankel transforms.
-#
-#     Defined as :math:`\int_0^\infty f(x) j_\nu(x) dx
-#
-#     .. Note :: Only does 0th-order transforms currently.
-#     """
-#     def __init__(self, nu=0, *args, **kwargs):
-#         nu += 0.5
-#         super(SphericalHankelTransform, self).__init__(nu, *args, **kwargs)
-#
-#     def _f(self, f, x):
-#         return np.sqrt(np.pi / (2 * x)) * f(x)
-#
-#     def _roots(self, N):
-#         if self._nu == 0.5:
-#             return (np.arange(N) + 1)
-#         else:
-#             return super(SphericalHankelTransform, self)._roots(N)
-#
