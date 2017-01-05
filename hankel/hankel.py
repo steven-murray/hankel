@@ -59,7 +59,6 @@ class HankelTransform(object):
 
         # Some quantities only useful in the FourierTransform
         self._x_power = 1
-        self._norm = 1
         self._k_power = 2
 
     def _psi(self, t):
@@ -108,6 +107,15 @@ class HankelTransform(object):
     def _f(self, f, x):
         return f(x)
 
+    def _k(self,k):
+        return k
+
+    def _norm(self,inverse=False):
+        """
+        Scalar normalisation of the transform. Identically 1.
+        """
+        return 1
+
     def transform(self, f, k=1, ret_err=True, ret_cumsum=False, inverse=False):
         """
         Do the Hankel-transform of the function f.
@@ -123,19 +131,25 @@ class HankelTransform(object):
         ret_cumsum : boolean, optional, default = False
             Whether to return the cumulative sum
         """
-        if inverse:
-            norm = 1./self._norm
-        else:
-            norm = self._norm
+        # The following allows for a re-scaling of k when doing FT's.
+        k = self._k(k)
+
+        # The following is the scalar normalisation of the transform
+        # The basic transform has a norm of 1, but when doing FT's, this depends on the dimensionality.
+        norm = self._norm(inverse)
+
+        # The following renormalises by the fourier dual to some power
+        # For the standard transform, this is 1, but for FT's, depends on the dimensionality
+        knorm = k ** self._k_power
 
         fres = self._f(f, np.divide.outer(self.x, k).T)*self.x**self._x_power
         summation = np.pi*self.w*fres*self.j*self.dpsi
-        ret = norm * np.sum(summation, axis=-1)/k ** self._k_power
+        ret = norm * np.sum(summation, axis=-1)/knorm
 
         if ret_err:
-            err = norm * np.take(summation, -1, axis=-1)/k ** self._k_power
+            err = norm * np.take(summation, -1, axis=-1)/knorm
         if ret_cumsum:
-            cumsum = norm * np.divide.outer(np.cumsum(summation, axis=-1), k ** self._k_power)
+            cumsum = norm * np.divide.outer(np.cumsum(summation, axis=-1),knorm)
 
         if ret_err and ret_cumsum:
             return ret, err, cumsum
@@ -180,19 +194,38 @@ class SymmetricFourierTransform(HankelTransform):
         Number of dimensions the transform is in.
     """
 
-    def __init__(self, ndim=2, N=200, h=0.05):
+    def __init__(self, ndim=2, a = 1, b = 1, N=200, h=0.05):
         if ndim%2 == 0:
             nu = ndim/2 - 1
         else:
             nu = ndim/2. - 1
 
         self.ndim = ndim
+        self.fourier_norm_a = a
+        self.fourier_norm_b = b
 
         super(SymmetricFourierTransform, self).__init__(nu=nu, N=N, h=h)
 
         self._x_power = self.ndim/2.
         self._k_power = self.ndim
-        self._norm = (2*np.pi) ** (self.ndim/2.)
+
+    def _fourier_norm(self,inverse=False):
+        """
+        Calculate fourier-pair normalisations.
+
+        Exactly based on http://mathworld.wolfram.com/FourierTransform.html, where the "inverse" is Eqn. 16, and the
+        "forward" transform is Eq. 15.
+        """
+        if inverse:
+            return np.sqrt(np.abs(self.fourier_norm_b)/(2*np.pi)**(1+self.fourier_norm_a))**self.ndim
+        else:
+            return np.sqrt(np.abs(self.fourier_norm_b)/(2*np.pi) ** (1 - self.fourier_norm_a))**self.ndim
+
+    def _norm(self,inverse=False):
+        """
+        The scalar normalisation of the transform, taking into account Fourier conventions and a possible inversion.
+        """
+        return (2*np.pi) ** (self.ndim/2.) * self._fourier_norm(inverse)
 
     # def transform(self, f, k=1, ret_err=True, ret_cumsum=False, inverse=False):
     #     """

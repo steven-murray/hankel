@@ -4,6 +4,19 @@ Changelog
 Development Version
 -------------------
 
+v0.3.1 [5 Jan 2017]
+-------------------
+**Bugfixes**
+
+- Fixed normalisation for inverse transform in ``SymmetricFourierTransform``.
+
+**Features**
+
+- Ability to set Fourier conventions arbitrarily in ``SymmetricFourierTransform``.
+
+
+v0.3.0 [4 Jan 2017]
+-------------------
 **Features**
 
 - New class `SymmetricFourierTransform` which makes it incredibly easy to do arbitrary *n*-dimensional
