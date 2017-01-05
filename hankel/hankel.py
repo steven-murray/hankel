@@ -269,8 +269,7 @@ class SymmetricFourierTransform(HankelTransform):
         """
         Calculate fourier-pair normalisations.
 
-        Exactly based on http://mathworld.wolfram.com/FourierTransform.html, where the "inverse" is Eqn. 16, and the
-        "forward" transform is Eq. 15.
+        See class documentation for details.
         """
         if inverse:
             return np.sqrt(np.abs(self.fourier_norm_b)/(2*np.pi)**(1+self.fourier_norm_a))**self.ndim
