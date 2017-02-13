@@ -1,4 +1,4 @@
-'''
+r'''
 General quadrature method for Hankel transformations.
 
 Based on the algorithm provided in
@@ -13,11 +13,11 @@ vol. 41, no. 4, pp. 949-970, 2005.
 
 import numpy as np
 from mpmath import fp as mpm
-from scipy.special import j0, j1, jn_zeros, jn, yv, jv
+from scipy.special import j0, j1, jn_zeros as _jn_zeros, jn, yv, jv
 
 
 class HankelTransform(object):
-    """
+    r"""
     The basis of the Hankel Transformation algorithm by Ogata 2005.
 
     This algorithm is used to solve the equation :math:`\int_0^\infty f(x) J_\nu(x) dx`
@@ -33,6 +33,7 @@ class HankelTransform(object):
 
     Parameters
     ----------
+
     nu : int or 0.5, optional, default = 0
         The order of the bessel function (of the first kind) J_nu(x)
 
@@ -78,7 +79,7 @@ class HankelTransform(object):
 
     def _roots(self, N):
         if isinstance(self._nu, int):
-            return jn_zeros(self._nu, N)/np.pi
+            return _jn_zeros(self._nu, N)/np.pi
         elif self._nu == 0.5:
             return np.arange(1, N + 1)
         else:
@@ -116,13 +117,13 @@ class HankelTransform(object):
 
     @staticmethod
     def _norm(self,inverse=False):
-        """
+        r"""
         Scalar normalisation of the transform. Identically 1.
         """
         return 1
 
     def transform(self, f, k=1, ret_err=True, ret_cumsum=False, inverse=False):
-        """
+        r"""
         Do the Hankel-transform of the function f.
 
         Parameters
@@ -189,11 +190,11 @@ class HankelTransform(object):
             return ret
 
     def integrate(self, f, ret_err=True, ret_cumsum=False):
-        """
+        r"""
         Do the Hankel-type integral of the function f.
 
         This is *not* the Hankel transform, but rather the simplified
-        integral, :math:`\int_0^\infty f(x) J_\nu(x) dx`, equivalent to the
+        integral, :math:`\int_0^\infty f(x) J_\nu(x) dx` , equivalent to the
         transform of :math:`f(r)/r` at *k=1*.
 
         Parameters
@@ -211,7 +212,7 @@ class HankelTransform(object):
 
 
 class SymmetricFourierTransform(HankelTransform):
-    """
+    r"""
     Determine the Fourier Transform of a radially symmetric function in arbitrary dimensions.
 
     Parameters
@@ -268,7 +269,7 @@ class SymmetricFourierTransform(HankelTransform):
         self._k_power = self.ndim
 
     def _fourier_norm(self,inverse=False):
-        """
+        r"""
         Calculate fourier-pair normalisations.
 
         See class documentation for details.
@@ -279,7 +280,23 @@ class SymmetricFourierTransform(HankelTransform):
             return np.sqrt(np.abs(self.fourier_norm_b)/(2*np.pi) ** (1 - self.fourier_norm_a))**self.ndim
 
     def _norm(self,inverse=False):
-        """
+        r"""
         The scalar normalisation of the transform, taking into account Fourier conventions and a possible inversion.
         """
         return (2*np.pi) ** (self.ndim/2.) * self._fourier_norm(inverse)
+
+
+    def transform(self, *args, **kwargs):
+        r"""
+        Do the *n*-symmetric Fourier transform of the function f.
+
+        Parameters and returns are precisely the same as :meth:`HankelTransform.transform`.
+
+        Notes
+        -----
+        The *n*-symmetric fourier transform is defined in terms of the Hankel transform as
+
+        .. math:: F(k) = \frac{(2\pi)^{n/2}}{k^{n/2-1}} \int_0^\infty r^{n/2-1} f(r) J_{n/2-1}(kr)r dr.
+
+        The inverse transform has an inverse normalisation.
+        """

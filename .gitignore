@@ -5,3 +5,5 @@ hankel.egg-info
 *idea
 *.pyc
 devel/.ipynb_checkpoints/*
+docs/_*
+docs/demos/.ipynb_checkpoints/*
