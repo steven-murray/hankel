@@ -300,3 +300,4 @@ class SymmetricFourierTransform(HankelTransform):
 
         The inverse transform has an inverse normalisation.
         """
+        return super(SymmetricFourierTransform,self).transform(*args,**kwargs)

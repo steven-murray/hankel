@@ -7,6 +7,7 @@ Development Version
 
 - Documentation! See it at https://hankel.readthedocs.io
 - Two new jupyter notebook demos (find them in the docs) by `@francispoulin <https://github.com/francispoulin>`_
+
 v0.3.1 [5 Jan 2017]
 -------------------
 **Bugfixes**
