@@ -110,9 +110,11 @@ class HankelTransform(object):
     def _f(self, f, x):
         return f(x)
 
-    def _k(self,k):
+    @staticmethod
+    def _k(k):
         return k
 
+    @staticmethod
     def _norm(self,inverse=False):
         """
         Scalar normalisation of the transform. Identically 1.
