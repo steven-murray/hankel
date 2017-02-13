@@ -1,0 +1,4 @@
+numpydoc
+nbsphinx
+ipykernel
+pandoc
