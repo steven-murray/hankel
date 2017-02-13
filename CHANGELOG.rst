@@ -3,7 +3,10 @@ Changelog
 
 Development Version
 -------------------
+**Enhancements**
 
+- Documentation! See it at https://hankel.readthedocs.io
+- Two new jupyter notebook demos (find them in the docs) by Francis Poulin (@francispoulin)
 v0.3.1 [5 Jan 2017]
 -------------------
 **Bugfixes**

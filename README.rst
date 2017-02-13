@@ -14,7 +14,7 @@ Ogata 2005.
 Hankel transforms and integrals are commonplace in any area in which
 Fourier Transforms are required over fields that
 are radially symmetric (see
-`Wikipedia <https://en.wikipedia.org/wiki/Hankel_transform>`__ for a
+`Wikipedia <https://en.wikipedia.org/wiki/Hankel_transform>`_ for a
 thorough description).
 They involve integrating an arbitrary function multiplied by a Bessel
 function of arbitrary order (of the first kind).
@@ -36,8 +36,7 @@ Either clone the repository at github.com/steven-murray/hankel and use
 ``python setup.py install``, or simply install
 using ``pip install hankel``.
 
-The only dependencies are [numpy](www.numpy.org), [scipy](www.scipy.org) and [mpmath](www.mpmath.org)
- (as of v0.2.0).
+The only dependencies are `numpy <www.numpy.org>`_, `scipy <www.scipy.org>`_ and `mpmath <www.mpmath.org>`_ (as of v0.2.0).
 
 Features
 --------
