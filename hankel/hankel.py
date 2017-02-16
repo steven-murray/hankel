@@ -235,11 +235,11 @@ class SymmetricFourierTransform(HankelTransform):
     We allow for arbitrary Fourier convention, according to the scheme in http://mathworld.wolfram.com/FourierTransform.html.
     That is, we define the forward and inverse *n*-dimensional transforms respectively as
 
-    .. math:: F(k) = \sqrt{\frac{|b|}{(2\pi)^{1-a}}}^n \int f(r) e^{i \mathbf{k}\cdot\mathbf{r}} d^n\mathbf{r}
+    .. math:: F(k) = \sqrt{\frac{|b|}{(2\pi)^{1-a}}}^n \int f(r) e^{i b\mathbf{k}\cdot\mathbf{r}} d^n\mathbf{r}
 
     and
 
-    .. math:: f(r) = \sqrt{\frac{|b|}{(2\pi)^{1+a}}}^n \int F(k) e^{-i \mathbf{k}\cdot\mathbf{r}} d^n \mathbf{k}.
+    .. math:: f(r) = \sqrt{\frac{|b|}{(2\pi)^{1+a}}}^n \int F(k) e^{-i b\mathbf{k}\cdot\mathbf{r}} d^n \mathbf{k}.
 
     By default, we set both *a* and *b* to 1, so that the forward transform has a normalisation of unity.
 
