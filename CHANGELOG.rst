@@ -8,6 +8,10 @@ Development Version
 - Documentation! See it at https://hankel.readthedocs.io
 - Two new jupyter notebook demos (find them in the docs) by `@francispoulin <https://github.com/francispoulin>`_
 
+**Bugfixes**
+- Fixed docstring of SymmetricFourierTransform to have correct Fourier convention equation
+- Fixed bug in choosing alternative conventions in which the fourier-dual variable was unchanged.
+
 v0.3.1 [5 Jan 2017]
 -------------------
 **Bugfixes**

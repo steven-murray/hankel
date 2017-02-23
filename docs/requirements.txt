@@ -1,4 +1,7 @@
 sphinx>=1.5.1
+numpy
+scipy
+mpmath
 numpydoc
 nbsphinx
 ipykernel

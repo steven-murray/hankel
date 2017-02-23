@@ -286,7 +286,7 @@ class SymmetricFourierTransform(HankelTransform):
         return (2*np.pi) ** (self.ndim/2.) * self._fourier_norm(inverse)
 
 
-    def transform(self, *args, **kwargs):
+    def transform(self, f, k, *args, **kwargs):
         r"""
         Do the *n*-symmetric Fourier transform of the function f.
 
@@ -300,4 +300,5 @@ class SymmetricFourierTransform(HankelTransform):
 
         The inverse transform has an inverse normalisation.
         """
-        return super(SymmetricFourierTransform,self).transform(*args,**kwargs)
+        k = self.fourier_norm_b * k
+        return super(SymmetricFourierTransform,self).transform(f,k,*args,**kwargs)
