@@ -1,14 +1,15 @@
 Changelog
 =========
 
-Development Version
--------------------
+v0.3.2 [12 July 2017]
+---------------------
 **Enhancements**
 
 - Documentation! See it at https://hankel.readthedocs.io
 - Two new jupyter notebook demos (find them in the docs) by `@francispoulin <https://github.com/francispoulin>`_
 
 **Bugfixes**
+- Fixed relative import in Python 3 (tests now passing), thanks to `@louity <https://github.com/louity>`_
 - Fixed docstring of SymmetricFourierTransform to have correct Fourier convention equation
 - Fixed bug in choosing alternative conventions in which the fourier-dual variable was unchanged.
 
