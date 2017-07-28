@@ -12,5 +12,6 @@ by looking at whatever is in the ``devel/`` directory at the time.
    :maxdepth: 2
 
    demos/getting_started
+   demos/paper_plots
+   demos/choosing_resolution_parameters
    demos/testing_forward_and_inverse_transforms
-   demos/forward_inverse_transform_hankel_vs_fft
