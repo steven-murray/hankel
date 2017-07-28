@@ -1,6 +1,18 @@
 Changelog
 =========
 
+v0.3.4 [28 July 2017]
+---------------------
+**Features**
+- Added get_h function to aide in determining optimal h value for a given transformation.
+
+**Enhancements**
+- Added _get_series method to quickly retrieve the summed series for the integration.
+- Two updated notebook examples.
+
+**Bugfixes**
+- Moved setting of N to avoid error.
+
 v0.3.3 [28 July 2017]
 ---------------------
 **Features**
