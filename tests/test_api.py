@@ -20,7 +20,7 @@ from hankel import HankelTransform, SymmetricFourierTransform
 def test_array_N():
     ht = HankelTransform(N=np.linspace(100,200,10))
 
-@raises(ValueError)
+@raises(TypeError)
 def test_array_h():
     ht = HankelTransform(h=np.logspace(-3, 0, 10))
 
