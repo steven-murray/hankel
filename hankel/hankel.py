@@ -47,6 +47,10 @@ class HankelTransform(object):
     """
 
     def __init__(self, nu=0, N=None, h=0.05):
+
+        if N is None:
+            N = int(3.2/h)
+
         if not np.isscalar(N):
             raise ValueError("N must be a scalar")
         if not np.isscalar(h):
@@ -54,8 +58,6 @@ class HankelTransform(object):
         if not np.isscalar(nu):
             raise ValueError("nu must be a scalar")
 
-        if N is None:
-            N = int(3.2/h)
 
         self._nu = nu
         self._h = h
@@ -126,6 +128,10 @@ class HankelTransform(object):
         """
         return 1
 
+    def _get_series(self, f, k=1):
+        fres = self._f(f, np.divide.outer(self.x, k).T)*self.x**self._x_power
+        return np.pi*self.w*fres*self.j*self.dpsi
+
     def transform(self, f, k=1, ret_err=True, ret_cumsum=False, inverse=False):
         r"""
         Do the Hankel-transform of the function f.
@@ -175,8 +181,7 @@ class HankelTransform(object):
         # The following renormalises by the fourier dual to some power
         knorm = k ** self._k_power
 
-        fres = self._f(f, np.divide.outer(self.x, k).T)*self.x**self._x_power
-        summation = np.pi*self.w*fres*self.j*self.dpsi
+        summation = self._get_series(f,k)
         ret = norm * np.sum(summation, axis=-1)/knorm
 
         if ret_err:
@@ -426,3 +431,103 @@ class SymmetricFourierTransform(HankelTransform):
             return (3.2/h)**((ndim-1)/2.) * f(3.2*np.pi/h/k)
 
 
+def get_h(f, nu, K=None, cls=HankelTransform, hstart=0.05, hdecrement=2,
+          atol=1e-3, rtol=1e-3, maxiter=15, inverse=False):
+    """
+    Determine the largest value of h which gives a converged solution.
+
+    Parameters
+    ----------
+    f : callable
+        The function to be integrated/transformed.
+    nu : float
+        Either the order of the transformation, or the number of dimensions (if `cls` is a :class:`SymmetricFourierTransform`)
+    K : float or array-like, optional
+        The scale(s) of the transformation. If None, assumes an integration over f(x)J_nu(x) is desired. It is
+        recommended to use a down-sampled K for this routine for efficiency. Often a min/max is enough.
+    cls : :class:`HankelTransform` subclass, optional
+        Either :class:`HankelTransform` or a subclass, specifying the type of transformation to do on `f`.
+    hstart : float, optional
+        The starting value of h.
+    hdecrement : float, optional
+        How much to divide h by on each iteration.
+    atol, rtol : float, optional
+        The tolerance parameters, passed to `np.isclose`, defining the stopping condition.
+    maxiter : int, optional
+        Maximum number of iterations to perform.
+    inverse : bool, optional
+        Whether to treat as an inverse transformation.
+
+    Returns
+    -------
+    h : float
+        The h value at which the solution converges.
+    res : scalar or tuple
+        The value of the integral/transformation using the returned h -- if a transformation, returns results at K.
+    N : int
+        The number of nodes necessary in the final calculation. While each iteration uses N=3.2/h, the returned N checks
+        whether nodes are numerically zero above some threshold.
+
+    Notes
+    -----
+    This function is not completely general. The function `f` is assumed to be reasonably smooth and non-oscillatory.
+
+    """
+
+    # First, ensure that *some* of the values are non-zero
+    i = 0
+    while np.any(np.all(cls(nu, h=hstart, N=int(3.2 / hstart))._get_series(f, 1 if K is None else K) == 0,
+                        axis=-1)) and i < maxiter:
+        hstart /= hdecrement
+        i += 1
+
+    if K is None:  # Do a normal integral of f(x)J_nu(x)
+
+        # First ensure that the derivative of G(h) is negative
+        while cls.deltaG(f, hstart) > 0:
+            hstart /= hdecrement
+
+        K = 1
+
+        def getres(h):
+            return cls(nu, h=h, N=int(3.2 / h)).transform(lambda x: f(x) / x, k=K, ret_err=False, inverse=inverse)
+
+    else:  # Do a transform at k=K
+        while np.any(cls.deltaG(f, hstart, K, nu) > 0):
+            hstart /= hdecrement
+
+        def getres(h):
+            return cls(nu, h=h, N=int(3.2 / h)).transform(f, k=K, ret_err=False, inverse=inverse)
+
+    res = getres(hstart)
+    res2 = 2 * res + 10
+    i = 0
+
+    while not np.allclose(res, res2) and i < maxiter:
+        i += 1
+        hstart /= hdecrement
+        res2 = 1 * res
+        res = getres(hstart)
+
+    if i == maxiter:
+        raise Exception("Maxiter reached")
+
+    # Can do some more trimming of N potentially, by seeing where f(x)~0.
+    def consecutive(data, stepsize=1):
+        return np.split(data, np.where(np.diff(data) != stepsize)[0] + 1)
+
+    hstart *= hdecrement
+
+    x = cls(nu, h=hstart, N=int(3.2 / hstart)).x
+    lastk = np.where(f(x / np.max(K)) == 0)[0]
+    if len(
+            lastk) > 1:  # if there are any that are zero, and if there are more than 1 in a row (otherwise might just be oscillatory)
+        lastk = consecutive(lastk)  # split into arrays of consecutive zeros
+        if len(lastk[-1]) == 1:
+            lastk = int(3.2 / hstart)
+        else:
+            lastk = lastk[-1][0]
+    else:  # otherwise set back to N
+        lastk = int(3.2 / hstart)
+
+    return hstart, res2, lastk
