@@ -1,6 +1,18 @@
 Changelog
 =========
 
+v0.3.3 [28 July 2017]
+---------------------
+**Features**
+- Some additional tools to determine accuracy -- quick calculation of last term in sum, and evaluated range.
+
+**Enhancements**
+- Default setting of N=3.2/h, which is the maximum possible N that should be chosen, as above this, the series truncates
+  due to the double-exponential convergence to the roots of the Bessel function.
+
+**Bugfixes**
+- Fixed error in cumulative sum when k is not scalar.
+
 v0.3.2 [12 July 2017]
 ---------------------
 **Enhancements**

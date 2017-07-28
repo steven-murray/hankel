@@ -37,21 +37,25 @@ class HankelTransform(object):
     nu : int or 0.5, optional, default = 0
         The order of the bessel function (of the first kind) J_nu(x)
 
-    N : int, optional, default = 100
+    N : int, optional, default = 3.2/`h`
         The number of nodes in the calculation. Generally this must increase
-        for a smaller value of the step-size h.
+        for a smaller value of the step-size h. Default value is based on where the series will truncate according
+        to the double-exponential convergence to the roots of the Bessel function.
 
     h : float, optional, default = 0.1
         The step-size of the integration.
     """
 
-    def __init__(self, nu=0, N=200, h=0.05):
+    def __init__(self, nu=0, N=None, h=0.05):
         if not np.isscalar(N):
             raise ValueError("N must be a scalar")
         if not np.isscalar(h):
             raise ValueError("h must be a scalar")
         if not np.isscalar(nu):
             raise ValueError("nu must be a scalar")
+
+        if N is None:
+            N = int(3.2/h)
 
         self._nu = nu
         self._h = h
@@ -178,7 +182,7 @@ class HankelTransform(object):
         if ret_err:
             err = norm * np.take(summation, -1, axis=-1)/knorm
         if ret_cumsum:
-            cumsum = norm * np.divide.outer(np.cumsum(summation, axis=-1),knorm)
+            cumsum = norm * np.cumsum(summation, axis=-1).T/knorm
 
         if ret_err and ret_cumsum:
             return ret, err, cumsum
@@ -210,6 +214,73 @@ class HankelTransform(object):
         """
         return self.transform(f=lambda x: f(x)/x, k=1, ret_err=ret_err, ret_cumsum=ret_cumsum, inverse=False)
 
+    def xrange(self, k=1):
+        """
+        Tuple giving (min,max) x value evaluated by f(x).
+
+        Parameters
+        ----------
+        k : array-like, optional
+            Scales for the transformation. Leave as 1 for an integral.
+
+        See Also
+        --------
+        See :meth:`xrange_approx` for an approximate version of this method which is a classmethod.
+        """
+        return np.array([self.x.min()/np.max(k), self.x.max()/np.min(k)])
+
+    @classmethod
+    def xrange_approx(cls, h, nu, k=1):
+        """
+        Tuple giving approximate (min,max) x value evaluated by f(x/k).
+
+        Operates under the assumption that N = 3.2/h.
+
+        Parameters
+        ----------
+        h : float
+            The resolution parameter of the Hankel integration
+        nu : float
+            Order of the integration/transform
+        k : array-like, optional
+            Scales for the transformation. Leave as 1 for an integral.
+
+        See Also
+        --------
+        See :meth:`xrange` (instance method) for the actual x-range under a given choice of parameters.
+        """
+        r = mpm.besseljzero(nu, 1)/np.pi
+        return np.array([np.pi**2*h*r**2/2/k, np.pi*3.2/h/k])
+
+    @classmethod
+    def G(cls, f, h, k=None, *args,**kwargs):
+        """
+        The absolute value of the non-oscillatory  of the summed series' last term, up to a scaling constant.
+
+        This can be used to get the sign of the slope of G with h.
+
+        Parameters
+        ----------
+        f : callable
+            The function to integrate/transform
+        h : float
+            The resolution parameter of the hankel integration
+        k : float or array-like, optional
+            The scale at which to evaluate the transform. If None, assume an integral.
+
+        Returns
+        -------
+        The value of G.
+        """
+        if k is None:
+            return np.sqrt(2*h/3.2) * f(3.2*np.pi/h)
+        else:
+            return np.sqrt(3.2/(2*h)) * f(3.2*np.pi/h/k)
+
+    @classmethod
+    def deltaG(cls, f,h, *args, **kwargs):
+        "The slope (up to a constant) of the last term of the series with h"
+        return cls.G(f,h,*args,**kwargs) - cls.G(f,h/1.1,*args,**kwargs)
 
 class SymmetricFourierTransform(HankelTransform):
     r"""
@@ -302,3 +373,56 @@ class SymmetricFourierTransform(HankelTransform):
         """
         k = self.fourier_norm_b * k
         return super(SymmetricFourierTransform,self).transform(f,k,*args,**kwargs)
+
+    @classmethod
+    def xrange_approx(cls, h, ndim, k=1):
+        """
+        Tuple giving approximate (min,max) x value evaluated by f(x/k).
+
+        Operates under the assumption that N = 3.2/h.
+
+        Parameters
+        ----------
+        h : float
+            The resolution parameter of the Hankel integration
+
+        ndim : float
+            Number of dimensions of the transform.
+
+        k : array-like, optional
+            Scales for the transformation. Leave as 1 for an integral.
+
+        See Also
+        --------
+        See :meth:`xrange` (instance method) for the actual x-range under a given choice of parameters.
+        """
+        return HankelTransform.xrange_approx(h, ndim/2.-1, k)
+
+    @classmethod
+    def G(self, f, h, k=None, ndim=2):
+        """
+        The absolute value of the non-oscillatory  of the summed series' last term, up to a scaling constant.
+
+        This can be used to get the sign of the slope of G with h.
+
+        Parameters
+        ----------
+        f : callable
+            The function to integrate/transform
+        h : float
+            The resolution parameter of the hankel integration
+        k : float or array-like, optional
+            The scale at which to evaluate the transform. If None, assume an integral.
+        ndim : float
+            The number of dimensions of the transform
+
+        Returns
+        -------
+        The value of G.
+        """
+        if k is None:
+            return HankelTransform.G(f, h, k)
+        else:
+            return (3.2/h)**((ndim-1)/2.) * f(3.2*np.pi/h/k)
+
+
