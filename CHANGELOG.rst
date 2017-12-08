@@ -1,6 +1,11 @@
 Changelog
 =========
 
+v0.3.5 [8 Dec 2017]
+-------------------
+**Bugfixes**
+- Fixed Python 3 support from v0.3.4
+
 v0.3.4 [28 July 2017]
 ---------------------
 **Features**
