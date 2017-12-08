@@ -287,6 +287,7 @@ class HankelTransform(object):
         "The slope (up to a constant) of the last term of the series with h"
         return cls.G(f,h,*args,**kwargs) - cls.G(f,h/1.1,*args,**kwargs)
 
+
 class SymmetricFourierTransform(HankelTransform):
     r"""
     Determine the Fourier Transform of a radially symmetric function in arbitrary dimensions.
