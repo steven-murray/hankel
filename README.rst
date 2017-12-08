@@ -26,8 +26,8 @@ locating the zeros of the Bessel function.
 Quicklinks
 ----------
 
-- **Documentation:** `<https://hankel.readthedocs.io>`__
-- **Quickstart+Description:** `Getting Started <https://hankel.readthedocs.io/demos/getting_started>`__
+- **Documentation:** `<https://hankel.readthedocs.io>`_
+- **Quickstart+Description:** `Getting Started <https://hankel.readthedocs.io/en/latest/demos/getting_started.html>`_
 
 Installation
 ------------
