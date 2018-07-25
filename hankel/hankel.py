@@ -88,6 +88,8 @@ class HankelTransform(object):
             return _jn_zeros(self._nu, N)/np.pi
         elif self._nu == 0.5:
             return np.arange(1, N + 1)
+        elif self._nu == -0.5:
+            return np.arange(1, N + 1) - 0.5
         else:
             return np.array([mpm.besseljzero(self._nu, i + 1) for i in range(N)])/np.pi
 
