@@ -15,6 +15,7 @@ Contents
    example_toc
    license
    changelog
+   authors
    api
 
 
