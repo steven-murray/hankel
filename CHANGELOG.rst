@@ -1,33 +1,46 @@
 Changelog
 =========
 
+v0.3.6 [6 Aug 2018]
+-------------------
+**Enhancements**
+
+- Added support for transforms with ``nu=-0.5`` (thanks `@MuellerSeb <https://github.com/MuellerSeb>`
+
 v0.3.5 [8 Dec 2017]
 -------------------
 **Bugfixes**
+
 - Fixed Python 3 support from v0.3.4
 
 v0.3.4 [28 July 2017]
 ---------------------
 **Features**
+
 - Added get_h function to aide in determining optimal h value for a given transformation.
 
 **Enhancements**
+
 - Added _get_series method to quickly retrieve the summed series for the integration.
 - Two updated notebook examples.
 
 **Bugfixes**
+
 - Moved setting of N to avoid error.
 
 v0.3.3 [28 July 2017]
 ---------------------
 **Features**
+
 - Some additional tools to determine accuracy -- quick calculation of last term in sum, and evaluated range.
 
 **Enhancements**
+
 - Default setting of N=3.2/h, which is the maximum possible N that should be chosen, as above this, the series truncates
   due to the double-exponential convergence to the roots of the Bessel function.
 
 **Bugfixes**
+
 - Fixed error in cumulative sum when k is not scalar.
 
 v0.3.2 [12 July 2017]
@@ -38,6 +51,7 @@ v0.3.2 [12 July 2017]
 - Two new jupyter notebook demos (find them in the docs) by `@francispoulin <https://github.com/francispoulin>`_
 
 **Bugfixes**
+
 - Fixed relative import in Python 3 (tests now passing), thanks to `@louity <https://github.com/louity>`_
 - Fixed docstring of SymmetricFourierTransform to have correct Fourier convention equation
 - Fixed bug in choosing alternative conventions in which the fourier-dual variable was unchanged.
