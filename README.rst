@@ -5,9 +5,10 @@ hankel
    :target: https://travis-ci.org/steven-murray/hankel
 .. image:: https://coveralls.io/repos/github/steven-murray/hankel/badge.svg?branch=master
    :target: https://coveralls.io/github/steven-murray/hankel?branch=master
-.. image:: https://img.shields.io/pypi/v/hankel.svg
 .. image:: https://zenodo.org/badge/19090866.svg
    :target: https://zenodo.org/badge/latestdoi/19090866
+.. image:: https://img.shields.io/pypi/v/hankel.svg
+
 
 Perform simple and accurate Hankel transformations using the method of
 Ogata 2005.
