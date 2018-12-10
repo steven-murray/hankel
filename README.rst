@@ -8,7 +8,8 @@ hankel
 .. image:: https://zenodo.org/badge/19090866.svg
    :target: https://zenodo.org/badge/latestdoi/19090866
 .. image:: https://img.shields.io/pypi/v/hankel.svg
-
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/ambv/black
 
 Perform simple and accurate Hankel transformations using the method of
 Ogata 2005.
