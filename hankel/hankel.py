@@ -10,6 +10,7 @@ vol. 41, no. 4, pp. 949-970, 2005.
 # TODO: Suppress warnings on overflows
 # TODO: Write tests
 # TODO: Profile.
+from __future__ import division
 
 import numpy as np
 from mpmath import fp as mpm
@@ -93,10 +94,10 @@ class HankelTransform(object):
     def _roots(self, N):
         if isinstance(self._nu, int):
             return _jn_zeros(self._nu, N) / np.pi
-        elif self._nu == 0.5:
+        elif np.isclose(self._nu, 0.5):
             # J[0.5] = sqrt(2/(x*pi))*sin(x)
             return np.arange(1, N + 1)
-        elif self._nu == -0.5:
+        elif np.isclose(self._nu, -0.5):
             # J[-0.5] = sqrt(2/(x*pi))*cos(x)
             return np.arange(1, N + 1) - 0.5
         else:
@@ -374,8 +375,9 @@ class SymmetricFourierTransform(HankelTransform):
     """
 
     def __init__(self, ndim=2, a=1, b=1, N=200, h=0.05):
-        if ndim % 2 == 0:
-            nu = ndim / 2 - 1
+        # keep int-type in python 3
+        if np.isclose(ndim % 2, 0):
+            nu = int(ndim) // 2 - 1
         else:
             nu = ndim / 2.0 - 1
 
