@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v0.3.7 [11 Dec 2018]
+--------------------
+**Bugfixes**
+
+- Fixed issue in Py3 in which dim=2 would not run the fast function (thanks `@MuellerSeb <https://github.com/MuellerSeb>`
+
 v0.3.6 [6 Aug 2018]
 -------------------
 **Enhancements**
