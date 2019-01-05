@@ -79,10 +79,21 @@ class HankelTransform(object):
         return t * np.tanh(np.pi * y / 2)
 
     def _d_psi(self, t):
-        a = (np.pi * t * np.cosh(t) + np.sinh(np.pi * np.sinh(t))) / (
-            1.0 + np.cosh(np.pi * np.sinh(t))
-        )
-        a[np.isnan(a)] = 1.0
+        a = np.ones_like(t)
+        mask = t < 6
+        t = t[mask]
+        a[mask] = (np.pi * t * np.cosh(t) + np.sinh(np.pi * np.sinh(t))) / (
+                1.0 + np.cosh(np.pi * np.sinh(t))
+            )
+
+        # a[t<6] = (np.pi * t * np.cosh(t) + np.sinh(np.pi * np.sinh(t))) / (
+        #         1.0 + np.cosh(np.pi * np.sinh(t))
+        #     )
+        # with warnings.catch_warnings():
+        #     warnings.simplefilter("ignore")
+        #     a =
+        #
+        # a[np.isnan(a)] = 1.0
         return a
 
     def _weight(self):
