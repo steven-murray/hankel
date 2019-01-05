@@ -23,7 +23,7 @@ class HankelTransform(object):
     This algorithm is used to solve the equation
     :math:`\int_0^\infty f(x) J_\nu(x) dx`
     where :math:`J_\nu(x)` is a Bessel function of the first kind of order
-    :math:`nu`, and :math:`f(x)` is an arbitrary (slowly-decaying) function.
+    :math:`\nu`, and :math:`f(x)` is an arbitrary (slowly-decaying) function.
 
     The algorithm is presented in
     H. Ogata, A Numerical Integration Formula Based on the Bessel Functions,
@@ -36,24 +36,24 @@ class HankelTransform(object):
     Parameters
     ----------
 
-    nu : int or 0.5, optional, default = 0
+    nu : scalar, optional
         The order of the bessel function (of the first kind) J_nu(x)
 
-    N : int, optional, default = 3.2/`h`
+    N : int, optional, default = ``pi/h``
         The number of nodes in the calculation. Generally this must increase
         for a smaller value of the step-size h. Default value is based on where
         the series will truncate according
         to the double-exponential convergence to
         the roots of the Bessel function.
 
-    h : float, optional, default = 0.1
+    h : float, optional
         The step-size of the integration.
     """
 
     def __init__(self, nu=0, N=None, h=0.05):
 
         if N is None:
-            N = int(3.2 / h)
+            N = int(np.pi / h)
 
         if not np.isscalar(N):
             raise ValueError("N must be a scalar")
@@ -278,11 +278,10 @@ class HankelTransform(object):
 
         See Also
         --------
-        See :meth:`xrange` (instance method) for the actual x-range
-        under a given choice of parameters.
+        xrange: the actual x-range under a given choice of parameters.
         """
         r = mpm.besseljzero(nu, 1) / np.pi
-        return np.array([np.pi ** 2 * h * r ** 2 / 2 / k, np.pi * 3.2 / h / k])
+        return np.array([np.pi ** 2 * h * r ** 2 / 2 / k, np.pi * np.pi / h / k])
 
     @classmethod
     def G(cls, f, h, k=None, *args, **kwargs):
@@ -461,15 +460,14 @@ class SymmetricFourierTransform(HankelTransform):
 
         See Also
         --------
-        See :meth:`xrange` (instance method)
-        for the actual x-range under a given choice of parameters.
+        xrange:  the actual x-range under a given choice of parameters.
         """
         return HankelTransform.xrange_approx(h, ndim / 2.0 - 1, k)
 
     @classmethod
     def G(self, f, h, k=None, ndim=2):
         """
-        The absolute value of the non-oscillatory
+        The absolute value of the non-oscillatory part
         of the summed series' last term, up to a scaling constant.
 
         This can be used to get the sign of the slope of G with h.
@@ -547,25 +545,22 @@ def get_h(
         if a transformation, returns results at K.
     N : int
         The number of nodes necessary in the final calculation.
-        While each iteration uses N=3.2/h, the returned N checks
+        While each iteration uses N=pi/h, the returned N checks
         whether nodes are numerically zero above some threshold.
 
     Notes
     -----
-    This function is not completely general.
-    The function `f` is assumed to be reasonably smooth and non-oscillatory.
+    This function is not completely general. The function `f` is assumed to be reasonably smooth and non-oscillatory.
 
+    The idea is to use successively smaller values of *h*, with N=pi/h on each iteration, until the result between
+    iterations becomes stable.
     """
-
     # First, ensure that *some* of the values are non-zero
     i = 0
     while (
         np.any(
             np.all(
-                cls(nu, h=hstart, N=int(3.2 / hstart))._get_series(
-                    f, 1 if K is None else K
-                )
-                == 0,
+                cls(nu, h=hstart, N=int(np.pi / hstart))._get_series(f, 1 if K is None else K) == 0,
                 axis=-1,
             )
         )
