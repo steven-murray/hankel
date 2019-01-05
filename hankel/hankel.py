@@ -580,42 +580,36 @@ def get_h(
         hstart /= hdecrement
         i += 1
 
+    if i == maxiter:
+        raise Exception("Maxiter reached while checking for non-zero values")
+
     if K is None:  # Do a normal integral of f(x)J_nu(x)
-
-        # First ensure that the derivative of G(h) is negative
-        while cls.deltaG(f, hstart) > 0:
-            hstart /= hdecrement
-
         K = 1
 
         def getres(h):
             """dummy function to get the result"""
-            return cls(nu, h=h, N=int(3.2 / h)).transform(
+            return cls(nu, h=h, N=int(np.pi / h)).transform(
                 lambda x: f(x) / x, k=K, ret_err=False, inverse=inverse
             )
 
     else:  # Do a transform at k=K
-        while np.any(cls.deltaG(f, hstart, K, nu) > 0):
-            hstart /= hdecrement
-
         def getres(h):
             """dummy function to get the result"""
-            return cls(nu, h=h, N=int(3.2 / h)).transform(
+            return cls(nu, h=h, N=int(np.pi / h)).transform(
                 f, k=K, ret_err=False, inverse=inverse
             )
 
     res = getres(hstart)
     res2 = 2 * res + 10
-    i = 0
 
-    while not np.allclose(res, res2) and i < maxiter:
+    while not np.allclose(res, res2, atol=atol, rtol=rtol) and i < maxiter:
         i += 1
         hstart /= hdecrement
         res2 = 1 * res
         res = getres(hstart)
 
     if i == maxiter:
-        raise Exception("Maxiter reached")
+        raise Exception("Maxiter reached while checking convergence")
 
     # Can do some more trimming of N potentially, by seeing where f(x)~0.
     def consecutive(data, stepsize=1):
