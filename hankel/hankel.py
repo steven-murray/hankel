@@ -102,7 +102,7 @@ class HankelTransform(object):
         )
 
     def _roots(self, N):
-        if isinstance(self._nu, int):
+        if np.floor(self._nu) == self._nu:
             return _jn_zeros(self._nu, N) / np.pi
         elif np.isclose(self._nu, 0.5):
             # J[0.5] = sqrt(2/(x*pi))*sin(x)
@@ -121,7 +121,7 @@ class HankelTransform(object):
             return j0(x)
         elif self._nu == 1:
             return j1(x)
-        elif isinstance(self._nu, int):
+        elif np.floor(self._nu) == self._nu:
             return jn(self._nu, x)
         else:
             return jv(self._nu, x)
@@ -131,7 +131,7 @@ class HankelTransform(object):
             return j0(x)
         elif self._nu == 0:
             return j1(x)
-        elif isinstance(self._nu, int):
+        elif np.floor(self._nu) == self._nu:
             return jn(self._nu + 1, x)
         else:
             return jv(self._nu + 1, x)
