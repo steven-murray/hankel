@@ -8,9 +8,8 @@ vol. 41, no. 4, pp. 949-970, 2005.
 """
 
 # TODO: Suppress warnings on overflows
-# TODO: Write tests
-# TODO: Profile.
-from __future__ import division
+from __future__ import division, absolute_import
+from builtins import super
 
 import numpy as np
 from mpmath import fp as mpm
@@ -385,7 +384,7 @@ class SymmetricFourierTransform(HankelTransform):
         self.fourier_norm_a = a
         self.fourier_norm_b = b
 
-        super(SymmetricFourierTransform, self).__init__(nu=nu, N=N, h=h)
+        super().__init__(nu=nu, N=N, h=h)
 
         self._x_power = self.ndim / 2.0
         self._k_power = self.ndim
@@ -438,7 +437,7 @@ class SymmetricFourierTransform(HankelTransform):
         The inverse transform has an inverse normalisation.
         """
         k = self.fourier_norm_b * k
-        return super(SymmetricFourierTransform, self).transform(
+        return super().transform(
             f, k, *args, **kwargs
         )
 
