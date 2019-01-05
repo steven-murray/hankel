@@ -317,9 +317,9 @@ class HankelTransform(object):
         The value of G.
         """
         if k is None:
-            return np.sqrt(2 * h / 3.2) * f(3.2 * np.pi / h)
+            return np.sqrt(2 * h / np.pi) * f(np.pi * np.pi / h)
         else:
-            return np.sqrt(3.2 / (2 * h)) * f(3.2 * np.pi / h / k)
+            return np.sqrt(np.pi / (2 * h)) * f(np.pi * np.pi / h / k)
 
     @classmethod
     def deltaG(cls, f, h, *args, **kwargs):
@@ -502,7 +502,7 @@ class SymmetricFourierTransform(HankelTransform):
         if k is None:
             return HankelTransform.G(f, h, k)
         else:
-            return (3.2 / h) ** ((ndim - 1) / 2.0) * f(3.2 * np.pi / h / k)
+            return (np.pi / h) ** ((ndim - 1) / 2.0) * f(np.pi**2 / h / k)
 
 
 def get_h(
@@ -624,7 +624,7 @@ def get_h(
 
     hstart *= hdecrement
 
-    x = cls(nu, h=hstart, N=int(3.2 / hstart)).x
+    x = cls(nu, h=hstart, N=int(np.pi / hstart)).x
     lastk = np.where(f(x / np.max(K)) == 0)[0]
     if len(lastk) > 1:
         # if there are any that are zero,
@@ -632,10 +632,10 @@ def get_h(
         # (otherwise might just be oscillatory)
         lastk = consecutive(lastk)  # split into arrays of consecutive zeros
         if len(lastk[-1]) == 1:
-            lastk = int(3.2 / hstart)
+            lastk = int(np.pi / hstart)
         else:
             lastk = lastk[-1][0]
     else:  # otherwise set back to N
-        lastk = int(3.2 / hstart)
+        lastk = int(np.pi / hstart)
 
     return hstart, res2, lastk
