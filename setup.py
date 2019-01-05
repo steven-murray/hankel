@@ -30,9 +30,13 @@ if sys.argv[-1] == "publish":
     os.system("twine upload dist/*")
     sys.exit()
 
+req = ["numpy>=1.6.1", "scipy>=0.12.0", "mpmath>=0.18"]
+if sys.version < '3':
+    req += ['future']
+
 setup(
     name="hankel",
-    install_requires=["numpy>=1.6.1", "scipy>=0.12.0", "mpmath>=0.18"],
+    install_requires=req,
     version=find_version("hankel", "__init__.py"),
     packages=["hankel"],
     description="Hankel Transformations using method of Ogata 2005",
