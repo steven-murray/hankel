@@ -5,13 +5,13 @@ v0.3.7 [11 Dec 2018]
 --------------------
 **Bugfixes**
 
-- Fixed issue in Py3 in which dim=2 would not run the fast function (thanks `@MuellerSeb <https://github.com/MuellerSeb>`
+- Fixed issue in Py3 in which dim=2 would not run the fast function (thanks `@MuellerSeb <https://github.com/MuellerSeb>`_)
 
 v0.3.6 [6 Aug 2018]
 -------------------
 **Enhancements**
 
-- Added support for transforms with ``nu=-0.5`` (thanks `@MuellerSeb <https://github.com/MuellerSeb>`
+- Added support for transforms with ``nu=-0.5`` (thanks `@MuellerSeb <https://github.com/MuellerSeb>`_)
 
 v0.3.5 [8 Dec 2017]
 -------------------

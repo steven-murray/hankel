@@ -27,6 +27,16 @@ quadrature method used in this package provides a fast and accurate
 way of performing the integration based on
 locating the zeros of the Bessel function.
 
+Features
+--------
+
+-  Accurate and fast solutions to many Hankel integrals
+-  Easy to use and re-use
+-  Arbitrary order transforms
+-  Built-in support for radially symmetric Fourier Transforms
+-  Thoroughly tested.
+-  Python 2 and 3 compatible.
+
 Quicklinks
 ----------
 
@@ -39,15 +49,7 @@ Either clone the repository at github.com/steven-murray/hankel and use
 ``python setup.py install``, or simply install
 using ``pip install hankel``.
 
-The only dependencies are `numpy <www.numpy.org>`_, `scipy <www.scipy.org>`_ and `mpmath <www.mpmath.org>`_ (as of v0.2.0).
-
-Features
---------
-
--  Accurate and fast solutions to many Hankel integrals
--  Easy to use and re-use
--  Arbitrary order transforms
--  Built-in support for radially symmetric Fourier Transforms
+The only dependencies are `numpy <www.numpy.org>`_, `scipy <www.scipy.org>`_ and `mpmath <www.mpmath.org>`_.
 
 
 References
