@@ -7,3 +7,5 @@ hankel.egg-info
 devel/.ipynb_checkpoints/*
 docs/_*
 docs/demos/.ipynb_checkpoints/*
+.tox/*
+\.coverage

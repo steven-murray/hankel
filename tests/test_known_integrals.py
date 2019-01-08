@@ -131,13 +131,9 @@ def test_nu_varying_powerlaw(s, nu, N, h):
 @pytest.mark.parametrize(
     's, nu, N, h',
     [
-        [0, 1, 50, 0.05],
-        [0, 2, 50, 0.05],
         [0.5, 1, 50, 0.05],
-        [-2, 2, 600, 10 ** -2.6],  # This is pretty finnicky
-        [-0.783, 1, 50, 0.05],
-        [1.0, 0.5, 150, 0.05],
-        [-1., 0.5, 50, 0.05],
+        [0.783, 1, 50, 0.05],
+        [1.0, 0.5, 500, 0.01],
     ]
 )
 def test_nu_varying_gamma_mod(s, nu, N, h):

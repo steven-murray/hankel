@@ -292,7 +292,8 @@ class HankelTransform(object):
         xrange: the actual x-range under a given choice of parameters.
         """
         r = mpm.besseljzero(nu, 1) / np.pi
-        return np.array([np.pi ** 2 * h * r ** 2 / 2 / k, np.pi * np.pi / h / k])
+        return np.array([np.pi ** 2 * h * r ** 2 / 2 / k,
+                         np.pi * np.pi / h / k])
 
     @classmethod
     def G(cls, f, h, k=None, *args, **kwargs):
@@ -561,17 +562,20 @@ def get_h(
 
     Notes
     -----
-    This function is not completely general. The function `f` is assumed to be reasonably smooth and non-oscillatory.
+    This function is not completely general. The function `f` is assumed to be
+    reasonably smooth and non-oscillatory.
 
-    The idea is to use successively smaller values of *h*, with N=pi/h on each iteration, until the result between
-    iterations becomes stable.
+    The idea is to use successively smaller values of *h*, with N=pi/h on each
+    iteration, until the result betweeniterations becomes stable.
     """
     # First, ensure that *some* of the values are non-zero
     i = 0
     while (
         np.any(
             np.all(
-                cls(nu, h=hstart, N=int(np.pi / hstart))._get_series(f, 1 if K is None else K) == 0,
+                cls(nu, h=hstart, N=int(np.pi / hstart))._get_series(
+                    f, 1 if K is None else K
+                ) == 0,
                 axis=-1,
             )
         )
