@@ -5,33 +5,25 @@ That is, it tests stuff like whether one can input scalars/arrays, and whether t
 number of entries etc.
 '''
 
-import inspect
 import numpy as np
-import os
+import pytest
 
-LOCATION = "/".join(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))).split("/")[:-1])
-import sys
-
-sys.path.insert(0, LOCATION)
-
-from nose.tools import raises
-
-from hankel import HankelTransform, SymmetricFourierTransform
+from hankel import HankelTransform
 
 
-@raises(ValueError)
 def test_array_N():
-    ht = HankelTransform(N=np.linspace(100, 200, 10))
+    with pytest.raises(ValueError):
+        HankelTransform(N=np.linspace(100, 200, 10))
 
 
-@raises(TypeError)
 def test_array_h():
-    ht = HankelTransform(h=np.logspace(-3, 0, 10))
+    with pytest.raises(TypeError):
+        HankelTransform(h=np.logspace(-3, 0, 10))
 
 
-@raises(ValueError)
 def test_array_nu():
-    ht = HankelTransform(nu=np.linspace(0, 1, 2))
+    with pytest.raises(ValueError):
+        HankelTransform(nu=np.linspace(0, 1, 2))
 
 
 def test_k_array():

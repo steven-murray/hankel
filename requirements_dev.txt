@@ -1,0 +1,12 @@
+pip
+wheel==0.31.0
+flake8==2.6.0
+tox==3.0.0
+coverage==4.5.1
+cryptography==2.3
+PyYAML==3.12
+pluggy==0.6.0
+pytest==3.5.1
+pytest-runner==4.2
+pytest-cov==2.5.1
+coveralls
