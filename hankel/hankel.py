@@ -457,7 +457,7 @@ class SymmetricFourierTransform(HankelTransform):
         """
         Tuple giving approximate (min,max) x value evaluated by f(x/k).
 
-        Operates under the assumption that N = 3.2/h.
+        Operates under the assumption that N = pi/h.
 
         Parameters
         ----------
@@ -503,7 +503,8 @@ class SymmetricFourierTransform(HankelTransform):
         if k is None:
             return HankelTransform.G(f, h, k)
         else:
-            return (np.pi / h) ** ((ndim - 1) / 2.0) * f(np.pi**2 / h / k)
+            fmax = f(self.xrange_approx(h, ndim, k)[-1])
+            return (np.pi / h) ** ((ndim - 1) / 2.0) * fmax
 
 
 def get_h(
@@ -568,6 +569,10 @@ def get_h(
     The idea is to use successively smaller values of *h*, with N=pi/h on each
     iteration, until the result betweeniterations becomes stable.
     """
+
+    if hstart >= 1:
+        raise ValueError("h should never be greater than unity")
+
     # First, ensure that *some* of the values are non-zero
     i = 0
     while (
@@ -611,6 +616,7 @@ def get_h(
         hstart /= hdecrement
         res2 = 1 * res
         res = getres(hstart)
+        print(res)
 
     if i == maxiter:
         raise Exception("Maxiter reached while checking convergence")

@@ -9,3 +9,5 @@ docs/_*
 docs/demos/.ipynb_checkpoints/*
 .tox/*
 \.coverage
+
+htmlcov/
