@@ -1,6 +1,21 @@
 Changelog
 =========
 
+v0.3.8 [08 Jan 2019]
+--------------------
+**Enhancements**
+
+- Swapped to pytest from nose for all testing
+- Removed warnings of overflow for cosh and sinh functions
+- Improved documentation in many areas.
+- Swapped out default 3.2/h for pi/h, which sounds way cooler :-)
+
+**Bugfixes**
+
+- Fixed an error in tests such that the wrong analytic function was being tested.
+- Removed a check for deltaG in get_h, which sometimes fails spectacularly.
+
+
 v0.3.7 [11 Dec 2018]
 --------------------
 **Bugfixes**

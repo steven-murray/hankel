@@ -31,4 +31,4 @@ from hankel.hankel import HankelTransform, SymmetricFourierTransform, get_h
 
 __all__ = ["HankelTransform", "SymmetricFourierTransform", "get_h"]
 
-__version__ = "0.3.7"
+__version__ = "0.3.8"
