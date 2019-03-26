@@ -1,6 +1,12 @@
 Changelog
 =========
 
+dev
+---
+**Bugfixes**
+
+- Fixed SymmetricFourierTransform default N to be dynamic, like HankelTransform.
+
 v0.3.8 [08 Jan 2019]
 --------------------
 **Enhancements**
