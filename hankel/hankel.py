@@ -384,7 +384,7 @@ class SymmetricFourierTransform(HankelTransform):
 
     """
 
-    def __init__(self, ndim=2, a=1, b=1, N=200, h=0.05):
+    def __init__(self, ndim=2, a=1, b=1, N=None, h=0.05):
         # keep int-type in python 3
         if np.isclose(ndim % 2, 0):
             nu = int(ndim) // 2 - 1
