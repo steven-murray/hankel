@@ -42,7 +42,7 @@ Fourier transform, which is more simply expressed as a Hankel transform [@Szapud
 Another example that arises in both geophysical and astrophysical contexts is in 
 regards to vortices.  The radially-symmetric vortical solution to Laplace's 
 equation in two, three or even higher dimensions can be performed quickly 
-and accurately via the Hankel transform.
+and accurately via the Hankel transform [@carton2001hydrodynamical].
 
 Conceptually, computation of such problems using the Hankel transform, in 
 contrast to the Fourier transform, has the advantage of reducing the problem's 
