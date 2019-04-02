@@ -4,21 +4,23 @@ tags:
   - Python
   - astronomy
   - numerical analysis
-  
 authors:
   - name: Steven G. Murray
     orcid: 0000-0003-3059-3823
     affiliation: 1, 2, 3
   - name: Francis J. Poulin
-    orcid: 
-    affiliation: 
+    orcid: 0000-0002-7686-4089
+    affiliation: 4
 affiliations:
  - name: International Centre for Radio Astronomy Research (ICRAR), Curtin University,  Bentley, WA 6102, Australia
    index: 1
  - name: ARC Centre of Excellence for All-Sky Astrophysics in 3 Dimensions (ASTRO 3D)
    index: 2
  - name: School of Earth and Space Exploration, Arizona State University, Tempe, AZ, 85281, USA
-date: 19 July 2018
+   index: 3
+ - name: Department of Applied Mathematics, University of Waterloo
+   index: 4
+date: 02 April 2019
 bibliography: paper.bib
 ---
 
