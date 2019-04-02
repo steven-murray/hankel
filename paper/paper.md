@@ -97,7 +97,7 @@ modified to accurately transform any function that theoretically converges.
 How to choose these values, and the estimated error of the transform under a 
 given choice, are discussed in the ``hankel``'s extensive online documentation 
 (and the reader is referred to [@Ogata2005] for more details).
-Based on the arguments in this documentation, ``hankel`` provides an automatic, 
+Based on the arguments in the documentation, ``hankel`` provides an automatic, 
 guided-adaptive algorithm for determination of *h* and *N*.
 
 A particularly important limitation of ``hankel``, as currently implemented, is 
@@ -109,6 +109,10 @@ evaluate that function at the non-regular locations required by the
 double-exponential transform of [@Ogata2005].
 Extensions to discrete Hankel transforms (and even *fast* Hankel transforms) are
  envisioned for v2.0 of ``hankel``.
+ 
+The source code for ``hankel`` has been
+archived to Zenodo with the linked DOI: [@zenodo]
+
 
 # Acknowledgements
 
