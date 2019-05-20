@@ -67,3 +67,14 @@ Also draws inspiration from
     Function and the Power Spectrum Szapudi, Istvan; Pan, Jun; Prunet,
     Simon; Budavari, Tamas (2005) The Astrophysical Journal vol. 631 (1)
     DOI: 10.1086/496971
+
+How to Run Tests
+----------------
+To run tests:
+
+1. Either fork and clone the repo locally, or just clone the main repo:
+   ``git clone https://github.com/steven-murray/hankel``
+2. Install the development requirements: ``pip install -r requirements_dev.txt``
+3. Run ``tox`` from the top-level directory.
+
+Alternatively, to test against your specific python version, run ``pytest``.
