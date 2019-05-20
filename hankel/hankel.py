@@ -616,7 +616,6 @@ def get_h(
         hstart /= hdecrement
         res2 = 1 * res
         res = getres(hstart)
-        print(res)
 
     if i == maxiter:
         raise Exception("Maxiter reached while checking convergence")
