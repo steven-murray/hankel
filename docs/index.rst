@@ -16,6 +16,7 @@ Contents
    license
    changelog
    authors
+   contributing
    api
 
 

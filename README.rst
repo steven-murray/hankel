@@ -21,7 +21,7 @@ are radially symmetric (see
 thorough description).
 They involve integrating an arbitrary function multiplied by a Bessel
 function of arbitrary order (of the first kind).
-Typical integration schemes often fall over because of the highly
+Typical integration schemes often fail because of the highly
 oscillatory nature of the transform. Ogata's
 quadrature method used in this package provides a fast and accurate
 way of performing the integration based on
@@ -45,13 +45,22 @@ Quicklinks
 
 Installation
 ------------
-Either clone the repository at github.com/steven-murray/hankel and use
-``python setup.py install``, or simply install
-using ``pip install hankel``.
+Either clone the repository and install locally::
+
+    $ git clone https://github.com/steven-murray/hankel.git
+    $ cd hankel/
+    $ pip install -U .
+
+Or install from PyPI:
+
+    $ pip install hankel
 
 The only dependencies are `numpy <https://www.numpy.org>`_,
 `scipy <https://www.scipy.org>`_ and `mpmath <https://www.mpmath.org>`_.
+These will be installed automatically if they are not already installed.
 
+For instructions on testing hankel or any other development- or contribution-related
+issues, see CONTRIBUTING.rst.
 
 References
 ----------
@@ -67,14 +76,3 @@ Also draws inspiration from
     Function and the Power Spectrum Szapudi, Istvan; Pan, Jun; Prunet,
     Simon; Budavari, Tamas (2005) The Astrophysical Journal vol. 631 (1)
     DOI: 10.1086/496971
-
-How to Run Tests
-----------------
-To run tests:
-
-1. Either fork and clone the repo locally, or just clone the main repo:
-   ``git clone https://github.com/steven-murray/hankel``
-2. Install the development requirements: ``pip install -r requirements_dev.txt``
-3. Run ``tox`` from the top-level directory.
-
-Alternatively, to test against your specific python version, run ``pytest``.

@@ -9,4 +9,5 @@ pluggy==0.6.0
 pytest==3.5.1
 pytest-runner==4.2
 pytest-cov==2.5.1
+bumpversion==0.5.3
 coveralls
