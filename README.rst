@@ -55,15 +55,15 @@ The only dependencies are `numpy <https://www.numpy.org>`_,
 
 References
 ----------
-
 Based on the algorithm provided in
 
     H. Ogata, A Numerical Integration Formula Based on the Bessel
     Functions, Publications of the Research Institute for Mathematical
-    Sciences, vol. 41, no. 4, pp. 949-970, 2005.
+    Sciences, vol. 41, no. 4, pp. 949-970, 2005. DOI: 10.2977/prims/1145474602
 
 Also draws inspiration from
 
     Fast Edge-corrected Measurement of the Two-Point Correlation
     Function and the Power Spectrum Szapudi, Istvan; Pan, Jun; Prunet,
     Simon; Budavari, Tamas (2005) The Astrophysical Journal vol. 631 (1)
+    DOI: 10.1086/496971
