@@ -15,7 +15,7 @@ Types of Contributions
 Report Bugs
 ~~~~~~~~~~~
 
-Report bugs at https://github.com/steven-murray/hankel/issues.
+Report bugs by opening a `new issue <https://github.com/steven-murray/hankel/issues/new?template=bugs.md>`_.
 
 If you are reporting a bug, please include:
 
@@ -26,14 +26,16 @@ If you are reporting a bug, please include:
 Fix Bugs
 ~~~~~~~~
 
-Look through the GitHub issues for bugs. Anything tagged with "bug" and "help
-wanted" is open to whoever wants to implement it.
+Look through the GitHub issues for bugs. Anything tagged with
+`"bug" and "help wanted" <https://github.com/steven-murray/hankel/issues?q=is%3Aissue+is%3Aopen+label%3Abug+label%3A%22help+wanted%22+>`_
+is open to whoever wants to implement it.
 
 Implement Features
 ~~~~~~~~~~~~~~~~~~
 
-Look through the GitHub issues for features. Anything tagged with "enhancement"
-and "help wanted" is open to whoever wants to implement it.
+Look through the GitHub issues for features. Anything tagged with
+`"enhancement" and "help wanted" <https://github.com/steven-murray/hankel/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3Aenhancement+label%3A%22help+wanted%22+>`_
+is open to whoever wants to implement it.
 
 Write Documentation
 ~~~~~~~~~~~~~~~~~~~
@@ -49,7 +51,7 @@ Submit Feedback
 ~~~~~~~~~~~~~~~
 
 The best way to send feedback is to
-`file an issue <https://github.com/steven-murray/hankel/issues/new>`_.
+`file an issue <https://github.com/steven-murray/hankel/issues/new?template=feature-request.md>`_.
 
 If you are proposing a feature:
 
