@@ -49,7 +49,8 @@ Either clone the repository at github.com/steven-murray/hankel and use
 ``python setup.py install``, or simply install
 using ``pip install hankel``.
 
-The only dependencies are `numpy <www.numpy.org>`_, `scipy <www.scipy.org>`_ and `mpmath <www.mpmath.org>`_.
+The only dependencies are `numpy <https://www.numpy.org>`_,
+`scipy <https://www.scipy.org>`_ and `mpmath <https://www.mpmath.org>`_.
 
 
 References
