@@ -110,9 +110,6 @@ double-exponential transform of [@Ogata2005].
 Extensions to discrete Hankel transforms (and even *fast* Hankel transforms) are
  envisioned for v2.0 of ``hankel``.
  
-The source code for ``hankel`` has been
-archived to Zenodo with the linked DOI: [@zenodo]
-
 
 # Acknowledgements
 
