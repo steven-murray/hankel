@@ -58,7 +58,7 @@ especially for large values of the transformation variable, *k* (henceforth we
 will use *r* to denote the magnitude of the real-space co-ordinate). 
 Highly oscillatory integrals are a topic of much interest in applied mathematics, 
 and there does not exist a general optimal solution to numerically evaluate them 
-in general [Huybrechs2008]. Nevertheless, [@Ogata2005] determined that a 
+in general [@huybrechs_olver_2009]. Nevertheless, [@Ogata2005] determined that a
 double-exponential variable transformation based on the zeros of the Bessel function [@Ooura1999] 
 has the property that the numerical integral converges with many fewer divisions 
 compared to naively computing the transform integral. This procedure is able to 
