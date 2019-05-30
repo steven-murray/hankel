@@ -1,8 +1,10 @@
 Changelog
 =========
 
-dev
----
+0.3.9
+-----
+:tada: Version corresponding to JOSS paper release.
+
 **Bugfixes**
 
 - Fixed SymmetricFourierTransform default N to be dynamic, like HankelTransform.
