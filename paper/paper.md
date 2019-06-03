@@ -58,7 +58,7 @@ especially for large values of the transformation variable, *k* (henceforth we
 will use *r* to denote the magnitude of the real-space co-ordinate). 
 Highly oscillatory integrals are a topic of much interest in applied mathematics, 
 and there does not exist a general optimal solution to numerically evaluate them 
-in general [@huybrechs_olver_2009]. Nevertheless, [@Ogata2005] determined that a
+in general [@huybrechs_olver_2009]. Nevertheless, @Ogata2005 determined that a
 double-exponential variable transformation based on the zeros of the Bessel function [@Ooura1999] 
 has the property that the numerical integral converges with many fewer divisions 
 compared to naively computing the transform integral. This procedure is able to 
@@ -69,7 +69,7 @@ The purpose of ``hankel`` is to provide a dead-simple intuitive pure-Python
 interface for performing Hankel integrals and transforms, written with both 
 Python 2 and 3 compatibility. It enables the accurate determination of the 
 transform of a callable function at any arbitrary value of the 
-transform variable, *k*, and utilises the proven method of [@Ogata2005] to do 
+transform variable, *k*, and utilises the proven method of @Ogata2005 to do 
 this efficiently. 
 In addition, it recognizes that the most common application of the Hankel 
 transform is in the context of the 
@@ -96,7 +96,7 @@ determine the resolution and upper limit of the integration grid. These can be
 modified to accurately transform any function that theoretically converges.
 How to choose these values, and the estimated error of the transform under a 
 given choice, are discussed in the ``hankel``'s extensive online documentation 
-(and the reader is referred to [@Ogata2005] for more details).
+(and the reader is referred to @Ogata2005 for more details).
 Based on the arguments in the documentation, ``hankel`` provides an automatic, 
 guided-adaptive algorithm for determination of *h* and *N*.
 
@@ -106,7 +106,7 @@ That is, it provides no direct means of transforming an array of regular-spaced
 function values into "radial Fourier space" at regular-spaced *k* values. 
 It is focused solely on transforming *callable* functions, so that it can 
 evaluate that function at the non-regular locations required by the 
-double-exponential transform of [@Ogata2005].
+double-exponential transform of @Ogata2005.
 Extensions to discrete Hankel transforms (and even *fast* Hankel transforms) are
  envisioned for v2.0 of ``hankel``.
  
