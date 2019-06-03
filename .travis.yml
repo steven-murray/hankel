@@ -15,7 +15,7 @@ after_success:
 
 deploy:
   provider: pypi
-  user: "stevenjeanette"
+  user: stevenjeanette
   password:
     secure: V7EmyeE17kKNPZQYk3P+v5Kh3dIKuD8jzrH/OypBR3BlO2rYVDtVpnQG6f6uhET7TB821m64X1AE48Wyt/36Yc9+NoPIE+oBngn5ZD/1uErR9zF7Dj4Ot5llRjPWVF2Bl1k19erJMNacisTBDXT6K78BSf9gyqL3CR8srbixEak=
   on:

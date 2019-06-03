@@ -5,8 +5,8 @@ hankel
    :target: https://travis-ci.org/steven-murray/hankel
 .. image:: https://coveralls.io/repos/github/steven-murray/hankel/badge.svg?branch=master
    :target: https://coveralls.io/github/steven-murray/hankel?branch=master
-.. image:: https://zenodo.org/badge/19090866.svg
-   :target: https://zenodo.org/badge/latestdoi/19090866
+.. image:: http://joss.theoj.org/papers/10.21105/joss.01397/status.svg
+   :target: https://doi.org/10.21105/joss.01397
 .. image:: https://img.shields.io/pypi/v/hankel.svg
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/ambv/black
@@ -61,6 +61,16 @@ These will be installed automatically if they are not already installed.
 
 For instructions on testing hankel or any other development- or contribution-related
 issues, see CONTRIBUTING.rst.
+
+Acknowledging
+-------------
+If you find `hankel` useful in your research, please cite
+
+    S. G. Murray and F. J. Poulin, "hankel: A Python library for performing simple and
+    accurate Hankel transformations", Journal of Open Source Software,
+    4(37), 1397, https://doi.org/10.21105/joss.01397
+
+Also consider starring this repository!
 
 References
 ----------
