@@ -11,3 +11,21 @@ docs/demos/.ipynb_checkpoints/*
 \.coverage
 
 htmlcov/
+
+*.aux
+
+*.bcf
+
+paper/Makefile~
+
+*.dvi
+
+*.out
+
+paper/paper\.pdf
+
+*.log
+
+*.xml
+
+*.tex
