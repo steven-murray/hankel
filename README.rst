@@ -51,7 +51,7 @@ Either clone the repository and install locally::
     $ cd hankel/
     $ pip install -U .
 
-Or install from PyPI:
+Or install from PyPI::
 
     $ pip install hankel
 
