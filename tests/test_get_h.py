@@ -1,4 +1,4 @@
-"""
+r"""
 This module provides some tests of the integrator to known integrals.
 
 Note, these are not the transformations, just the plain integrals,  :math:`\int_0^\infty f(x) J_\nu(x) dx`
@@ -10,11 +10,11 @@ to ensure that this function works.
 import numpy as np
 from scipy.special import k0, gamma, gammainc, gammaincc
 
-gammainc_ = lambda a, x: gamma(a) * gammainc(a, x)
-gammaincc_ = lambda a, x: gamma(a) * gammaincc(a, x)
-
 from hankel import get_h, HankelTransform, SymmetricFourierTransform
 import pytest
+
+gammainc_ = lambda a, x: gamma(a) * gammainc(a, x)
+gammaincc_ = lambda a, x: gamma(a) * gammaincc(a, x)
 
 
 @pytest.mark.parametrize(

@@ -11,11 +11,11 @@ for other unknown functions.
 import numpy as np
 from scipy.special import gamma, gammainc, gammaincc
 
-gammainc_ = lambda a, x: gamma(a) * gammainc(a, x)
-gammaincc_ = lambda a, x: gamma(a) * gammaincc(a, x)
-
 from hankel import HankelTransform
 import pytest
+
+gammainc_ = lambda a, x: gamma(a) * gammainc(a, x)
+gammaincc_ = lambda a, x: gamma(a) * gammaincc(a, x)
 
 
 @pytest.mark.parametrize(
