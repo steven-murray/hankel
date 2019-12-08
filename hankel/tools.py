@@ -223,7 +223,8 @@ def get_h(
             np.all(
                 cls(nu, h=hstart, N=int(np.pi / hstart))._get_series(
                     f, 1 if K is None else K
-                ) == 0,
+                )
+                == 0,
                 axis=-1,
             )
         )
@@ -245,6 +246,7 @@ def get_h(
             )
 
     else:  # Do a transform at k=K
+
         def getres(h):
             """Dummy function to get the result."""
             return cls(nu, h=h, N=int(np.pi / h)).transform(
