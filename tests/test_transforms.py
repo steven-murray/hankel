@@ -105,3 +105,33 @@ def test_alternative(s, nu, k, N, h):
     ft2 = ht2.transform(lambda r: r ** (s + 0.5), k, False, False) / k ** 0.5
     print("Numerical Results: ", ft1, " and ", ft2)
     assert np.isclose(ft1, ft2, rtol=1e-3)
+
+
+@pytest.mark.parametrize(
+    "nu, alt",
+    [
+        [-0.5, False],
+        [0, False],
+        [0.5, False],
+        [1, False],
+        [1.5, False],
+        [-0.5, True],
+        [0, True],
+        [0.5, True],
+        [1, True],
+        [1.5, True],
+    ],
+)
+def test_k_zero(nu, alt):
+    """Testing k=0."""
+    threshold = -0.5 if alt else 0
+    f = lambda r: np.exp(-r ** 2 / 2)
+    ht = HankelTransform(nu=nu, N=50, h=1e-3, alt=alt)
+    ans = ht.transform(f, 0, False, False)
+    print("Numerical Results: ", ans)
+    if nu < threshold:
+        assert np.isinf(ans)
+    elif nu > threshold:
+        assert np.isclose(ans, 0, rtol=1e-3)
+    else:
+        assert np.isclose(ans, 1, rtol=1e-3)
