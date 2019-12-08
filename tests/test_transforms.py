@@ -61,3 +61,42 @@ def test_powerlaw(s, nu, k, N, h):
 
     print("Numerical Result: ", ans, " (required %s)" % anl)
     assert np.isclose(ans, anl, rtol=1e-3)
+
+
+@pytest.mark.parametrize(
+    's, nu, k, N, h',
+    [
+        [-2, 1, 0.01, 300, 10 ** -3.2],
+        [-2, 1, 1, 300, 10 ** -3.2],
+        [-2, 1, 10.0, 300, 10 ** -3.2],
+        [-2, 2, 0.01, 200, 10 ** -2.],
+        [-2, 2, 1, 200, 10 ** -2.],
+        [-2, 2, 10.0, 200, 10 ** -2.],
+        [-1, 0, 0.01, 50, 0.05],
+        [-1, 0, 1, 50, 0.05],
+        [-1, 0, 10.0, 50, 0.05],
+        [-1, 1, 0.01, 50, 0.05],
+        [-1, 1, 1, 50, 0.05],
+        [-1, 1, 10.0, 50, 0.05],
+        [-1, 2, 0.01, 50, 0.05],
+        [-1, 2, 1, 50, 0.05],
+        [-1, 2, 10.0, 50, 0.05],
+        [1, 0, 0.01, 150, 10 ** -1.5],
+        [1, 0, 1, 150, 10 ** -1.5],
+        [1, 0, 10.0, 150, 10 ** -1.5],
+        [1, 2, 0.01, 50, 0.05],
+        [1, 2, 1, 50, 0.05],
+        [1, 2, 10.0, 50, 0.05],
+        [2, 1, 0.01, 100, 10 ** -1.5],
+        [2, 1, 1, 100, 10 ** -1.5],
+        [2, 1, 10.0, 100, 10 ** -1.5],
+    ]
+)
+def test_alternative(s, nu, k, N, h):
+    """Test alternative hankel definition."""
+    ht1 = HankelTransform(nu=nu, N=N, h=h)
+    ht2 = HankelTransform(nu=nu, N=N, h=h, alt=True)
+    ft1 = ht1.transform(lambda r: r ** s, k, False, False)
+    ft2 = ht2.transform(lambda r: r ** (s + 0.5), k, False, False) / k ** 0.5
+    print("Numerical Results: ", ft1, " and ", ft2)
+    assert np.isclose(ft1, ft2, rtol=1e-3)
