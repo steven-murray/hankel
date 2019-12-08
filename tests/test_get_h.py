@@ -1,11 +1,11 @@
-'''
+"""
 This module provides some tests of the integrator to known integrals.
 
 Note, these are not the transformations, just the plain integrals,  :math:`\int_0^\infty f(x) J_\nu(x) dx`
 
 In this module, we use the get_h function, rather than choosing N and h,
 to ensure that this function works.
-'''
+"""
 
 import numpy as np
 from scipy.special import k0, gamma, gammainc, gammaincc
@@ -18,29 +18,25 @@ import pytest
 
 
 @pytest.mark.parametrize(
-    'f, anl',
+    "f, anl",
     [
         (lambda x: 1, 1),  # Ogata 05
         (lambda x: x / (x ** 2 + 1), k0(1)),  # Ogata 05
         (lambda x: x ** 2, -1),  # wikipedia
         (lambda x: x ** 4, 9),  # wikipedia
-        (lambda x: 1. / np.sqrt(x),  # wikipedia
-         2 ** (-0.5) * gamma(-1.5 / 2 + 1) / gamma(1.5 / 2)),
-        (lambda x: x / np.sqrt(x ** 2 + 1 ** 2),  # wikipedia
-         np.exp(-1)),
-        (lambda x: x * np.exp(-0.5 * 2 ** 2 * x ** 2),  # wikipedia
-         1. / 2 ** 2 * np.exp(-0.5 / 2 ** 2))
-    ]
+        (
+            lambda x: 1.0 / np.sqrt(x),  # wikipedia
+            2 ** (-0.5) * gamma(-1.5 / 2 + 1) / gamma(1.5 / 2),
+        ),
+        (lambda x: x / np.sqrt(x ** 2 + 1 ** 2), np.exp(-1)),  # wikipedia
+        (
+            lambda x: x * np.exp(-0.5 * 2 ** 2 * x ** 2),  # wikipedia
+            1.0 / 2 ** 2 * np.exp(-0.5 / 2 ** 2),
+        ),
+    ],
 )
 def test_nu0(f, anl):
-    ans = get_h(
-        f=f,
-        nu=0,
-        hstart=0.5,
-        atol=0,
-        rtol=1e-3,
-        maxiter=20,
-    )[1]
+    ans = get_h(f=f, nu=0, hstart=0.5, atol=0, rtol=1e-3, maxiter=20)[1]
     print("Numerical Result: {ans} (required {anl})".format(ans=ans, anl=anl))
     # we ensure that the answer is within 5e-3 of the true answer,
     # because the algorithm does not ensure that the result is within that
@@ -49,24 +45,19 @@ def test_nu0(f, anl):
 
 
 @pytest.mark.parametrize(
-    's, nu, N, h',
+    "s, nu, N, h",
     [
         [0, 1, 50, 0.05],
         [0, 2, 50, 0.05],
         [0.5, 1, 50, 0.05],
         [-2, 2, 600, 10 ** -2.6],  # This is pretty finnicky
-        [-0.783, 1, 50, 0.05]
-    ]
+        [-0.783, 1, 50, 0.05],
+    ],
 )
 def test_nu_varying_powerlaw(s, nu, N, h):
     # For this one we test the transform instead
     ans = get_h(
-        f=lambda x: x ** s,
-        nu=nu,
-        K=1,
-        hstart=0.5,
-        atol=1e-3,
-        rtol=1e-3,
+        f=lambda x: x ** s, nu=nu, K=1, hstart=0.5, atol=1e-3, rtol=1e-3
     )[1]
 
     anl = 2 ** (s + 1) * gamma(0.5 * (2 + nu + s)) / gamma(0.5 * (nu - s))
@@ -75,12 +66,8 @@ def test_nu_varying_powerlaw(s, nu, N, h):
 
 
 @pytest.mark.parametrize(
-    's, nu, N, h',
-    [
-        [0.5, 1, 50, 0.05],
-        [0.783, 1, 50, 0.05],
-        [1.0, 0.5, 500, 0.01],
-    ]
+    "s, nu, N, h",
+    [[0.5, 1, 50, 0.05], [0.783, 1, 50, 0.05], [1.0, 0.5, 500, 0.01]],
 )
 def test_nu_varying_gamma_mod(s, nu, N, h):
     ans = get_h(

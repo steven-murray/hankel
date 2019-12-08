@@ -1,4 +1,4 @@
-'''
+"""
 This module provides tests that ensure that the forward then backward transform ends up with the original.
 
 For simplicity and because of common use (for me at least), we do this with a broken powerlaw, which turns
@@ -8,7 +8,7 @@ correctly (some here are commented out because they don't fit the convergence cr
 There is a corresponding notebook in devel/ that runs each of these functions through a grid of N and h,
 showing the pattern of accuracy. This could be useful for finding the correct numbers to choose for these
 for other unknown functions.
-'''
+"""
 
 import numpy as np
 import pytest
@@ -16,11 +16,11 @@ from scipy.interpolate import InterpolatedUnivariateSpline as spline
 
 from hankel import SymmetricFourierTransform
 
-r = np.array([0.1, 1, 10.])
+r = np.array([0.1, 1, 10.0])
 
 
 @pytest.mark.parametrize(
-    's, t, x0, ndim, N, h, r',
+    "s, t, x0, ndim, N, h, r",
     [
         [0, 1, 1, 2, 1100, 10 ** -2.5, r],
         [0, 2, 1, 2, 800, 10 ** -2.6, r],
@@ -50,13 +50,17 @@ r = np.array([0.1, 1, 10.])
         # [3, 1, 10, 3, 50, 0.05, r],
         # [3, 2, 10, 3, 50, 0.05, r],
         # [3, 3, 10, 3, 50, 0.05, r],
-    ]
+    ],
 )
 def test_roundtrip_broken_pl(s, t, x0, ndim, N, h, r):
     f = lambda x: x ** s / (x ** t + x0)
     ht = SymmetricFourierTransform(ndim=ndim, N=N, h=h)
 
-    k = np.logspace(np.log10(ht.x.min() / r.max() / 10.0), np.log10(10 * ht.x.max() / r.min()), 1000)
+    k = np.logspace(
+        np.log10(ht.x.min() / r.max() / 10.0),
+        np.log10(10 * ht.x.max() / r.min()),
+        1000,
+    )
     resk = ht.transform(f, k, False)
     spl = spline(k, resk)
     res = ht.transform(spl, r, False, inverse=True)
