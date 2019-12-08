@@ -187,7 +187,7 @@ class HankelTransform(object):
                 ret[k_0] = 0
 
         if k_scalar:
-            ret = np.asscalar(ret)
+            ret = ret.item()
 
         if ret_err:
             err = norm * np.take(summation, -1, axis=-1) / knorm
