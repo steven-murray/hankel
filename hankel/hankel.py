@@ -148,6 +148,7 @@ class HankelTransform(object):
         The inverse transform is identical (swapping *k* and *r* of course).
         """
         # The following allows for a re-scaling of k when doing FT's.
+        k_scalar = np.isscalar(k)
         k = self._k(k)
         # k = zero here
         k_0 = np.isclose(k, 0)
@@ -184,6 +185,9 @@ class HankelTransform(object):
                 ret[k_0] = np.inf
             else:
                 ret[k_0] = 0
+
+        if k_scalar:
+            ret = np.asscalar(ret)
 
         if ret_err:
             err = norm * np.take(summation, -1, axis=-1) / knorm
