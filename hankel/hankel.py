@@ -165,7 +165,7 @@ class HankelTransform(object):
         k[k_0] = 1
 
         summation = self._get_series(f, k)
-        ret = norm * np.sum(summation, axis=-1) / knorm
+        ret = np.array(norm * np.sum(summation, axis=-1) / knorm)
 
         # care about k = 0
         if np.any(k_0):
@@ -180,7 +180,7 @@ class HankelTransform(object):
 
             if np.isclose(self.nu, nu_th):
                 ret[k_0] = quad(integrand, 0, np.inf)[0] * lim * norm
-            elif not self.alt and self.nu < nu_th:
+            elif self.nu < nu_th:
                 ret[k_0] = np.inf
             else:
                 ret[k_0] = 0
@@ -374,7 +374,7 @@ class SymmetricFourierTransform(HankelTransform):
 
     def _k(self, k):
         """Substitution for k."""
-        return np.array(self.fourier_norm_b * k)
+        return np.array(self.fourier_norm_b * np.array(k))
 
     @classmethod
     def xrange_approx(cls, h, ndim, k=1):
