@@ -56,7 +56,7 @@ class HankelTransform(object):
     h : float, optional
         The step-size of the integration.
     alt : bool, optional
-        State if the alternative definition of the hankel transform
+        Whether to use the alternative definition of the hankel transform.
         should be used. Default: False
     """
 

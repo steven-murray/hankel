@@ -76,7 +76,7 @@ def kernel(x, nu, alt=False):
     nu : int or float
         order of the bessel function.
     alt : bool, optional
-        State if the alternative defintion of the hankel transform should be
+        Whether the alternative defintion of the hankel transform should be
         used: J(nu, x)*sqrt(x). The default is False.
 
     Returns
