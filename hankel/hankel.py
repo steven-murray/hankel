@@ -182,7 +182,7 @@ class HankelTransform(object):
             if np.isclose(self.nu, nu_th):
                 ret[k_0] = quad(integrand, 0, np.inf)[0] * lim * norm
             elif self.nu < nu_th:
-                ret[k_0] = np.inf
+                ret[k_0] = np.nan
             else:
                 ret[k_0] = 0
 
