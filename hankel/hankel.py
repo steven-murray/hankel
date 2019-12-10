@@ -219,8 +219,12 @@ class HankelTransform(object):
         ret_cumsum : boolean, optional, default = False
             Whether to return the cumulative sum
         """
+        if self.alt:
+            func = lambda x: f(x) / np.sqrt(x)
+        else:
+            func = lambda x: f(x) / x
         return self.transform(
-            f=lambda x: f(x) / x,
+            f=func,
             k=1,
             ret_err=ret_err,
             ret_cumsum=ret_cumsum,
