@@ -15,7 +15,7 @@ from mpmath import fp as mpm
 from scipy.integrate import quad
 from hankel.tools import (
     d_psi,
-    j,
+    kernel,
     weight,
     roots,
     get_x,
@@ -76,7 +76,7 @@ class HankelTransform(object):
         self._h = h
         self._zeros = roots(N, nu)
         self.x = get_x(h, self._zeros)
-        self.j = j(self.x, nu, alt)
+        self.kernel = kernel(self.x, nu, alt)
         self.w = weight(nu, self._zeros)
         self.dpsi = d_psi(h * self._zeros)
         self.alt = alt
@@ -105,7 +105,7 @@ class HankelTransform(object):
         with np.errstate(divide="ignore"):  # numpy safely divids by 0
             args = np.divide.outer(self.x, k).T  # x = r*k
         fres = self._f(f, args)
-        return np.pi * self.w * fres * self.j * self.dpsi
+        return np.pi * self.w * fres * self.kernel * self.dpsi
 
     def transform(self, f, k=1, ret_err=True, ret_cumsum=False, inverse=False):
         r"""
@@ -171,9 +171,9 @@ class HankelTransform(object):
         # care about k = 0
         if np.any(k_0):
             # limit of J(nu, 0) considering powers of k
-            lim_k_pow = 0.5 if self.alt else 0  # in alt. def sqrt(k) involved
-            lim_r_pow = self._r_power + lim_k_pow + self.nu
-            nu_th = self._k_power - 1 - lim_k_pow  # threshold
+            alt_pow = 0.5 if self.alt else 0  # in alt. def sqrt(rk) involved
+            lim_r_pow = self._r_power + alt_pow + self.nu
+            nu_th = self._k_power - 1 - alt_pow  # threshold
             lim = j_lim(self.nu)
 
             def integrand(r):

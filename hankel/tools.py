@@ -63,9 +63,11 @@ def j_lim(nu):
     return 0.5 ** nu / gamma(nu + 1)
 
 
-def j(x, nu, alt=False):
+def kernel(x, nu, alt=False):
     """
-    Bessel J(nu, x) functions for the hankel transformation.
+    Kernel functions for the hankel transformation.
+
+    J(nu, x) or for alt=True: J(nu, x) * sqrt(x).
 
     Parameters
     ----------
