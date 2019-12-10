@@ -30,7 +30,7 @@ def d_psi(t):
 
 def weight(nu, zeros):
     """Weights for the summation in the hankel transformation."""
-    return yv(nu, np.pi * zeros) / j(np.pi * zeros, nu + 1)
+    return yv(nu, np.pi * zeros) / kernel(np.pi * zeros, nu + 1)
 
 
 def roots(N, nu):
