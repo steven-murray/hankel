@@ -130,7 +130,7 @@ def test_k_zero(nu, alt):
     ans = ht.transform(f, 0, False, False)
     print("Numerical Results: ", ans)
     if nu < threshold:
-        assert np.isinf(ans)
+        assert np.isnan(ans)
     elif nu > threshold:
         assert np.isclose(ans, 0, rtol=1e-3)
     else:
