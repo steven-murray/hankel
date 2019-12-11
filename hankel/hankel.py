@@ -83,7 +83,7 @@ class HankelTransform(object):
 
         # Some quantities only useful in the FourierTransform
         self._r_power = 0 if alt else 1
-        self._k_power = 1
+        self._k_power = 0
 
     @property
     def nu(self):
@@ -159,7 +159,7 @@ class HankelTransform(object):
         norm = self._norm(inverse)
 
         # The following renormalises by the fourier dual to some power
-        knorm = safe_power(k, self._k_power)
+        knorm = safe_power(k, self._k_power + 1)
 
         # set replace k=0 with 1 in the following
         knorm[k_0] = 1
@@ -368,7 +368,7 @@ class SymmetricFourierTransform(HankelTransform):
         self.fourier_norm_a = a
         self.fourier_norm_b = b
         self._r_power = (ndim - 1) / 2.0 if alt else ndim / 2.0
-        self._k_power = (ndim + 1) / 2.0 if alt else ndim / 2.0
+        self._k_power = (ndim - 1) / 2.0 if alt else ndim / 2.0 - 1
 
     def _norm(self, inverse=False):
         r"""
