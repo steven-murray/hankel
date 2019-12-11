@@ -90,10 +90,6 @@ class HankelTransform(object):
         """Order of the hankel transform."""
         return self._nu
 
-    def _f(self, f, r):
-        """Correct integrand depending on transformation definition."""
-        return f(r) * safe_power(r, self._r_power)
-
     def _k(self, k):
         return np.array(k)
 
@@ -104,7 +100,7 @@ class HankelTransform(object):
     def _get_series(self, f, k=1):
         with np.errstate(divide="ignore"):  # numpy safely divids by 0
             args = np.divide.outer(self.x, k).T  # x = r*k
-        fres = self._f(f, args)
+        fres = f(args) * safe_power(self.x, self._r_power)
         return np.pi * self.w * fres * self.kernel * self.dpsi
 
     def transform(self, f, k=1, ret_err=True, ret_cumsum=False, inverse=False):
@@ -159,7 +155,7 @@ class HankelTransform(object):
         norm = self._norm(inverse)
 
         # The following renormalises by the fourier dual to some power
-        knorm = safe_power(k, self._k_power + 1)
+        knorm = safe_power(k, self._k_power + self._r_power + 1)
 
         # set replace k=0 with 1 in the following
         knorm[k_0] = 1
@@ -173,7 +169,7 @@ class HankelTransform(object):
             # limit of J(nu, 0) considering powers of k
             alt_pow = 0.5 if self.alt else 0  # in alt. def sqrt(rk) involved
             lim_r_pow = self._r_power + alt_pow + self.nu
-            nu_th = self._k_power - 1 - alt_pow  # threshold
+            nu_th = self._k_power - alt_pow  # threshold
             lim = j_lim(self.nu)
 
             def integrand(r):
@@ -224,11 +220,7 @@ class HankelTransform(object):
         else:
             func = lambda x: f(x) / x
         return self.transform(
-            f=func,
-            k=1,
-            ret_err=ret_err,
-            ret_cumsum=ret_cumsum,
-            inverse=False,
+            f=func, k=1, ret_err=ret_err, ret_cumsum=ret_cumsum, inverse=False
         )
 
     def xrange(self, k=1):
