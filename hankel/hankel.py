@@ -157,14 +157,14 @@ class HankelTransform(object):
         # The following renormalises by the fourier dual to some power
         knorm = safe_power(k, self._k_power + self._r_power + 1)
 
-        # set replace k=0 with 1 in the following
+        # replace k=0 with 1
         knorm[k_0] = 1
         k[k_0] = 1
 
         summation = self._get_series(f, k)
         ret = np.array(norm * np.sum(summation, axis=-1) / knorm)
 
-        # care about k = 0
+        # care about k=0
         if np.any(k_0):
             # limit of J(nu, 0) considering powers of k
             alt_pow = 0.5 if self.alt else 0  # in alt. def sqrt(rk) involved
