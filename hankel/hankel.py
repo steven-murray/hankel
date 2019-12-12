@@ -11,7 +11,6 @@ from __future__ import division, absolute_import
 from builtins import super
 
 import numpy as np
-from mpmath import fp as mpm
 from scipy.integrate import quad
 from hankel.tools import (
     d_psi,
@@ -259,7 +258,7 @@ class HankelTransform(object):
         --------
         xrange: the actual x-range under a given choice of parameters.
         """
-        r = mpm.besseljzero(nu, 1) / np.pi
+        r = roots(1, nu)[0]
         return np.array(
             [np.pi ** 2 * h * r ** 2 / 2 / k, np.pi * np.pi / h / k]
         )
