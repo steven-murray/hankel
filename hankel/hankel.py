@@ -83,11 +83,20 @@ class HankelTransform(object):
         # Some quantities only useful in the FourierTransform
         self._r_power = 0 if alt else 1
         self._k_power = 0
+        # initialize the factors of the series
+        self._factor = None
 
     @property
     def nu(self):
         """Order of the hankel transform."""
         return self._nu
+
+    @property
+    def _series_fac(self):
+        """Factors for the series."""
+        if self._factor is None:
+            self._factor = np.pi * self.w * self.kernel * self.dpsi
+        return self._factor
 
     def _k(self, k):
         return np.array(k)
@@ -99,8 +108,7 @@ class HankelTransform(object):
     def _get_series(self, f, k=1):
         with np.errstate(divide="ignore"):  # numpy safely divids by 0
             args = np.divide.outer(self.x, k).T  # x = r*k
-        fres = f(args) * safe_power(self.x, self._r_power)
-        return np.pi * self.w * fres * self.kernel * self.dpsi
+        return self._series_fac * f(args) * safe_power(self.x, self._r_power)
 
     def transform(self, f, k=1, ret_err=True, ret_cumsum=False, inverse=False):
         r"""
