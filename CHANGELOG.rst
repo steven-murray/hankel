@@ -7,11 +7,11 @@ unreleased
 
 - Limit calculation for k=0 provided (resulted in nan before)
 - alternative hankel kernel now selectable: sqrt(x) * J(nu, x)
+- caching of series factors for faster calculations
 
 **Bugfixes**
 
 - saver calculation of xrange_approx
-- caching of series factors for faster calculations
 
 0.3.9
 -----
