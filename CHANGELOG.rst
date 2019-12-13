@@ -1,6 +1,18 @@
 Changelog
 =========
 
+unreleased
+----------
+**Enhancements**
+
+- Limit calculation for k=0 provided (resulted in nan before)
+- alternative hankel kernel now selectable: sqrt(x) * J(nu, x)
+- caching of series factors for faster calculations
+
+**Bugfixes**
+
+- saver calculation of xrange_approx
+
 0.3.9
 -----
 :tada: Version corresponding to JOSS paper release.

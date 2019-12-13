@@ -7,13 +7,22 @@ Publications of the Research Institute for Mathematical Sciences,
 vol. 41, no. 4, pp. 949-970, 2005.
 """
 
-# TODO: Suppress warnings on overflows
 from __future__ import division, absolute_import
 from builtins import super
 
 import numpy as np
-from mpmath import fp as mpm
-from scipy.special import j0, j1, jn_zeros as _jn_zeros, jn, yv, jv
+from scipy.integrate import quad
+from hankel.tools import (
+    d_psi,
+    kernel,
+    weight,
+    roots,
+    get_x,
+    fourier_norm,
+    dim_to_nu,
+    safe_power,
+    j_lim,
+)
 
 
 class HankelTransform(object):
@@ -35,129 +44,71 @@ class HankelTransform(object):
 
     Parameters
     ----------
-
     nu : scalar, optional
         The order of the bessel function (of the first kind) J_nu(x)
-
     N : int, optional, default = ``pi/h``
         The number of nodes in the calculation. Generally this must increase
         for a smaller value of the step-size h. Default value is based on where
         the series will truncate according
         to the double-exponential convergence to
         the roots of the Bessel function.
-
     h : float, optional
         The step-size of the integration.
+    alt : bool, optional
+        Whether to use the alternative definition of the hankel transform.
+        should be used. Default: False
     """
 
-    def __init__(self, nu=0, N=None, h=0.05):
+    def __init__(self, nu=0, N=None, h=0.05, alt=False):
 
-        if N is None:
-            N = int(np.pi / h)
-
+        N = int(np.pi / h) if N is None else N
         if not np.isscalar(N):
             raise ValueError("N must be a scalar")
         if not np.isscalar(h):
             raise ValueError("h must be a scalar")
         if not np.isscalar(nu):
             raise ValueError("nu must be a scalar")
+        if nu < -0.5:
+            raise ValueError("nu must be at least -1/2")
 
         self._nu = nu
         self._h = h
-        self._zeros = self._roots(N)
-        self.x = self._x(h)
-        self.j = self._j(self.x)
-        self.w = self._weight()
-        self.dpsi = self._d_psi(h * self._zeros)
+        self._zeros = roots(N, nu)
+        self.x = get_x(h, self._zeros)
+        self.kernel = kernel(self.x, nu, alt)
+        self.w = weight(nu, self._zeros)
+        self.dpsi = d_psi(h * self._zeros)
+        self.alt = alt
 
         # Some quantities only useful in the FourierTransform
-        self._x_power = 1
-        self._k_power = 2
+        self._r_power = 0 if alt else 1
+        self._k_power = 0
+        # initialize the factors of the series
+        self._factor = None
 
-    def _psi(self, t):
-        y = np.sinh(t)
-        return t * np.tanh(np.pi * y / 2)
+    @property
+    def nu(self):
+        """Order of the hankel transform."""
+        return self._nu
 
-    def _d_psi(self, t):
-        a = np.ones_like(t)
-        mask = t < 6
-        t = t[mask]
-        a[mask] = (np.pi * t * np.cosh(t) + np.sinh(np.pi * np.sinh(t))) / (
-                1.0 + np.cosh(np.pi * np.sinh(t))
-            )
+    @property
+    def _series_fac(self):
+        """Factors for the series."""
+        if self._factor is None:
+            self._factor = np.pi * self.w * self.kernel * self.dpsi
+        return self._factor
 
-        # a[t<6] = (np.pi * t * np.cosh(t) + np.sinh(np.pi * np.sinh(t))) / (
-        #         1.0 + np.cosh(np.pi * np.sinh(t))
-        #     )
-        # with warnings.catch_warnings():
-        #     warnings.simplefilter("ignore")
-        #     a =
-        #
-        # a[np.isnan(a)] = 1.0
-        return a
+    def _k(self, k):
+        return np.array(k)
 
-    def _weight(self):
-        return yv(self._nu, np.pi * self._zeros) / self._j1(
-            np.pi * self._zeros
-        )
-
-    def _roots(self, N):
-        if np.floor(self._nu) == self._nu:
-            return _jn_zeros(self._nu, N) / np.pi
-        elif np.isclose(self._nu, 0.5):
-            # J[0.5] = sqrt(2/(x*pi))*sin(x)
-            return np.arange(1, N + 1)
-        elif np.isclose(self._nu, -0.5):
-            # J[-0.5] = sqrt(2/(x*pi))*cos(x)
-            return np.arange(1, N + 1) - 0.5
-        else:
-            return (
-                np.array([mpm.besseljzero(self._nu, i + 1) for i in range(N)])
-                / np.pi
-            )
-
-    def _j(self, x):
-        if self._nu == 0:
-            return j0(x)
-        elif self._nu == 1:
-            return j1(x)
-        elif np.floor(self._nu) == self._nu:
-            return jn(self._nu, x)
-        else:
-            return jv(self._nu, x)
-
-    def _j1(self, x):
-        if self._nu == -1:
-            return j0(x)
-        elif self._nu == 0:
-            return j1(x)
-        elif np.floor(self._nu) == self._nu:
-            return jn(self._nu + 1, x)
-        else:
-            return jv(self._nu + 1, x)
-
-    def _x(self, h):
-        return np.pi * self._psi(h * self._zeros) / h
-
-    def _f(self, f, x):
-        return f(x)
-
-    @staticmethod
-    def _k(k):
-        return k
-
-    @staticmethod
     def _norm(self, inverse=False):
-        r"""
-        Scalar normalisation of the transform. Identically 1.
-        """
+        r"""Scalar normalisation of the transform. Identically 1."""
         return 1
 
     def _get_series(self, f, k=1):
-        fres = (
-            self._f(f, np.divide.outer(self.x, k).T) * self.x ** self._x_power
-        )
-        return np.pi * self.w * fres * self.j * self.dpsi
+        with np.errstate(divide="ignore"):  # numpy safely divids by 0
+            args = np.divide.outer(self.x, k).T  # x = r*k
+        return self._series_fac * f(args) * safe_power(self.x, self._r_power)
 
     def transform(self, f, k=1, ret_err=True, ret_cumsum=False, inverse=False):
         r"""
@@ -167,10 +118,8 @@ class HankelTransform(object):
         ----------
         f : callable
             A function of one variable, representing :math:`f(x)`
-
         ret_err : boolean, optional, default = True
             Whether to return the estimated error
-
         ret_cumsum : boolean, optional, default = False
             Whether to return the cumulative sum
 
@@ -179,18 +128,15 @@ class HankelTransform(object):
         ret : array-like
             The Hankel-transform of f(x) at the provided k. If
             `k` is scalar, then this will be scalar.
-
         err : array-like
             The estimated error of the approximate integral, at every `k`.
             It is merely the last term in the sum.
             Only returned if `ret_err=True`.
-
         cumsum : array-like
             The total cumulative sum, for which the last term
             is itself the transform.
             One can use this to check whether the integral is converging.
             Only returned if `ret_cumsum=True`
-
 
         Notes
         -----
@@ -198,35 +144,73 @@ class HankelTransform(object):
 
         .. math:: F(k) = \int_0^\infty r f(r) J_\nu(kr) dr.
 
+        Or in the alternative case with ``alt=True``:
+
+        .. math:: F(k) = \int_0^\infty f(r) \sqrt{kr} J_\nu(kr) dr.
+
         The inverse transform is identical (swapping *k* and *r* of course).
         """
         # The following allows for a re-scaling of k when doing FT's.
+        k_scalar = np.isscalar(k)
         k = self._k(k)
-
+        # k = zero here
+        k_0 = np.isclose(k, 0)
+        kn0 = np.invert(k_0)
+        k_tmp = k[kn0]
+        # The following renormalises by the fourier dual to some power
+        knorm = safe_power(k_tmp, self._k_power + self._r_power + 1)
         # The following is the scalar normalisation of the transform
         # The basic transform has a norm of 1.
         # But when doing FT's, this depends on the dimensionality.
         norm = self._norm(inverse)
+        # calculate the result for non zero k (int k -> real ret)
+        ret = np.empty_like(k, float) if np.isrealobj(k) else np.empty_like(k)
+        summation = self._get_series(f, k_tmp)
+        ret[kn0] = np.array(norm * np.sum(summation, axis=-1) / knorm)
 
-        # The following renormalises by the fourier dual to some power
-        knorm = k ** self._k_power
+        # care about k=0
+        ret_0 = 0
+        err_0 = 0
+        if np.any(k_0):
+            # limit of J(nu, 0) considering powers of k
+            alt_pow = 0.5 if self.alt else 0  # in alt. def sqrt(rk) involved
+            nu_th = self._k_power - alt_pow  # threshold
 
-        summation = self._get_series(f, k)
-        ret = norm * np.sum(summation, axis=-1) / knorm
+            if np.isclose(self.nu, nu_th):
+                lim_r_pow = self._r_power + alt_pow + self.nu
+                int_fac = j_lim(self.nu) * norm
+
+                def integrand(r):
+                    return f(r) * safe_power(r, lim_r_pow)
+
+                int_res = quad(integrand, 0, np.inf)
+                ret_0 = int_res[0] * int_fac
+                err_0 = int_res[1] * int_fac
+            elif self.nu < nu_th:
+                ret_0 = np.nan
+            ret[k_0] = ret_0
+
+        if k_scalar:
+            ret = ret.item()
 
         if ret_err:
-            err = norm * np.take(summation, -1, axis=-1) / knorm
+            err = np.empty_like(ret)
+            err[kn0] = norm * np.take(summation, -1, axis=-1) / knorm
+            err[k_0] = err_0
         if ret_cumsum:
-            cumsum = norm * np.cumsum(summation, axis=-1).T / knorm
+            cumsum = np.empty(
+                np.shape(self.x) + np.shape(ret), np.array(ret).dtype
+            )
+            cumsum[:, kn0] = norm * np.cumsum(summation, axis=-1).T / knorm
+            cumsum[:, k_0] = ret_0
 
         if ret_err and ret_cumsum:
             return ret, err, cumsum
-        elif ret_err:
+        if ret_err:
             return ret, err
-        elif ret_cumsum:
+        if ret_cumsum:
             return ret, cumsum
-        else:
-            return ret
+        return ret
 
     def integrate(self, f, ret_err=True, ret_cumsum=False):
         r"""
@@ -240,19 +224,17 @@ class HankelTransform(object):
         ----------
         f : callable
             A function of one variable, representing :math:`f(x)`
-
         ret_err : boolean, optional, default = True
             Whether to return the estimated error
-
         ret_cumsum : boolean, optional, default = False
             Whether to return the cumulative sum
         """
+        if self.alt:
+            func = lambda x: f(x) / np.sqrt(x)
+        else:
+            func = lambda x: f(x) / x
         return self.transform(
-            f=lambda x: f(x) / x,
-            k=1,
-            ret_err=ret_err,
-            ret_cumsum=ret_cumsum,
-            inverse=False,
+            f=func, k=1, ret_err=ret_err, ret_cumsum=ret_cumsum, inverse=False
         )
 
     def xrange(self, k=1):
@@ -291,16 +273,18 @@ class HankelTransform(object):
         --------
         xrange: the actual x-range under a given choice of parameters.
         """
-        r = mpm.besseljzero(nu, 1) / np.pi
-        return np.array([np.pi ** 2 * h * r ** 2 / 2 / k,
-                         np.pi * np.pi / h / k])
+        r = roots(1, nu)[0]
+        return np.array(
+            [np.pi ** 2 * h * r ** 2 / 2 / k, np.pi * np.pi / h / k]
+        )
 
     @classmethod
     def G(cls, f, h, k=None, *args, **kwargs):
         """
+        Info about the last term in the series.
+
         The absolute value of the non-oscillatory
         of the summed series' last term, up to a scaling constant.
-
         This can be used to get the sign of the slope of G with h.
 
         Parameters
@@ -319,12 +303,11 @@ class HankelTransform(object):
         """
         if k is None:
             return np.sqrt(2 * h / np.pi) * f(np.pi * np.pi / h)
-        else:
-            return np.sqrt(np.pi / (2 * h)) * f(np.pi * np.pi / h / k)
+        return np.sqrt(np.pi / (2 * h)) * f(np.pi * np.pi / h / k)
 
     @classmethod
     def deltaG(cls, f, h, *args, **kwargs):
-        "The slope (up to a constant) of the last term of the series with h"
+        """Slope (up to a constant) of the last term of the series with h."""
         return cls.G(f, h, *args, **kwargs) - cls.G(
             f, h / 1.1, *args, **kwargs
         )
@@ -332,24 +315,23 @@ class HankelTransform(object):
 
 class SymmetricFourierTransform(HankelTransform):
     r"""
-    Determine the Fourier Transform of a radially symmetric function
-    in arbitrary dimensions.
+    Fourier Transform of a radially symmetric function in arbitrary dimensions.
 
     Parameters
     ----------
     ndim : int
         Number of dimensions the transform is in.
-
     a, b : float, default 1
         This pair of values defines the Fourier convention used
         (see Notes below for details)
-
     N : int, optional
         The number of nodes in the calculation. Generally this must increase
         for a smaller value of the step-size h.
-
     h : float, optional
         The step-size of the integration.
+    alt : bool, optional
+        State if the alternative definition of the hankel transform
+        should be used. Default: False
 
     Notes
     -----
@@ -384,73 +366,29 @@ class SymmetricFourierTransform(HankelTransform):
 
     """
 
-    def __init__(self, ndim=2, a=1, b=1, N=None, h=0.05):
-        # keep int-type in python 3
-        if np.isclose(ndim % 2, 0):
-            nu = int(ndim) // 2 - 1
-        else:
-            nu = ndim / 2.0 - 1
+    def __init__(self, ndim=2, a=1, b=1, N=None, h=0.05, alt=True):
+
+        super().__init__(nu=dim_to_nu(ndim), N=N, h=h, alt=alt)
 
         self.ndim = ndim
         self.fourier_norm_a = a
         self.fourier_norm_b = b
-
-        super().__init__(nu=nu, N=N, h=h)
-
-        self._x_power = self.ndim / 2.0
-        self._k_power = self.ndim
-
-    def _fourier_norm(self, inverse=False):
-        r"""
-        Calculate fourier-pair normalisations.
-
-        See class documentation for details.
-        """
-        if inverse:
-            return (
-                np.sqrt(
-                    np.abs(self.fourier_norm_b)
-                    / (2 * np.pi) ** (1 + self.fourier_norm_a)
-                )
-                ** self.ndim
-            )
-        else:
-            return (
-                np.sqrt(
-                    np.abs(self.fourier_norm_b)
-                    / (2 * np.pi) ** (1 - self.fourier_norm_a)
-                )
-                ** self.ndim
-            )
+        self._r_power = (ndim - 1) / 2.0 if alt else ndim / 2.0
+        self._k_power = (ndim - 1) / 2.0 if alt else ndim / 2.0 - 1
 
     def _norm(self, inverse=False):
         r"""
-        The scalar normalisation of the transform,
-        taking into account Fourier conventions and a possible inversion.
+        Scalar normalisation of the transform.
+
+        Taking into account Fourier conventions and a possible inversion.
         """
-        return (2 * np.pi) ** (self.ndim / 2.0) * self._fourier_norm(inverse)
-
-    def transform(self, f, k, *args, **kwargs):
-        r"""
-        Do the *n*-symmetric Fourier transform of the function f.
-
-        Parameters and returns are precisely the same as
-        :meth:`HankelTransform.transform`.
-
-        Notes
-        -----
-        The *n*-symmetric fourier transform is defined
-        in terms of the Hankel transform as
-
-        .. math:: F(k) = \frac{(2\pi)^{n/2}}{k^{n/2-1}}
-                  \int_0^\infty r^{n/2-1} f(r) J_{n/2-1}(kr)r dr.
-
-        The inverse transform has an inverse normalisation.
-        """
-        k = self.fourier_norm_b * k
-        return super().transform(
-            f, k, *args, **kwargs
+        return (2 * np.pi) ** (self.ndim / 2.0) * fourier_norm(
+            self.fourier_norm_a, self.fourier_norm_b, self.ndim, inverse
         )
+
+    def _k(self, k):
+        """Substitution for k."""
+        return np.array(self.fourier_norm_b * np.array(k))
 
     @classmethod
     def xrange_approx(cls, h, ndim, k=1):
@@ -463,10 +401,8 @@ class SymmetricFourierTransform(HankelTransform):
         ----------
         h : float
             The resolution parameter of the Hankel integration
-
         ndim : float
             Number of dimensions of the transform.
-
         k : array-like, optional
             Scales for the transformation. Leave as 1 for an integral.
 
@@ -474,14 +410,15 @@ class SymmetricFourierTransform(HankelTransform):
         --------
         xrange:  the actual x-range under a given choice of parameters.
         """
-        return HankelTransform.xrange_approx(h, ndim / 2.0 - 1, k)
+        return HankelTransform.xrange_approx(h, dim_to_nu(ndim), k)
 
     @classmethod
-    def G(self, f, h, k=None, ndim=2):
+    def G(cls, f, h, k=None, ndim=2):
         """
+        Info about the last term in the series.
+
         The absolute value of the non-oscillatory part
         of the summed series' last term, up to a scaling constant.
-
         This can be used to get the sign of the slope of G with h.
 
         Parameters
@@ -502,143 +439,5 @@ class SymmetricFourierTransform(HankelTransform):
         """
         if k is None:
             return HankelTransform.G(f, h, k)
-        else:
-            fmax = f(self.xrange_approx(h, ndim, k)[-1])
-            return (np.pi / h) ** ((ndim - 1) / 2.0) * fmax
-
-
-def get_h(
-    f,
-    nu,
-    K=None,
-    cls=HankelTransform,
-    hstart=0.05,
-    hdecrement=2,
-    atol=1e-3,
-    rtol=1e-3,
-    maxiter=15,
-    inverse=False,
-):
-    """
-    Determine the largest value of h which gives a converged solution.
-
-    Parameters
-    ----------
-    f : callable
-        The function to be integrated/transformed.
-    nu : float
-        Either the order of the transformation, or the number of dimensions
-        (if `cls` is a :class:`SymmetricFourierTransform`)
-    K : float or array-like, optional
-        The scale(s) of the transformation.
-        If None, assumes an integration over f(x)J_nu(x) is desired.
-        It is recommended to use a down-sampled K
-        for this routine for efficiency. Often a min/max is enough.
-    cls : :class:`HankelTransform` subclass, optional
-        Either :class:`HankelTransform` or a subclass,
-        specifying the type of transformation to do on `f`.
-    hstart : float, optional
-        The starting value of h.
-    hdecrement : float, optional
-        How much to divide h by on each iteration.
-    atol, rtol : float, optional
-        The tolerance parameters, passed to `np.isclose`,
-        defining the stopping condition.
-    maxiter : int, optional
-        Maximum number of iterations to perform.
-    inverse : bool, optional
-        Whether to treat as an inverse transformation.
-
-    Returns
-    -------
-    h : float
-        The h value at which the solution converges.
-    res : scalar or tuple
-        The value of the integral/transformation using the returned h --
-        if a transformation, returns results at K.
-    N : int
-        The number of nodes necessary in the final calculation.
-        While each iteration uses N=pi/h, the returned N checks
-        whether nodes are numerically zero above some threshold.
-
-    Notes
-    -----
-    This function is not completely general. The function `f` is assumed to be
-    reasonably smooth and non-oscillatory.
-
-    The idea is to use successively smaller values of *h*, with N=pi/h on each
-    iteration, until the result betweeniterations becomes stable.
-    """
-
-    if hstart >= 1:
-        raise ValueError("h should never be greater than unity")
-
-    # First, ensure that *some* of the values are non-zero
-    i = 0
-    while (
-        np.any(
-            np.all(
-                cls(nu, h=hstart, N=int(np.pi / hstart))._get_series(
-                    f, 1 if K is None else K
-                ) == 0,
-                axis=-1,
-            )
-        )
-        and i < maxiter
-    ):
-        hstart /= hdecrement
-        i += 1
-
-    if i == maxiter:
-        raise Exception("Maxiter reached while checking for non-zero values")
-
-    if K is None:  # Do a normal integral of f(x)J_nu(x)
-        K = 1
-
-        def getres(h):
-            """dummy function to get the result"""
-            return cls(nu, h=h, N=int(np.pi / h)).transform(
-                lambda x: f(x) / x, k=K, ret_err=False, inverse=inverse
-            )
-
-    else:  # Do a transform at k=K
-        def getres(h):
-            """dummy function to get the result"""
-            return cls(nu, h=h, N=int(np.pi / h)).transform(
-                f, k=K, ret_err=False, inverse=inverse
-            )
-
-    res = getres(hstart)
-    res2 = 2 * res + 10
-
-    while not np.allclose(res, res2, atol=atol, rtol=rtol) and i < maxiter:
-        i += 1
-        hstart /= hdecrement
-        res2 = 1 * res
-        res = getres(hstart)
-
-    if i == maxiter:
-        raise Exception("Maxiter reached while checking convergence")
-
-    # Can do some more trimming of N potentially, by seeing where f(x)~0.
-    def consecutive(data, stepsize=1):
-        """split into arrays of consecutive zeros"""
-        return np.split(data, np.where(np.diff(data) != stepsize)[0] + 1)
-
-    hstart *= hdecrement
-
-    x = cls(nu, h=hstart, N=int(np.pi / hstart)).x
-    lastk = np.where(f(x / np.max(K)) == 0)[0]
-    if len(lastk) > 1:
-        # if there are any that are zero,
-        # and if there are more than 1 in a row
-        # (otherwise might just be oscillatory)
-        lastk = consecutive(lastk)  # split into arrays of consecutive zeros
-        if len(lastk[-1]) == 1:
-            lastk = int(np.pi / hstart)
-        else:
-            lastk = lastk[-1][0]
-    else:  # otherwise set back to N
-        lastk = int(np.pi / hstart)
-
-    return hstart, res2, lastk
+        fmax = f(cls.xrange_approx(h, ndim, k)[-1])
+        return (np.pi / h) ** ((ndim - 1) / 2.0) * fmax

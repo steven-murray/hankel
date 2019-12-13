@@ -27,8 +27,9 @@ Functions
 """
 from __future__ import absolute_import
 
-from hankel.hankel import HankelTransform, SymmetricFourierTransform, get_h
+from hankel.hankel import HankelTransform, SymmetricFourierTransform
+from hankel.tools import get_h
 
 __all__ = ["HankelTransform", "SymmetricFourierTransform", "get_h"]
 
-__version__ = "0.3.9"
+__version__ = "1.0.0.dev0"
