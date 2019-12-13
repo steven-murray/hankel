@@ -155,47 +155,54 @@ class HankelTransform(object):
         k = self._k(k)
         # k = zero here
         k_0 = np.isclose(k, 0)
-
+        kn0 = np.invert(k_0)
+        k_tmp = k[kn0]
+        # The following renormalises by the fourier dual to some power
+        knorm = safe_power(k_tmp, self._k_power + self._r_power + 1)
         # The following is the scalar normalisation of the transform
         # The basic transform has a norm of 1.
         # But when doing FT's, this depends on the dimensionality.
         norm = self._norm(inverse)
-
-        # The following renormalises by the fourier dual to some power
-        knorm = safe_power(k, self._k_power + self._r_power + 1)
-
-        # replace k=0 with 1
-        knorm[k_0] = 1
-        k[k_0] = 1
-
-        summation = self._get_series(f, k)
-        ret = np.array(norm * np.sum(summation, axis=-1) / knorm)
+        # calculate the result for non zero k (int k -> real ret)
+        ret = np.empty_like(k, float) if np.isrealobj(k) else np.empty_like(k)
+        summation = self._get_series(f, k_tmp)
+        ret[kn0] = np.array(norm * np.sum(summation, axis=-1) / knorm)
 
         # care about k=0
+        ret_0 = 0
+        err_0 = 0
         if np.any(k_0):
             # limit of J(nu, 0) considering powers of k
             alt_pow = 0.5 if self.alt else 0  # in alt. def sqrt(rk) involved
-            lim_r_pow = self._r_power + alt_pow + self.nu
             nu_th = self._k_power - alt_pow  # threshold
-            lim = j_lim(self.nu)
-
-            def integrand(r):
-                return f(r) * safe_power(r, lim_r_pow)
 
             if np.isclose(self.nu, nu_th):
-                ret[k_0] = quad(integrand, 0, np.inf)[0] * lim * norm
+                lim_r_pow = self._r_power + alt_pow + self.nu
+                int_fac = j_lim(self.nu) * norm
+
+                def integrand(r):
+                    return f(r) * safe_power(r, lim_r_pow)
+
+                int_res = quad(integrand, 0, np.inf)
+                ret_0 = int_res[0] * int_fac
+                err_0 = int_res[1] * int_fac
             elif self.nu < nu_th:
-                ret[k_0] = np.nan
-            else:
-                ret[k_0] = 0
+                ret_0 = np.nan
+            ret[k_0] = ret_0
 
         if k_scalar:
             ret = ret.item()
 
         if ret_err:
-            err = norm * np.take(summation, -1, axis=-1) / knorm
+            err = np.empty_like(ret)
+            err[kn0] = norm * np.take(summation, -1, axis=-1) / knorm
+            err[k_0] = err_0
         if ret_cumsum:
-            cumsum = norm * np.cumsum(summation, axis=-1).T / knorm
+            cumsum = np.empty(
+                np.shape(self.x) + np.shape(ret), np.array(ret).dtype
+            )
+            cumsum[:, kn0] = norm * np.cumsum(summation, axis=-1).T / knorm
+            cumsum[:, k_0] = ret_0
 
         if ret_err and ret_cumsum:
             return ret, err, cumsum
