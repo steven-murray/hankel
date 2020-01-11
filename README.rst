@@ -35,7 +35,7 @@ Features
 -  Arbitrary order transforms
 -  Built-in support for radially symmetric Fourier Transforms
 -  Thoroughly tested.
--  Python 2 and 3 compatible.
+-  only Python 3 compatible.
 
 Quicklinks
 ----------

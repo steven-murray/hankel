@@ -1,6 +1,7 @@
+"""hankel: Hankel Transformations using method of Ogata 2005."""
+
 from setuptools import setup
 import os
-import sys
 import re
 import io
 
@@ -23,20 +24,9 @@ def find_version(*file_paths):
     raise RuntimeError("Unable to find version string.")
 
 
-if sys.argv[-1] == "publish":
-    os.system("rm dist/*")
-    os.system("python setup.py sdist")
-    os.system("python setup.py bdist_wheel")
-    os.system("twine upload dist/*")
-    sys.exit()
-
-req = ["numpy>=1.6.1", "scipy>=0.12.0", "mpmath>=0.18"]
-if sys.version < '3':
-    req += ['future']
-
 setup(
     name="hankel",
-    install_requires=req,
+    install_requires=["numpy>=1.6.1", "scipy>=0.12.0", "mpmath>=0.18"],
     version=find_version("hankel", "__init__.py"),
     packages=["hankel"],
     description="Hankel Transformations using method of Ogata 2005",
