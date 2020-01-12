@@ -24,10 +24,32 @@ def find_version(*file_paths):
     raise RuntimeError("Unable to find version string.")
 
 
+CLASSIFIERS = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: Unix",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Utilities",
+]
+
+# use first version of req. to support py35
 setup(
     name="hankel",
-    install_requires=["numpy>=1.6.1", "scipy>=0.12.0", "mpmath>=0.18"],
+    install_requires=["numpy>=1.9.3", "scipy>=0.16.1", "mpmath>=1.0.0"],
     version=find_version("hankel", "__init__.py"),
+    classifiers=CLASSIFIERS,
+    python_requires=">=3.5",
     packages=["hankel"],
     description="Hankel Transformations using method of Ogata 2005",
     long_description=read("README.rst"),

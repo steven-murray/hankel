@@ -1,5 +1,5 @@
-numpy>=1.6.1
-scipy>=0.12.0
-mpmath>=0.18
+numpy>=1.9.3
+scipy>=0.16.1
+mpmath>=1.0.0
 pytest-cov
 coveralls
