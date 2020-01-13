@@ -22,9 +22,10 @@ script:
 stages:
   - test
   - coverage
-  - test_deploy
+  - name: test_deploy
+    if: (NOT type IN (pull_request)) AND (repo = steven-murray/hankel)
   - name: deploy  # only on github tag
-    if: branch = master AND tag IS PRESENT
+    if: (NOT type IN (pull_request)) AND (branch = master) AND (tag IS PRESENT)
 
 jobs:
   include:
