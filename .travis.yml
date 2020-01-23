@@ -7,8 +7,8 @@ env:
     - TWINE_USERNAME=stevenjeanette
     # skip py27 (EOL) and linux-32bit (Test get_h->test_nu0 hangs)
     - CIBW_SKIP="cp27-* *-manylinux_i686"
-    # first versions to support py3.8
-    - CIBW_BEFORE_BUILD="pip install numpy==1.17.3 scipy==1.3.2 mpmath==1.1.0 setuptools"
+    # update setuptools to latest version
+    - CIBW_BEFORE_BUILD="pip install -U setuptools"
     # testing with cibuildwheel
     - CIBW_TEST_REQUIRES=pytest
     - CIBW_TEST_COMMAND="python -m pytest -v {project}/tests"
