@@ -7,7 +7,6 @@ Publications of the Research Institute for Mathematical Sciences,
 vol. 41, no. 4, pp. 949-970, 2005.
 """
 
-from __future__ import division, absolute_import
 from builtins import super
 
 import numpy as np

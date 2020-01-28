@@ -25,8 +25,6 @@ Functions
    get_h
 
 """
-from __future__ import absolute_import
-
 from hankel.hankel import HankelTransform, SymmetricFourierTransform
 from hankel.tools import get_h
 

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 r"""Tools for Hankel transformations."""
 
-from __future__ import division, absolute_import
-
 import numpy as np
 from mpmath import fp as mpm
 from scipy.special import j0, j1, jn_zeros as _jn_zeros, jn, yv, jv, gamma
