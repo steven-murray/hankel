@@ -1,24 +1,79 @@
-dist: xenial
 language: python
-python:
-- 3.7
-- 3.6
-- 3.5
-- 2.7
-install: pip install -U tox-travis coverage coveralls
-script:
-- tox
-- coverage report
-after_success:
-- ls -a
-- coveralls
+# install python on windows
 
-deploy:
-  provider: pypi
-  user: stevenjeanette
-  password:
-    secure: V7EmyeE17kKNPZQYk3P+v5Kh3dIKuD8jzrH/OypBR3BlO2rYVDtVpnQG6f6uhET7TB821m64X1AE48Wyt/36Yc9+NoPIE+oBngn5ZD/1uErR9zF7Dj4Ot5llRjPWVF2Bl1k19erJMNacisTBDXT6K78BSf9gyqL3CR8srbixEak=
-  on:
-    tags: true
-  distributions: "sdist bdist_wheel"
-  skip_existing: true
+env:
+  global:
+    # Note: TWINE_PASSWORD is set in Travis settings
+    - TWINE_USERNAME=stevenjeanette
+    # skip py27 (EOL) and linux-32bit (Test get_h->test_nu0 hangs)
+    - CIBW_SKIP="cp27-* *-manylinux_i686"
+    # update setuptools to latest version
+    - CIBW_BEFORE_BUILD="pip install -U setuptools"
+    # testing with cibuildwheel
+    - CIBW_TEST_REQUIRES=pytest
+    - CIBW_TEST_COMMAND="python -m pytest -v {project}/tests"
+
+install:
+  - python -m pip install cibuildwheel==1.1.0
+
+script:
+  - python -m cibuildwheel --output-dir tmp_dist
+
+stages:
+  - test
+  - coverage
+  - name: test_deploy
+    if: (NOT type IN (pull_request)) AND (repo = steven-murray/hankel)
+  - name: deploy  # only on github tag
+    if: (NOT type IN (pull_request)) AND (branch = master) AND (tag IS PRESENT)
+
+jobs:
+  include:
+    - stage: test
+      services: docker
+      language: python
+      python: 3.8
+      name: Test on Linux
+
+    - stage: test
+      os: osx
+      language: generic
+      name: Test on MacOS
+
+    - stage: test
+      os: windows
+      language: shell
+      name: Test on Windows
+      before_install:
+        - |
+          if [[ "$TRAVIS_OS_NAME" = windows ]]; then
+              choco install python --version 3.8.0
+              export PATH="/c/Python38:/c/Python38/Scripts:$PATH"
+          fi
+
+    - stage: coverage
+      services: docker
+      python: 3.8
+      install: python -m pip install -r requirements_dev.txt
+      script:
+        - python setup.py install
+        - python -m pytest --cov hankel --cov-report term-missing -v tests/
+        # - python -m coveralls
+      name: Coverage on Linux
+
+    # Test Deploy source distribution
+    - stage: test_deploy
+      python: 3.8
+      name: Test Deploy
+      install: python -m pip install -U setuptools wheel twine
+      script: python setup.py sdist --formats=gztar bdist_wheel
+      after_success:
+       - python -m twine upload --verbose --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
+
+    # Deploy source distribution
+    - stage: deploy
+      python: 3.8
+      name: Deploy source distribution
+      install: python -m pip install -U setuptools wheel twine
+      script: python setup.py sdist --formats=gztar bdist_wheel
+      after_success: python -m twine upload --skip-existing dist/*

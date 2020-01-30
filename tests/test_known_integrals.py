@@ -1,4 +1,4 @@
-'''
+r"""
 This module provides some tests of the integrator to known integrals.
 
 Note, these are not the transformations, just the plain integrals,  :math:`\int_0^\infty f(x) J_\nu(x) dx`
@@ -6,16 +6,15 @@ Note, these are not the transformations, just the plain integrals,  :math:`\int_
 There is a corresponding notebook in devel/ that runs each of these functions through a grid of N and h,
 showing the pattern of accuracy. This could be useful for finding the correct numbers to choose for these
 for other unknown functions.
-'''
+"""
 
 import numpy as np
 from scipy.special import k0, gamma, gammainc, gammaincc
+from hankel import HankelTransform
+import pytest
 
 gammainc_ = lambda a, x: gamma(a) * gammainc(a, x)
 gammaincc_ = lambda a, x: gamma(a) * gammaincc(a, x)
-
-from hankel import HankelTransform
-import pytest
 
 
 def test_nu0_f_unity():
@@ -73,7 +72,7 @@ def test_nu0_1_on_sqrt_x():
     """
     # NOTE: this is REALLY finnicky!! (check devel/)
     ht = HankelTransform(nu=0, N=160, h=10 ** -3.5)
-    ans = ht.integrate(lambda x: 1. / np.sqrt(x), False, False)
+    ans = ht.integrate(lambda x: 1.0 / np.sqrt(x), False, False)
     m = -1.5
     anl = 2 ** (m + 1) * gamma(m / 2 + 1) / gamma(-m / 2)
 
@@ -102,21 +101,23 @@ def test_nu0_f_gauss():
     z = 2
     ht = HankelTransform(nu=0, N=50, h=0.01)
 
-    ans = ht.integrate(lambda x: x * np.exp(-0.5 * z ** 2 * x ** 2), False, False)
-    anl = 1. / z ** 2 * np.exp(-0.5 / z ** 2)
+    ans = ht.integrate(
+        lambda x: x * np.exp(-0.5 * z ** 2 * x ** 2), False, False
+    )
+    anl = 1.0 / z ** 2 * np.exp(-0.5 / z ** 2)
     print("Numerical Result: ", ans, " (required %s)" % anl)
     assert np.isclose(ans, anl, rtol=1e-3)
 
 
 @pytest.mark.parametrize(
-    's, nu, N, h',
+    "s, nu, N, h",
     [
         [0, 1, 50, 0.05],
         [0, 2, 50, 0.05],
         [0.5, 1, 50, 0.05],
         [-2, 2, 600, 10 ** -2.6],  # This is pretty finnicky
-        [-0.783, 1, 50, 0.05]
-    ]
+        [-0.783, 1, 50, 0.05],
+    ],
 )
 def test_nu_varying_powerlaw(s, nu, N, h):
     ht = HankelTransform(nu=nu, N=N, h=h)
@@ -129,17 +130,15 @@ def test_nu_varying_powerlaw(s, nu, N, h):
 
 
 @pytest.mark.parametrize(
-    's, nu, N, h',
-    [
-        [0.5, 1, 50, 0.05],
-        [0.783, 1, 50, 0.05],
-        [1.0, 0.5, 500, 0.01],
-    ]
+    "s, nu, N, h",
+    [[0.5, 1, 50, 0.05], [0.783, 1, 50, 0.05], [1.0, 0.5, 500, 0.01]],
 )
 def test_nu_varying_gamma_mod(s, nu, N, h):
     ht = HankelTransform(nu=nu, N=N, h=h)
 
-    ans = ht.integrate(lambda x: x ** (nu - 2 * s + 1) * gammainc_(s, x ** 2), False, False)
+    ans = ht.integrate(
+        lambda x: x ** (nu - 2 * s + 1) * gammainc_(s, x ** 2), False, False
+    )
     anl = 0.5 ** (2 * s - nu - 1) * gammaincc_(1 - s + nu, 0.25)
 
     print("Numerical Result: ", ans, " (required %s)" % anl)
