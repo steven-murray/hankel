@@ -22,9 +22,16 @@ Functions
    get_h
 
 """
+from importlib.metadata import PackageNotFoundError, version
+
 from hankel.hankel import HankelTransform, SymmetricFourierTransform
 from hankel.tools import get_h
 
 __all__ = ["HankelTransform", "SymmetricFourierTransform", "get_h"]
 
-__version__ = "1.0.0.dev0"
+
+try:
+    __version__ = version(__name__)
+except PackageNotFoundError:
+    # package is not installed
+    pass
