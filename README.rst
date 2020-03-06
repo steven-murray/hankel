@@ -37,29 +37,33 @@ Features
 -  Thoroughly tested.
 -  only Python 3 compatible.
 
-Quicklinks
-----------
+Quick links
+-----------
 
 - **Documentation:** `<https://hankel.readthedocs.io>`_
 - **Quickstart+Description:** `Getting Started <https://hankel.readthedocs.io/en/latest/demos/getting_started.html>`_
 
 Installation
 ------------
-Either clone the repository and install locally::
+Either clone the repository and install locally (best for developer installs)::
 
     $ git clone https://github.com/steven-murray/hankel.git
     $ cd hankel/
     $ pip install -U .
 
-Or install from PyPI::
+Or install with pip::
 
     $ pip install hankel
+
+Or install with conda::
+
+    $ conda install -c conda-forge hankel
 
 The only dependencies are `numpy <https://www.numpy.org>`_,
 `scipy <https://www.scipy.org>`_ and `mpmath <https://www.mpmath.org>`_.
 These will be installed automatically if they are not already installed.
 
-For instructions on testing hankel or any other development- or contribution-related
+For instructions on testing `hankel` or any other development- or contribution-related
 issues, see CONTRIBUTING.rst.
 
 Acknowledging
