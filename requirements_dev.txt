@@ -1,5 +1,3 @@
-numpy>=1.9.3
-scipy>=0.16.1
-mpmath>=1.0.0
-pytest-cov
 coveralls
+pre-commit
+pytest-cov

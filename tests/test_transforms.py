@@ -8,14 +8,20 @@ showing the pattern of accuracy. This could be useful for finding the correct nu
 for other unknown functions.
 """
 
+import pytest
+
 import numpy as np
 from scipy.special import gamma, gammainc, gammaincc
 
 from hankel import HankelTransform
-import pytest
 
-gammainc_ = lambda a, x: gamma(a) * gammainc(a, x)
-gammaincc_ = lambda a, x: gamma(a) * gammaincc(a, x)
+
+def gammainc_(a, x):
+    return gamma(a) * gammainc(a, x)
+
+
+def gammaincc_(a, x):
+    return gamma(a) * gammaincc(a, x)
 
 
 @pytest.mark.parametrize(
@@ -58,10 +64,7 @@ def test_powerlaw(s, nu, k, N, h):
         raise Exception("Can't have a negative integer for gamma")
 
     anl = (
-        2 ** (s + 1)
-        * gamma(0.5 * (2 + nu + s))
-        / k ** (s + 2)
-        / gamma(0.5 * (nu - s))
+        2 ** (s + 1) * gamma(0.5 * (2 + nu + s)) / k ** (s + 2) / gamma(0.5 * (nu - s))
     )
 
     print("Numerical Result: ", ans, " (required %s)" % anl)
@@ -125,9 +128,8 @@ def test_alternative(s, nu, k, N, h):
 def test_k_zero(nu, alt):
     """Testing k=0."""
     threshold = -0.5 if alt else 0
-    f = lambda r: np.exp(-r ** 2 / 2)
     ht = HankelTransform(nu=nu, N=50, h=1e-3, alt=alt)
-    ans = ht.transform(f, 0, False, False)
+    ans = ht.transform(lambda r: np.exp(-(r ** 2) / 2), 0, False, False)
     print("Numerical Results: ", ans)
     if nu < threshold:
         assert np.isnan(ans)

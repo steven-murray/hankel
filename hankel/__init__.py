@@ -1,7 +1,4 @@
 """
-hankel API Summary
-------------------
-
 General quadrature method for Hankel transformations.
 
 Based on the algorithm provided in

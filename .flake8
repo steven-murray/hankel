@@ -1,0 +1,37 @@
+[flake8]
+select = A,B,C,E,F,W,T4,B9,RST,D,N,I
+ignore =
+    E203
+    E266
+    E501
+    W503
+    F403
+    F401
+    N803  # I like uppercase single-character names sometimes.
+    N806  # Same here
+    N802  # Can remove this line in v1.2
+max-line-length = 88
+max-complexity = 21
+docstring-convention=numpy
+per-file-ignores =
+    tests/*:D
+    setup.py:D
+rst-roles =
+    class
+    func
+    mod
+    data
+    const
+    meth
+    attr
+    exc
+    obj
+rst-directives =
+    note
+    warning
+    versionadded
+    versionchanged
+    deprecated
+    seealso
+    currentmodule
+    autosummary

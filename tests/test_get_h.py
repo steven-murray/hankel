@@ -7,14 +7,20 @@ In this module, we use the get_h function, rather than choosing N and h,
 to ensure that this function works.
 """
 
-import numpy as np
-from scipy.special import k0, gamma, gammainc, gammaincc
-
-from hankel import get_h, HankelTransform, SymmetricFourierTransform
 import pytest
 
-gammainc_ = lambda a, x: gamma(a) * gammainc(a, x)
-gammaincc_ = lambda a, x: gamma(a) * gammaincc(a, x)
+import numpy as np
+from scipy.special import gamma, gammainc, gammaincc, k0
+
+from hankel import HankelTransform, SymmetricFourierTransform, get_h
+
+
+def gammainc_(a, x):
+    return gamma(a) * gammainc(a, x)
+
+
+def gammaincc_(a, x):
+    return gamma(a) * gammaincc(a, x)
 
 
 @pytest.mark.parametrize(
@@ -56,9 +62,7 @@ def test_nu0(f, anl):
 )
 def test_nu_varying_powerlaw(s, nu, N, h):
     # For this one we test the transform instead
-    ans = get_h(
-        f=lambda x: x ** s, nu=nu, K=1, hstart=0.5, atol=1e-3, rtol=1e-3
-    )[1]
+    ans = get_h(f=lambda x: x ** s, nu=nu, K=1, hstart=0.5, atol=1e-3, rtol=1e-3)[1]
 
     anl = 2 ** (s + 1) * gamma(0.5 * (2 + nu + s)) / gamma(0.5 * (nu - s))
     print("Numerical Result: {ans} (required {anl})".format(ans=ans, anl=anl))
@@ -66,8 +70,7 @@ def test_nu_varying_powerlaw(s, nu, N, h):
 
 
 @pytest.mark.parametrize(
-    "s, nu, N, h",
-    [[0.5, 1, 50, 0.05], [0.783, 1, 50, 0.05], [1.0, 0.5, 500, 0.01]],
+    "s, nu, N, h", [[0.5, 1, 50, 0.05], [0.783, 1, 50, 0.05], [1.0, 0.5, 500, 0.01]],
 )
 def test_nu_varying_gamma_mod(s, nu, N, h):
     ans = get_h(
@@ -113,7 +116,7 @@ def test_xrange():
     assert x1[1] < x2[1]
 
 
-def test_G():
+def test_g():
     g1 = HankelTransform.G(f=lambda x: x ** -4, h=0.5)
     g2 = HankelTransform.G(f=lambda x: x ** -4, h=0.1)
     assert g1 > g2

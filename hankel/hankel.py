@@ -11,16 +11,17 @@ from builtins import super
 
 import numpy as np
 from scipy.integrate import quad
+
 from hankel.tools import (
     d_psi,
-    kernel,
-    weight,
-    roots,
-    get_x,
-    fourier_norm,
     dim_to_nu,
-    safe_power,
+    fourier_norm,
+    get_x,
     j_lim,
+    kernel,
+    roots,
+    safe_power,
+    weight,
 )
 
 
@@ -197,9 +198,7 @@ class HankelTransform(object):
             err[kn0] = norm * np.take(summation, -1, axis=-1) / knorm
             err[k_0] = err_0
         if ret_cumsum:
-            cumsum = np.empty(
-                np.shape(self.x) + np.shape(ret), np.array(ret).dtype
-            )
+            cumsum = np.empty(np.shape(self.x) + np.shape(ret), np.array(ret).dtype)
             cumsum[:, kn0] = norm * np.cumsum(summation, axis=-1).T / knorm
             cumsum[:, k_0] = ret_0
 
@@ -228,12 +227,12 @@ class HankelTransform(object):
         ret_cumsum : boolean, optional, default = False
             Whether to return the cumulative sum
         """
-        if self.alt:
-            func = lambda x: f(x) / np.sqrt(x)
-        else:
-            func = lambda x: f(x) / x
         return self.transform(
-            f=func, k=1, ret_err=ret_err, ret_cumsum=ret_cumsum, inverse=False
+            f=(lambda x: f(x) / np.sqrt(x)) if self.alt else (lambda x: f(x) / x),
+            k=1,
+            ret_err=ret_err,
+            ret_cumsum=ret_cumsum,
+            inverse=False,
         )
 
     def xrange(self, k=1):
@@ -273,18 +272,16 @@ class HankelTransform(object):
         xrange: the actual x-range under a given choice of parameters.
         """
         r = roots(1, nu)[0]
-        return np.array(
-            [np.pi ** 2 * h * r ** 2 / 2 / k, np.pi * np.pi / h / k]
-        )
+        return np.array([np.pi ** 2 * h * r ** 2 / 2 / k, np.pi * np.pi / h / k])
 
     @classmethod
-    def G(cls, f, h, k=None, *args, **kwargs):
+    def final_term_amplitude(cls, f, h, k=None, *args, **kwargs):
         """
         Info about the last term in the series.
 
-        The absolute value of the non-oscillatory
+        The absolute value of the non-oscillatory component
         of the summed series' last term, up to a scaling constant.
-        This can be used to get the sign of the slope of G with h.
+        This can be used to get the sign of the slope of the amplitude with h.
 
         Parameters
         ----------
@@ -298,18 +295,33 @@ class HankelTransform(object):
 
         Returns
         -------
-        The value of G.
+        The value of G, the amplitude of the final term in the series' sum.
         """
         if k is None:
             return np.sqrt(2 * h / np.pi) * f(np.pi * np.pi / h)
         return np.sqrt(np.pi / (2 * h)) * f(np.pi * np.pi / h / k)
 
     @classmethod
+    def G(cls, f, h, k=None, *args, **kwargs):
+        """
+        Alias of :meth:`final_term_amplitude`.
+
+        .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
+        """
+        return cls.final_term_amplitude(f, h, k=k, *args, **kwargs)
+
+    @classmethod
+    def slope_of_last_term(cls, f, h, *args, **kwargs):
+        """Get the slope (up to a constant) of the last term of the series with h."""
+        return cls.G(f, h, *args, **kwargs) - cls.G(f, h / 1.1, *args, **kwargs)
+
+    @classmethod
     def deltaG(cls, f, h, *args, **kwargs):
-        """Slope (up to a constant) of the last term of the series with h."""
-        return cls.G(f, h, *args, **kwargs) - cls.G(
-            f, h / 1.1, *args, **kwargs
-        )
+        """Alias of :meth:`slope_of_last_term`.
+
+        .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
+        """
+        return cls.slope_of_last_term(f, h, *args, **kwargs)
 
 
 class SymmetricFourierTransform(HankelTransform):
