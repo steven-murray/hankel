@@ -3,6 +3,7 @@ select = A,B,C,E,F,W,T4,B9,RST,D,N,I
 ignore =
     E203
     E266
+    E231
     E501
     W503
     F403

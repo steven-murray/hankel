@@ -51,7 +51,7 @@ Either clone the repository and install locally (best for developer installs)::
     $ cd hankel/
     $ pip install -U .
 
-Or install with pip::
+Or install from PyPI::
 
     $ pip install hankel
 
@@ -63,8 +63,12 @@ The only dependencies are `numpy <https://www.numpy.org>`_,
 `scipy <https://www.scipy.org>`_ and `mpmath <https://www.mpmath.org>`_.
 These will be installed automatically if they are not already installed.
 
+Dependencies required purely for development (testing and linting etc.) can be installed
+via the optional extra `pip install hankel[dev]`. If using `conda`, they can still be
+installed via `pip`: `pip install -r requirements_dev.txt`.
+
 For instructions on testing `hankel` or any other development- or contribution-related
-issues, see CONTRIBUTING.rst.
+issues, see the `contributing guide <CONTRIBUTING.rst>`_.
 
 Acknowledging
 -------------

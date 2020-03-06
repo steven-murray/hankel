@@ -41,6 +41,9 @@ CLASSIFIERS = [
     "Topic :: Utilities",
 ]
 
+with open("requirements_dev.txt") as fl:
+    dev_req = fl.readlines()
+
 # use first version of req. to support py35
 setup(
     name="hankel",
@@ -54,5 +57,6 @@ setup(
     author="Steven Murray",
     author_email="steven.murray@curtin.edu.au",
     license="MIT",
+    extras_require={"dev": dev_req,},
     url="https://github.com/steven-murray/hankel",
 )
