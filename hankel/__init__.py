@@ -29,7 +29,7 @@ from hankel.tools import get_h
 
 try:
     __version__ = get_distribution(__name__).version
-except DistributionNotFound:
+except DistributionNotFound:  # pragma: nocover
     # package is not installed
     pass
 
