@@ -7,6 +7,7 @@ Publications of the Research Institute for Mathematical Sciences,
 vol. 41, no. 4, pp. 949-970, 2005.
 """
 
+import warnings
 from builtins import super
 
 import numpy as np
@@ -308,6 +309,10 @@ class HankelTransform(object):
 
         .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
         """
+        warnings.warn(
+            "Using G has been deprecated and will be removed in v1.2. Please use final_term_amplitude instead.",
+            category=DeprecationWarning,
+        )
         return cls.final_term_amplitude(f, h, k=k, *args, **kwargs)
 
     @classmethod
@@ -321,6 +326,11 @@ class HankelTransform(object):
 
         .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
         """
+        warnings.warn(
+            "Using deltaG has been deprecated and will be removed in v1.2. Please use "
+            "slope_of_last_term instead.",
+            category=DeprecationWarning,
+        )
         return cls.slope_of_last_term(f, h, *args, **kwargs)
 
 
@@ -424,7 +434,7 @@ class SymmetricFourierTransform(HankelTransform):
         return HankelTransform.xrange_approx(h, dim_to_nu(ndim), k)
 
     @classmethod
-    def G(cls, f, h, k=None, ndim=2):
+    def final_term_amplitude(cls, f, h, k=None, ndim=2):
         """
         Info about the last term in the series.
 
@@ -446,9 +456,23 @@ class SymmetricFourierTransform(HankelTransform):
 
         Returns
         -------
-        The value of G.
+        float :
+            The amplitude of the final term in the sum.
         """
         if k is None:
             return HankelTransform.G(f, h, k)
         fmax = f(cls.xrange_approx(h, ndim, k)[-1])
         return (np.pi / h) ** ((ndim - 1) / 2.0) * fmax
+
+    @classmethod
+    def G(cls, f, h, k=None, ndim=2):
+        """
+        Info about the last term in the series.
+
+        .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
+        """
+        warnings.warn(
+            "Using G has been deprecated and will be removed in v1.2. Please use final_term_amplitude instead.",
+            category=DeprecationWarning,
+        )
+        return cls.G(f, h, k, ndim)

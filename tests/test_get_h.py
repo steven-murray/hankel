@@ -116,11 +116,11 @@ def test_xrange():
     assert x1[1] < x2[1]
 
 
-def test_g():
-    g1 = HankelTransform.G(f=lambda x: x ** -4, h=0.5)
-    g2 = HankelTransform.G(f=lambda x: x ** -4, h=0.1)
+def test_final_term_amplitude():
+    g1 = HankelTransform.final_term_amplitude(f=lambda x: x ** -4, h=0.5)
+    g2 = HankelTransform.final_term_amplitude(f=lambda x: x ** -4, h=0.1)
     assert g1 > g2
 
-    g1 = SymmetricFourierTransform.G(f=lambda x: x ** -4, h=0.5)
-    g2 = SymmetricFourierTransform.G(f=lambda x: x ** -4, h=0.1)
+    g1 = SymmetricFourierTransform.final_term_amplitude(f=lambda x: x ** -4, h=0.5)
+    g2 = SymmetricFourierTransform.final_term_amplitude(f=lambda x: x ** -4, h=0.1)
     assert g1 > g2
