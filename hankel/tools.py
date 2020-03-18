@@ -3,19 +3,20 @@ r"""Tools for Hankel transformations."""
 
 import numpy as np
 from mpmath import fp as mpm
-from scipy.special import j0, j1, jn_zeros as _jn_zeros, jn, yv, jv, gamma
-
+from scipy.special import gamma, j0, j1, jn
+from scipy.special import jn_zeros as _jn_zeros
+from scipy.special import jv, yv
 
 SRPI2 = np.sqrt(np.pi / 2.0)
 
 
 def psi(t):
-    """Variable transform from Ogata 2005."""
+    """Compute the variable transform from Ogata 2005."""
     return t * np.tanh(np.pi * np.sinh(t) / 2)
 
 
 def d_psi(t):
-    """Derivative of the Variable transform from Ogata 2005."""
+    """Compute the derivative of the variable transform from Ogata 2005."""
     t = np.array(t, dtype=float)
     a = np.ones_like(t)
     mask = t < 6
@@ -27,26 +28,26 @@ def d_psi(t):
 
 
 def weight(nu, zeros):
-    """Weights for the summation in the hankel transformation."""
+    """Get weights for the summation in the hankel transformation."""
     return yv(nu, np.pi * zeros) / kernel(np.pi * zeros, nu + 1)
 
 
 def roots(N, nu):
-    """First N Roots of the Bessel J(nu) functions divided by pi."""
+    """Get the first N Roots of the Bessel J(nu) functions divided by pi."""
     if np.isclose(nu, np.floor(nu)):
         return _jn_zeros(nu, N) / np.pi
     if np.isclose(nu, 0.5):
-        # J[0.5] = sqrt(2/(x*pi))*sin(x)
+        # J(0.5) is just sqrt(2/(x*pi))*sin(x)
         return np.arange(1, N + 1)
     if np.isclose(nu, -0.5):
-        # J[-0.5] = sqrt(2/(x*pi))*cos(x)
+        # J(-0.5) is just sqrt(2/(x*pi))*cos(x)
         return np.arange(1, N + 1) - 0.5
     return np.array([mpm.besseljzero(nu, i + 1) for i in range(N)]) / np.pi
 
 
 def j_lim(nu):
     """
-    Limit factor of Bessel J(nu, 0) = 0.5 ** nu / Gamma(nu + 1).
+    Compute the timit factor of Bessel J(nu, 0) = 0.5 ** nu / Gamma(nu + 1).
 
     Parameters
     ----------
@@ -63,7 +64,7 @@ def j_lim(nu):
 
 def kernel(x, nu, alt=False):
     """
-    Kernel functions for the hankel transformation.
+    Compute kernel functions for the hankel transformation.
 
     J(nu, x) or for alt=True: J(nu, x) * sqrt(x).
 
@@ -240,7 +241,7 @@ def get_h(
         K = 1
 
         def getres(h):
-            """Dummy function to get the result."""
+            """Get the result."""
             return cls(nu, h=h, N=int(np.pi / h)).transform(
                 lambda x: f(x) / x, k=K, ret_err=False, inverse=inverse
             )
@@ -248,7 +249,7 @@ def get_h(
     else:  # Do a transform at k=K
 
         def getres(h):
-            """Dummy function to get the result."""
+            """Get the result."""
             return cls(nu, h=h, N=int(np.pi / h)).transform(
                 f, k=K, ret_err=False, inverse=inverse
             )

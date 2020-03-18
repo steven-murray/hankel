@@ -75,7 +75,9 @@ Ready to contribute? Here's how to set up `hankel` for local development.
 
     $ mkvirtualenv hankel
     $ cd hankel/
-    $ pip install -e .
+    $ pip install -e .[dev]
+
+   Note the optional extra install of the development dependencies.
 
    If you are using `conda`, setup your environment the usual way, i.e.
    ``conda create -n hankel`` before installing as above.

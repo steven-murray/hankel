@@ -9,6 +9,7 @@ docs/_*
 docs/demos/.ipynb_checkpoints/*
 .tox/*
 \.coverage
+.eggs/
 
 htmlcov/
 

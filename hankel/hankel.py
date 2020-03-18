@@ -7,24 +7,26 @@ Publications of the Research Institute for Mathematical Sciences,
 vol. 41, no. 4, pp. 949-970, 2005.
 """
 
+import warnings
 from builtins import super
 
 import numpy as np
 from scipy.integrate import quad
+
 from hankel.tools import (
     d_psi,
-    kernel,
-    weight,
-    roots,
-    get_x,
-    fourier_norm,
     dim_to_nu,
-    safe_power,
+    fourier_norm,
+    get_x,
     j_lim,
+    kernel,
+    roots,
+    safe_power,
+    weight,
 )
 
 
-class HankelTransform(object):
+class HankelTransform:
     r"""
     The basis of the Hankel Transformation algorithm by Ogata 2005.
 
@@ -197,9 +199,7 @@ class HankelTransform(object):
             err[kn0] = norm * np.take(summation, -1, axis=-1) / knorm
             err[k_0] = err_0
         if ret_cumsum:
-            cumsum = np.empty(
-                np.shape(self.x) + np.shape(ret), np.array(ret).dtype
-            )
+            cumsum = np.empty(np.shape(self.x) + np.shape(ret), np.array(ret).dtype)
             cumsum[:, kn0] = norm * np.cumsum(summation, axis=-1).T / knorm
             cumsum[:, k_0] = ret_0
 
@@ -227,13 +227,31 @@ class HankelTransform(object):
             Whether to return the estimated error
         ret_cumsum : boolean, optional, default = False
             Whether to return the cumulative sum
+
+        Returns
+        -------
+        ret : float
+            The Hankel integral of f(x).
+        err : float
+            The estimated error of the approximate integral. It is merely the last term
+            in the sum. Only returned if `ret_err=True`.
+        cumsum : array-like
+            The total cumulative sum, for which the last term
+            is itself the integral. One can use this to check whether the integral is
+            converging. Only returned if `ret_cumsum=True`
+
+        See Also
+        --------
+        transform :
+            The Hankel transform (this function calls :func:`transform` with ``k=1`` and
+            ``f(x) = f(x)/x``.
         """
-        if self.alt:
-            func = lambda x: f(x) / np.sqrt(x)
-        else:
-            func = lambda x: f(x) / x
         return self.transform(
-            f=func, k=1, ret_err=ret_err, ret_cumsum=ret_cumsum, inverse=False
+            f=(lambda x: f(x) / np.sqrt(x)) if self.alt else (lambda x: f(x) / x),
+            k=1,
+            ret_err=ret_err,
+            ret_cumsum=ret_cumsum,
+            inverse=False,
         )
 
     def xrange(self, k=1):
@@ -247,8 +265,8 @@ class HankelTransform(object):
 
         See Also
         --------
-        See :meth:`xrange_approx` for an approximate version of this method
-        which is a classmethod.
+        :meth:`xrange_approx` :
+            An approximate version of this method which is a classmethod.
         """
         return np.array([self.x.min() / np.max(k), self.x.max() / np.min(k)])
 
@@ -270,21 +288,20 @@ class HankelTransform(object):
 
         See Also
         --------
-        xrange: the actual x-range under a given choice of parameters.
+        xrange :
+            The actual x-range under a given choice of parameters.
         """
         r = roots(1, nu)[0]
-        return np.array(
-            [np.pi ** 2 * h * r ** 2 / 2 / k, np.pi * np.pi / h / k]
-        )
+        return np.array([np.pi ** 2 * h * r ** 2 / 2 / k, np.pi * np.pi / h / k])
 
     @classmethod
-    def G(cls, f, h, k=None, *args, **kwargs):
+    def final_term_amplitude(cls, f, h, k=None, *args, **kwargs):
         """
-        Info about the last term in the series.
+        Get the amplitude of the last term in cumulative sum.
 
-        The absolute value of the non-oscillatory
+        The absolute value of the non-oscillatory component
         of the summed series' last term, up to a scaling constant.
-        This can be used to get the sign of the slope of G with h.
+        This can be used to get the sign of the slope of the amplitude with h.
 
         Parameters
         ----------
@@ -298,18 +315,63 @@ class HankelTransform(object):
 
         Returns
         -------
-        The value of G.
+        float :
+            The value of G, the amplitude of the final term in the series' sum.
         """
         if k is None:
             return np.sqrt(2 * h / np.pi) * f(np.pi * np.pi / h)
         return np.sqrt(np.pi / (2 * h)) * f(np.pi * np.pi / h / k)
 
     @classmethod
-    def deltaG(cls, f, h, *args, **kwargs):
-        """Slope (up to a constant) of the last term of the series with h."""
-        return cls.G(f, h, *args, **kwargs) - cls.G(
-            f, h / 1.1, *args, **kwargs
+    def G(cls, f, h, k=None, *args, **kwargs):
+        """
+        Alias of :meth:`final_term_amplitude`.
+
+        .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
+        """
+        warnings.warn(
+            "Using G has been deprecated and will be removed in v1.2. Please use final_term_amplitude instead.",
+            category=DeprecationWarning,
         )
+        return cls.final_term_amplitude(f, h, k=k, *args, **kwargs)
+
+    @classmethod
+    def slope_of_last_term(cls, f, h, *args, **kwargs):
+        """Get the slope (up to a constant) of the last term of the series with h.
+
+        Parameters
+        ----------
+        f : callable
+            The function to integrate/transform
+        h : float
+            The resolution parameter of the hankel integration
+
+        Other Parameters
+        ----------------
+        args, kwargs :
+            All other parameters are passed through to :func:`final_term_amplitude`.
+
+        Returns
+        -------
+        float :
+            The derivative of the last term of the series with h.
+        """
+        return cls.final_term_amplitude(
+            f, h, *args, **kwargs
+        ) - cls.final_term_amplitude(f, h / 1.1, *args, **kwargs)
+
+    @classmethod
+    def deltaG(cls, f, h, *args, **kwargs):
+        """Alias of :meth:`slope_of_last_term`.
+
+        .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
+        """
+        warnings.warn(
+            "Using deltaG has been deprecated and will be removed in v1.2. Please use "
+            "slope_of_last_term instead.",
+            category=DeprecationWarning,
+        )
+        return cls.slope_of_last_term(f, h, *args, **kwargs)
 
 
 class SymmetricFourierTransform(HankelTransform):
@@ -412,13 +474,13 @@ class SymmetricFourierTransform(HankelTransform):
         return HankelTransform.xrange_approx(h, dim_to_nu(ndim), k)
 
     @classmethod
-    def G(cls, f, h, k=None, ndim=2):
+    def final_term_amplitude(cls, f, h, k=None, ndim=2):
         """
-        Info about the last term in the series.
+        Get the amplitude of the last term in cumulative sum.
 
-        The absolute value of the non-oscillatory part
+        The absolute value of the non-oscillatory component
         of the summed series' last term, up to a scaling constant.
-        This can be used to get the sign of the slope of G with h.
+        This can be used to get the sign of the slope of the amplitude with h.
 
         Parameters
         ----------
@@ -434,9 +496,23 @@ class SymmetricFourierTransform(HankelTransform):
 
         Returns
         -------
-        The value of G.
+        float :
+            The amplitude of the final term in the sum.
         """
         if k is None:
             return HankelTransform.G(f, h, k)
         fmax = f(cls.xrange_approx(h, ndim, k)[-1])
         return (np.pi / h) ** ((ndim - 1) / 2.0) * fmax
+
+    @classmethod
+    def G(cls, f, h, k=None, ndim=2):
+        """
+        Info about the last term in the series.
+
+        .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
+        """
+        warnings.warn(
+            "Using G has been deprecated and will be removed in v1.2. Please use final_term_amplitude instead.",
+            category=DeprecationWarning,
+        )
+        return cls.G(f, h, k, ndim)

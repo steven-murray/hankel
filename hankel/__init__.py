@@ -1,7 +1,4 @@
 """
-hankel API Summary
-------------------
-
 General quadrature method for Hankel transformations.
 
 Based on the algorithm provided in
@@ -25,9 +22,16 @@ Functions
    get_h
 
 """
+from pkg_resources import DistributionNotFound, get_distribution
+
 from hankel.hankel import HankelTransform, SymmetricFourierTransform
 from hankel.tools import get_h
 
-__all__ = ["HankelTransform", "SymmetricFourierTransform", "get_h"]
+try:
+    __version__ = get_distribution(__name__).version
+except DistributionNotFound:  # pragma: nocover
+    # package is not installed
+    pass
 
-__version__ = "1.0.0.dev0"
+
+__all__ = ["HankelTransform", "SymmetricFourierTransform", "get_h"]

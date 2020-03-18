@@ -8,13 +8,20 @@ showing the pattern of accuracy. This could be useful for finding the correct nu
 for other unknown functions.
 """
 
-import numpy as np
-from scipy.special import k0, gamma, gammainc, gammaincc
-from hankel import HankelTransform
 import pytest
 
-gammainc_ = lambda a, x: gamma(a) * gammainc(a, x)
-gammaincc_ = lambda a, x: gamma(a) * gammaincc(a, x)
+import numpy as np
+from scipy.special import gamma, gammainc, gammaincc, k0
+
+from hankel import HankelTransform
+
+
+def gammainc_(a, x):
+    return gamma(a) * gammainc(a, x)
+
+
+def gammaincc_(a, x):
+    return gamma(a) * gammaincc(a, x)
 
 
 def test_nu0_f_unity():
@@ -101,9 +108,7 @@ def test_nu0_f_gauss():
     z = 2
     ht = HankelTransform(nu=0, N=50, h=0.01)
 
-    ans = ht.integrate(
-        lambda x: x * np.exp(-0.5 * z ** 2 * x ** 2), False, False
-    )
+    ans = ht.integrate(lambda x: x * np.exp(-0.5 * z ** 2 * x ** 2), False, False)
     anl = 1.0 / z ** 2 * np.exp(-0.5 / z ** 2)
     print("Numerical Result: ", ans, " (required %s)" % anl)
     assert np.isclose(ans, anl, rtol=1e-3)
@@ -130,8 +135,7 @@ def test_nu_varying_powerlaw(s, nu, N, h):
 
 
 @pytest.mark.parametrize(
-    "s, nu, N, h",
-    [[0.5, 1, 50, 0.05], [0.783, 1, 50, 0.05], [1.0, 0.5, 500, 0.01]],
+    "s, nu, N, h", [[0.5, 1, 50, 0.05], [0.783, 1, 50, 0.05], [1.0, 0.5, 500, 0.01]],
 )
 def test_nu_varying_gamma_mod(s, nu, N, h):
     ht = HankelTransform(nu=nu, N=N, h=h)

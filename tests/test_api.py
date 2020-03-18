@@ -5,13 +5,14 @@ That is, it tests stuff like whether one can input scalars/arrays, and whether t
 number of entries etc.
 """
 
-import numpy as np
 import pytest
+
+import numpy as np
 
 from hankel import HankelTransform
 
 
-def test_array_N():
+def test_array_n():
     with pytest.raises(ValueError):
         HankelTransform(N=np.linspace(100, 200, 10))
 
@@ -57,6 +58,6 @@ def test_ret_err_and_cumsum():
 
 def test_equivalence_of_integrate_and_transform():
     ht = HankelTransform(N=50)
-    int = ht.integrate(lambda x: 1, False)
+    intg = ht.integrate(lambda x: 1, False)
     tr = ht.transform(lambda x: 1.0 / x, ret_err=False)
-    assert int == tr
+    assert intg == tr

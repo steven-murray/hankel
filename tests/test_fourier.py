@@ -8,14 +8,20 @@ showing the pattern of accuracy. This could be useful for finding the correct nu
 for other unknown functions.
 """
 
+import pytest
+
 import numpy as np
 from scipy.special import gamma, gammainc, gammaincc
 
 from hankel import SymmetricFourierTransform
-import pytest
 
-gammainc_ = lambda a, x: gamma(a) * gammainc(a, x)
-gammaincc_ = lambda a, x: gamma(a) * gammaincc(a, x)
+
+def gammainc_(a, x):
+    return gamma(a) * gammainc(a, x)
+
+
+def gammaincc_(a, x):
+    return gamma(a) * gammaincc(a, x)
 
 
 @pytest.mark.parametrize(

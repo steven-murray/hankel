@@ -1,5 +1,4 @@
 language: python
-# install python on windows
 
 env:
   global:
@@ -54,12 +53,19 @@ jobs:
     - stage: coverage
       services: docker
       python: 3.8
-      install: python -m pip install -r requirements_dev.txt
+      install: python -m pip install .[dev] coveralls
       script:
-        - python setup.py install
         - python -m pytest --cov hankel --cov-report term-missing -v tests/
         - python -m coveralls
       name: Coverage on Linux
+
+    - stage: lint
+      services: docker
+      python: 3.8
+      install: python -m pip install pre-commit
+      script:
+        - pre-commit run -a
+      name: Linting on Linux
 
     # Test Deploy source distribution
     - stage: test_deploy
