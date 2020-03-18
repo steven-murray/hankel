@@ -13,8 +13,8 @@ def read(*names, **kwargs):
         return fp.read()
 
 
-    def local_scheme(version):
-    """Skip the local version (eg. +xyz of 1.0.1.dev1+xyz) to be able to upload to Test PyPI."""
+def local_scheme(version):
+    """Truncate the local version (eg. +xyz of 1.0.1.dev1+xyz) for Test PyPI."""
     return ""
 
 
