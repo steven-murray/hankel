@@ -19,15 +19,24 @@ script:
   - python -m cibuildwheel --output-dir tmp_dist
 
 stages:
+  - lint
   - test
   - coverage
   - name: test_deploy
     if: (NOT type IN (pull_request)) AND (repo = steven-murray/hankel)
-  - name: deploy  # only on github tag
-    if: (NOT type IN (pull_request)) AND (branch = master) AND (tag IS PRESENT)
+  - name: deploy
+    if: (NOT type IN (pull_request)) AND (repo = steven-murray/hankel) AND (branch = master) AND (tag IS present)
 
 jobs:
   include:
+    - stage: lint
+      services: docker
+      python: 3.8
+      install: python -m pip install pre-commit
+      script:
+        - pre-commit run -a
+      name: Linting on Linux
+
     - stage: test
       services: docker
       language: python
@@ -58,14 +67,6 @@ jobs:
         - python -m pytest --cov hankel --cov-report term-missing -v tests/
         - python -m coveralls
       name: Coverage on Linux
-
-    - stage: lint
-      services: docker
-      python: 3.8
-      install: python -m pip install pre-commit
-      script:
-        - pre-commit run -a
-      name: Linting on Linux
 
     # Test Deploy source distribution
     - stage: test_deploy
