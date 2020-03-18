@@ -13,6 +13,11 @@ def read(*names, **kwargs):
         return fp.read()
 
 
+    def local_scheme(version):
+    """Skip the local version (eg. +xyz of 1.0.1.dev1+xyz) to be able to upload to Test PyPI."""
+    return ""
+
+
 CLASSIFIERS = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -51,7 +56,7 @@ setup(
     author_email="steven.murray@curtin.edu.au",
     license="MIT",
     extras_require={"dev": test_req + doc_req, "tests": test_req, "docs": doc_req},
-    use_scm_version=True,
+    use_scm_version={"local_scheme": local_scheme},
     setup_requires=["setuptools_scm"],
     url="https://github.com/steven-murray/hankel",
 )
