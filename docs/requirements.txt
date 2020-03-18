@@ -2,5 +2,5 @@ ipykernel
 nbsphinx
 numpydoc
 pandoc
-sphinx>=1.5.1
+sphinx>=2.0<3
 sphinx_rtd_theme
