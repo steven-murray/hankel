@@ -77,11 +77,9 @@ jobs:
 
     # Deploy source distribution
     - stage: deploy
+      if: tag IS present
       python: 3.8
       name: Deploy source distribution
       install: python -m pip install -U setuptools wheel twine
       script: python setup.py sdist --formats=gztar bdist_wheel
       after_success: python -m twine upload --skip-existing dist/*
-      on:
-        tags: true
-        branch: master
