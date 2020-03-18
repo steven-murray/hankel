@@ -33,7 +33,10 @@ CLASSIFIERS = [
 ]
 
 with open("requirements_dev.txt") as fl:
-    dev_req = fl.readlines()
+    test_req = fl.readlines()
+
+with open("docs/requirements.txt") as fl:
+    doc_req = fl.readlines()
 
 # use first version of req. to support py35
 setup(
@@ -47,7 +50,7 @@ setup(
     author="Steven Murray",
     author_email="steven.murray@curtin.edu.au",
     license="MIT",
-    extras_require={"dev": dev_req,},
+    extras_require={"dev": test_req + doc_req, "tests": test_req, "docs": doc_req},
     use_scm_version=True,
     setup_requires=["setuptools_scm"],
     url="https://github.com/steven-murray/hankel",

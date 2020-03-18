@@ -26,7 +26,7 @@ from hankel.tools import (
 )
 
 
-class HankelTransform(object):
+class HankelTransform:
     r"""
     The basis of the Hankel Transformation algorithm by Ogata 2005.
 
@@ -227,6 +227,24 @@ class HankelTransform(object):
             Whether to return the estimated error
         ret_cumsum : boolean, optional, default = False
             Whether to return the cumulative sum
+
+        Returns
+        -------
+        ret : float
+            The Hankel integral of f(x).
+        err : float
+            The estimated error of the approximate integral. It is merely the last term
+            in the sum. Only returned if `ret_err=True`.
+        cumsum : array-like
+            The total cumulative sum, for which the last term
+            is itself the integral. One can use this to check whether the integral is
+            converging. Only returned if `ret_cumsum=True`
+
+        See Also
+        --------
+        transform :
+            The Hankel transform (this function calls :func:`transform` with ``k=1`` and
+            ``f(x) = f(x)/x``.
         """
         return self.transform(
             f=(lambda x: f(x) / np.sqrt(x)) if self.alt else (lambda x: f(x) / x),
@@ -247,8 +265,8 @@ class HankelTransform(object):
 
         See Also
         --------
-        See :meth:`xrange_approx` for an approximate version of this method
-        which is a classmethod.
+        :meth:`xrange_approx` :
+            An approximate version of this method which is a classmethod.
         """
         return np.array([self.x.min() / np.max(k), self.x.max() / np.min(k)])
 
@@ -270,7 +288,8 @@ class HankelTransform(object):
 
         See Also
         --------
-        xrange: the actual x-range under a given choice of parameters.
+        xrange :
+            The actual x-range under a given choice of parameters.
         """
         r = roots(1, nu)[0]
         return np.array([np.pi ** 2 * h * r ** 2 / 2 / k, np.pi * np.pi / h / k])
@@ -278,7 +297,7 @@ class HankelTransform(object):
     @classmethod
     def final_term_amplitude(cls, f, h, k=None, *args, **kwargs):
         """
-        Info about the last term in the series.
+        Get the amplitude of the last term in cumulative sum.
 
         The absolute value of the non-oscillatory component
         of the summed series' last term, up to a scaling constant.
@@ -296,7 +315,8 @@ class HankelTransform(object):
 
         Returns
         -------
-        The value of G, the amplitude of the final term in the series' sum.
+        float :
+            The value of G, the amplitude of the final term in the series' sum.
         """
         if k is None:
             return np.sqrt(2 * h / np.pi) * f(np.pi * np.pi / h)
@@ -317,8 +337,28 @@ class HankelTransform(object):
 
     @classmethod
     def slope_of_last_term(cls, f, h, *args, **kwargs):
-        """Get the slope (up to a constant) of the last term of the series with h."""
-        return cls.G(f, h, *args, **kwargs) - cls.G(f, h / 1.1, *args, **kwargs)
+        """Get the slope (up to a constant) of the last term of the series with h.
+
+        Parameters
+        ----------
+        f : callable
+            The function to integrate/transform
+        h : float
+            The resolution parameter of the hankel integration
+
+        Other Parameters
+        ----------------
+        args, kwargs :
+            All other parameters are passed through to :func:`final_term_amplitude`.
+
+        Returns
+        -------
+        float :
+            The derivative of the last term of the series with h.
+        """
+        return cls.final_term_amplitude(
+            f, h, *args, **kwargs
+        ) - cls.final_term_amplitude(f, h / 1.1, *args, **kwargs)
 
     @classmethod
     def deltaG(cls, f, h, *args, **kwargs):
@@ -436,11 +476,11 @@ class SymmetricFourierTransform(HankelTransform):
     @classmethod
     def final_term_amplitude(cls, f, h, k=None, ndim=2):
         """
-        Info about the last term in the series.
+        Get the amplitude of the last term in cumulative sum.
 
-        The absolute value of the non-oscillatory part
+        The absolute value of the non-oscillatory component
         of the summed series' last term, up to a scaling constant.
-        This can be used to get the sign of the slope of G with h.
+        This can be used to get the sign of the slope of the amplitude with h.
 
         Parameters
         ----------
