@@ -22,10 +22,8 @@ stages:
   - lint
   - test
   - coverage
-  - name: test_deploy
-    if: (NOT type IN (pull_request)) AND (repo = steven-murray/hankel)
   - name: deploy
-    if: (NOT type IN (pull_request)) AND (repo = steven-murray/hankel) AND (branch = master) AND (tag IS present)
+    if: (NOT type IN (pull_request)) AND (repo = steven-murray/hankel)
 
 jobs:
   include:
@@ -69,7 +67,7 @@ jobs:
       name: Coverage on Linux
 
     # Test Deploy source distribution
-    - stage: test_deploy
+    - stage: deploy
       python: 3.8
       name: Test Deploy
       install: python -m pip install -U setuptools wheel twine
@@ -84,3 +82,6 @@ jobs:
       install: python -m pip install -U setuptools wheel twine
       script: python setup.py sdist --formats=gztar bdist_wheel
       after_success: python -m twine upload --skip-existing dist/*
+      on:
+        tags: true
+        branch: master
