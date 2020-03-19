@@ -22,14 +22,12 @@ Functions
    get_h
 
 """
-from pkg_resources import DistributionNotFound, get_distribution
-
 from hankel.hankel import HankelTransform, SymmetricFourierTransform
 from hankel.tools import get_h
 
 try:
-    __version__ = get_distribution(__name__).version
-except DistributionNotFound:  # pragma: nocover
+    from hankel._version import __version__
+except ModuleNotFoundError:  # pragma: nocover
     # package is not installed
     pass
 
