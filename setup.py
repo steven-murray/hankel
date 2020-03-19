@@ -56,7 +56,13 @@ setup(
     author_email="steven.murray@curtin.edu.au",
     license="MIT",
     extras_require={"dev": test_req + doc_req, "tests": test_req, "docs": doc_req},
-    use_scm_version={"local_scheme": local_scheme},
+    use_scm_version={
+        "root": ".",
+        "relative_to": __file__,
+        "write_to": "hankel/_version.py",
+        "write_to_template": "__version__ = '{version}'",
+        "local_scheme": local_scheme,
+    },
     setup_requires=["setuptools_scm"],
     url="https://github.com/steven-murray/hankel",
 )
