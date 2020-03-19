@@ -62,6 +62,7 @@ setup(
         "write_to": "hankel/_version.py",
         "write_to_template": "__version__ = '{version}'",
         "local_scheme": local_scheme,
+        "fallback_version": "0.0.0.dev0",
     },
     setup_requires=["setuptools_scm"],
     url="https://github.com/steven-murray/hankel",
