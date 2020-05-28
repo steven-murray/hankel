@@ -137,3 +137,24 @@ def test_k_zero(nu, alt):
         assert np.isclose(ans, 0, rtol=1e-3)
     else:
         assert np.isclose(ans, 1, rtol=1e-3)
+
+
+@pytest.mark.parametrize(
+    "s, nu, k, N, h", [[-2, 1, 0.01, 300, 10 ** -3.2], [-2, 1, 1, 300, 10 ** -3.2],],
+)
+def test_complex(s, nu, k, N, h):
+    """
+    Test f(r) = 1/r^2 j, nu=0
+    """
+
+    ht = HankelTransform(nu=nu, N=N, h=h)
+    ans = ht.transform(lambda x: x ** s * 1j, k, False, False)
+    if nu - s <= 0 and (nu - s) % 2 == 0:
+        raise Exception("Can't have a negative integer for gamma")
+
+    anl = (
+        2 ** (s + 1) * gamma(0.5 * (2 + nu + s)) / k ** (s + 2) / gamma(0.5 * (nu - s))
+    ) * 1j
+
+    print("Numerical Result: ", ans, " (required %s)" % anl)
+    assert np.isclose(ans, anl, rtol=1e-3)

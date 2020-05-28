@@ -10,7 +10,7 @@ docs/demos/.ipynb_checkpoints/*
 .tox/*
 \.coverage
 .eggs/
-
+hankel/_version.py
 htmlcov/
 
 *.aux

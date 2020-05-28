@@ -107,7 +107,7 @@ class HankelTransform:
         return 1
 
     def _get_series(self, f, k=1):
-        with np.errstate(divide="ignore"):  # numpy safely divids by 0
+        with np.errstate(divide="ignore"):  # numpy safely divides by 0
             args = np.divide.outer(self.x, k).T  # x = r*k
         return self._series_fac * f(args) * safe_power(self.x, self._r_power)
 
@@ -164,10 +164,15 @@ class HankelTransform:
         # The basic transform has a norm of 1.
         # But when doing FT's, this depends on the dimensionality.
         norm = self._norm(inverse)
+
         # calculate the result for non zero k (int k -> real ret)
-        ret = np.empty_like(k, float) if np.isrealobj(k) else np.empty_like(k)
         summation = self._get_series(f, k_tmp)
+        # return value should be same dtype as summation (allows complex)
+        ret = np.empty(k.shape, dtype=summation.dtype)
+
         ret[kn0] = np.array(norm * np.sum(summation, axis=-1) / knorm)
+
+        is_cmplx = not np.isrealobj(summation)
 
         # care about k=0
         ret_0 = 0
@@ -182,11 +187,23 @@ class HankelTransform:
                 int_fac = j_lim(self.nu) * norm
 
                 def integrand(r):
-                    return f(r) * safe_power(r, lim_r_pow)
+                    return f(r).real * safe_power(r, lim_r_pow)
 
                 int_res = quad(integrand, 0, np.inf)
-                ret_0 = int_res[0] * int_fac
-                err_0 = int_res[1] * int_fac
+
+                if is_cmplx:
+                    # For a complex function, need to do the complex part of the integral.
+                    def integrand(r):
+                        return f(r).imag * safe_power(r, lim_r_pow)
+
+                    int_res_cmplx = quad(integrand, 0, np.inf)
+                    ret_0 = (int_res[0] + int_res_cmplx[0]) * int_fac
+                    err_0 = (int_res[1] + int_res_cmplx[1]) * int_fac
+
+                else:
+                    ret_0 = int_res[0] * int_fac
+                    err_0 = int_res[1] * int_fac
+
             elif self.nu < nu_th:
                 ret_0 = np.nan
             ret[k_0] = ret_0
