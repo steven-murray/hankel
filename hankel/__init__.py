@@ -27,7 +27,7 @@ from hankel.tools import get_h
 
 try:
     from hankel._version import __version__
-except ModuleNotFoundError:  # pragma: nocover
+except ImportError:  # pragma: nocover
     # package is not installed
     pass
 
