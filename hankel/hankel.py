@@ -197,8 +197,8 @@ class HankelTransform:
                         return f(r).imag * safe_power(r, lim_r_pow)
 
                     int_res_cmplx = quad(integrand, 0, np.inf)
-                    ret_0 = (int_res[0] + int_res_cmplx[0]) * int_fac
-                    err_0 = (int_res[1] + int_res_cmplx[1]) * int_fac
+                    ret_0 = (int_res[0] + 1j * int_res_cmplx[0]) * int_fac
+                    err_0 = (int_res[1] + 1j * int_res_cmplx[1]) * int_fac
 
                 else:
                     ret_0 = int_res[0] * int_fac
