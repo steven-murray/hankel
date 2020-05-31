@@ -1,6 +1,12 @@
 Changelog
 =========
 
+v1.1.0
+------
+**Enhancements**
+
+- Add ability to perform hankel transforms on complex functions.
+
 v1.0.0
 ------
 **Enhancements**
