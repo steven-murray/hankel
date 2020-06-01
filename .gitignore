@@ -30,3 +30,4 @@ paper/paper\.pdf
 *.xml
 
 *.tex
+hankel/_version.py
