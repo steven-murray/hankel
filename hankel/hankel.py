@@ -489,6 +489,6 @@ class SymmetricFourierTransform(HankelTransform):
             The amplitude of the final term in the sum.
         """
         if k is None:
-            return HankelTransform.G(f, h, k)
+            return HankelTransform.final_term_amplitude(f, h, k)
         fmax = f(cls.xrange_approx(h, ndim, k)[-1])
         return (np.pi / h) ** ((ndim - 1) / 2.0) * fmax
