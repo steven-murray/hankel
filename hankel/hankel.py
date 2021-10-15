@@ -7,10 +7,9 @@ Publications of the Research Institute for Mathematical Sciences,
 vol. 41, no. 4, pp. 949-970, 2005.
 """
 
+import numpy as np
 import warnings
 from builtins import super
-
-import numpy as np
 from scipy.integrate import quad
 
 from hankel.tools import (

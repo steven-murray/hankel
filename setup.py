@@ -1,8 +1,9 @@
 """hankel: Hankel Transformations using method of Ogata 2005."""
 
+from setuptools import setup
+
 import io
 import os
-from setuptools import setup
 
 
 def read(*names, **kwargs):

@@ -140,7 +140,11 @@ def test_k_zero(nu, alt):
 
 
 @pytest.mark.parametrize(
-    "s, nu, k, N, h", [[-2, 1, 0.01, 300, 10 ** -3.2], [-2, 1, 1, 300, 10 ** -3.2],],
+    "s, nu, k, N, h",
+    [
+        [-2, 1, 0.01, 300, 10 ** -3.2],
+        [-2, 1, 1, 300, 10 ** -3.2],
+    ],
 )
 def test_complex(s, nu, k, N, h):
     """

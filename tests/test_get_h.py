@@ -70,7 +70,8 @@ def test_nu_varying_powerlaw(s, nu, N, h):
 
 
 @pytest.mark.parametrize(
-    "s, nu, N, h", [[0.5, 1, 50, 0.05], [0.783, 1, 50, 0.05], [1.0, 0.5, 500, 0.01]],
+    "s, nu, N, h",
+    [[0.5, 1, 50, 0.05], [0.783, 1, 50, 0.05], [1.0, 0.5, 500, 0.01]],
 )
 def test_nu_varying_gamma_mod(s, nu, N, h):
     ans = get_h(
