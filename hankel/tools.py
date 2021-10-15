@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 r"""Tools for Hankel transformations."""
 
 import numpy as np

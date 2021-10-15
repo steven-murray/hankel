@@ -16,6 +16,7 @@ repos:
           - id: requirements-txt-fixer
           - id: mixed-line-ending
             args: ['--fix=no']
+
     - repo: https://gitlab.com/pycqa/flake8
       rev: 3.9.2
       hooks:
@@ -28,11 +29,30 @@ repos:
             - flake8-rst-docstrings
             - flake8-copyright
             - flake8-docstrings
+
     - repo: https://github.com/psf/black
       rev: 21.9b0
       hooks:
           - id: black
+
     - repo: https://github.com/pre-commit/mirrors-isort
       rev: v5.9.3
       hooks:
       - id: isort
+
+    - repo: https://github.com/pre-commit/pygrep-hooks
+      rev: v1.8.0
+      hooks:
+        - id: rst-backticks
+
+    - repo: https://github.com/asottile/pyupgrade
+      rev: v2.26.0
+      hooks:
+      - id: pyupgrade
+        args: [--py36-plus]
+
+    - repo: https://github.com/asottile/setup-cfg-fmt
+      rev: v1.17.0
+      hooks:
+      - id: setup-cfg-fmt
+        args: ['--min-py3-version=3.6']

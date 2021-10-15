@@ -9,7 +9,6 @@ vol. 41, no. 4, pp. 949-970, 2005.
 
 import numpy as np
 import warnings
-from builtins import super
 from scipy.integrate import quad
 
 from hankel.tools import (

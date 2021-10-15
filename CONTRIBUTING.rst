@@ -63,9 +63,9 @@ If you are proposing a feature:
 Get Started!
 ------------
 
-Ready to contribute? Here's how to set up `hankel` for local development.
+Ready to contribute? Here's how to set up ``hankel`` for local development.
 
-1. Fork the `hankel` repo on GitHub.
+1. Fork the ``hankel`` repo on GitHub.
 2. Clone your fork locally::
 
     $ git clone git@github.com:your_name_here/hankel.git
@@ -79,7 +79,7 @@ Ready to contribute? Here's how to set up `hankel` for local development.
 
    Note the optional extra install of the development dependencies.
 
-   If you are using `conda`, setup your environment the usual way, i.e.
+   If you are using ``conda``, setup your environment the usual way, i.e.
    ``conda create -n hankel`` before installing as above.
 
 4. Create a branch for local development::
