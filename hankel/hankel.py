@@ -339,19 +339,6 @@ class HankelTransform:
         return np.sqrt(np.pi / (2 * h)) * f(np.pi * np.pi / h / k)
 
     @classmethod
-    def G(cls, f, h, k=None, *args, **kwargs):
-        """
-        Alias of :meth:`final_term_amplitude`.
-
-        .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
-        """
-        warnings.warn(
-            "Using G has been deprecated and will be removed in v1.2. Please use final_term_amplitude instead.",
-            category=DeprecationWarning,
-        )
-        return cls.final_term_amplitude(f, h, k=k, *args, **kwargs)
-
-    @classmethod
     def slope_of_last_term(cls, f, h, *args, **kwargs):
         """Get the slope (up to a constant) of the last term of the series with h.
 
@@ -375,19 +362,6 @@ class HankelTransform:
         return cls.final_term_amplitude(
             f, h, *args, **kwargs
         ) - cls.final_term_amplitude(f, h / 1.1, *args, **kwargs)
-
-    @classmethod
-    def deltaG(cls, f, h, *args, **kwargs):
-        """Alias of :meth:`slope_of_last_term`.
-
-        .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
-        """
-        warnings.warn(
-            "Using deltaG has been deprecated and will be removed in v1.2. Please use "
-            "slope_of_last_term instead.",
-            category=DeprecationWarning,
-        )
-        return cls.slope_of_last_term(f, h, *args, **kwargs)
 
 
 class SymmetricFourierTransform(HankelTransform):
@@ -519,16 +493,3 @@ class SymmetricFourierTransform(HankelTransform):
             return HankelTransform.G(f, h, k)
         fmax = f(cls.xrange_approx(h, ndim, k)[-1])
         return (np.pi / h) ** ((ndim - 1) / 2.0) * fmax
-
-    @classmethod
-    def G(cls, f, h, k=None, ndim=2):
-        """
-        Info about the last term in the series.
-
-        .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
-        """
-        warnings.warn(
-            "Using G has been deprecated and will be removed in v1.2. Please use final_term_amplitude instead.",
-            category=DeprecationWarning,
-        )
-        return cls.G(f, h, k, ndim)

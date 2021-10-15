@@ -1,5 +1,4 @@
 [flake8]
-select = A,B,C,E,F,W,T4,B9,RST,D,N,I
 ignore =
     E203
     E266
@@ -10,7 +9,6 @@ ignore =
     F401
     N803  # I like uppercase single-character names sometimes.
     N806  # Same here
-    N802  # Can remove this line in v1.2
 max-line-length = 88
 max-complexity = 21
 docstring-convention=numpy
