@@ -1,10 +1,10 @@
 hankel
 ======
 
-.. image:: https://travis-ci.org/steven-murray/hankel.svg?branch=master
-   :target: https://travis-ci.org/steven-murray/hankel
-.. image:: https://coveralls.io/repos/github/steven-murray/hankel/badge.svg?branch=master
-   :target: https://coveralls.io/github/steven-murray/hankel?branch=master
+.. image:: https://github.com/steven-murray/hankel/actions/workflows/test_suite.yaml/badge.svg
+   :target: https://github.com/steven-murray/hankel/actions/workflows/test_suite.yaml
+.. image:: https://codecov.io/gh/steven-murray/hankel/branch/master/graph/badge.svg?token=GQY2Glwr0U
+   :target: https://codecov.io/gh/steven-murray/hankel
 .. image:: http://joss.theoj.org/papers/10.21105/joss.01397/status.svg
    :target: https://doi.org/10.21105/joss.01397
 .. image:: https://img.shields.io/pypi/v/hankel.svg
