@@ -24,6 +24,13 @@ jobs:
           pip install build
           pip install setuptools_scm wheel
 
+      - name: Create setuptools_scm env variable
+        shell: bash
+        run: |
+          wget https://gist.github.com/plaplant/0902f09e59166bac742bbd554f3cd2f9/raw/make_dev_version.sh -O ../make_dev_version.sh
+          version=$(bash ../make_dev_version.sh)
+          echo "SETUPTOOLS_SCM_PRETEND_VERSION=$version" >> $GITHUB_ENV
+
       - name: Build
         run: |
           python -m build
