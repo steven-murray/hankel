@@ -489,6 +489,19 @@ class SymmetricFourierTransform(HankelTransform):
             The amplitude of the final term in the sum.
         """
         if k is None:
-            return HankelTransform.final_term_amplitude(f, h, k)
+            return HankelTransform.G(f, h, k)
         fmax = f(cls.xrange_approx(h, ndim, k)[-1])
         return (np.pi / h) ** ((ndim - 1) / 2.0) * fmax
+
+    @classmethod
+    def G(cls, f, h, k=None, ndim=2):
+        """
+        Info about the last term in the series.
+
+        .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
+        """
+        warnings.warn(
+            "Using G has been deprecated and will be removed in v1.2. Please use final_term_amplitude instead.",
+            category=DeprecationWarning,
+        )
+        return cls.G(f, h, k, ndim)
