@@ -338,6 +338,19 @@ class HankelTransform:
         return np.sqrt(np.pi / (2 * h)) * f(np.pi * np.pi / h / k)
 
     @classmethod
+    def G(cls, f, h, k=None, *args, **kwargs):
+        """
+        Alias of :meth:`final_term_amplitude`.
+
+        .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
+        """
+        warnings.warn(
+            "Using G has been deprecated and will be removed in v1.2. Please use final_term_amplitude instead.",
+            category=DeprecationWarning,
+        )
+        return cls.final_term_amplitude(f, h, k=k, *args, **kwargs)
+
+    @classmethod
     def slope_of_last_term(cls, f, h, *args, **kwargs):
         """Get the slope (up to a constant) of the last term of the series with h.
 
