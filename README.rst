@@ -1,10 +1,10 @@
 hankel
 ======
 
-.. image:: https://travis-ci.org/steven-murray/hankel.svg?branch=master
-   :target: https://travis-ci.org/steven-murray/hankel
-.. image:: https://coveralls.io/repos/github/steven-murray/hankel/badge.svg?branch=master
-   :target: https://coveralls.io/github/steven-murray/hankel?branch=master
+.. image:: https://github.com/steven-murray/hankel/actions/workflows/test_suite.yaml/badge.svg
+   :target: https://github.com/steven-murray/hankel/actions/workflows/test_suite.yaml
+.. image:: https://codecov.io/gh/steven-murray/hankel/branch/master/graph/badge.svg?token=GQY2Glwr0U
+   :target: https://codecov.io/gh/steven-murray/hankel
 .. image:: http://joss.theoj.org/papers/10.21105/joss.01397/status.svg
    :target: https://doi.org/10.21105/joss.01397
 .. image:: https://img.shields.io/pypi/v/hankel.svg
@@ -64,15 +64,15 @@ The only dependencies are `numpy <https://www.numpy.org>`_,
 These will be installed automatically if they are not already installed.
 
 Dependencies required purely for development (testing and linting etc.) can be installed
-via the optional extra `pip install hankel[dev]`. If using `conda`, they can still be
-installed via `pip`: `pip install -r requirements_dev.txt`.
+via the optional extra ``pip install hankel[dev]``. If using ``conda``, they can still be
+installed via ``pip``: ``pip install -r requirements_dev.txt``.
 
-For instructions on testing `hankel` or any other development- or contribution-related
+For instructions on testing ``hankel`` or any other development- or contribution-related
 issues, see the `contributing guide <CONTRIBUTING.rst>`_.
 
 Acknowledging
 -------------
-If you find `hankel` useful in your research, please cite
+If you find ``hankel`` useful in your research, please cite
 
     S. G. Murray and F. J. Poulin, "hankel: A Python library for performing simple and
     accurate Hankel transformations", Journal of Open Source Software,

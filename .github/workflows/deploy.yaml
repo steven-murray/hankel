@@ -1,0 +1,63 @@
+name: Build and upload to PyPI
+
+# Build on every branch push, tag push, and pull request change:
+on: [push, pull_request]
+
+jobs:
+  build_wheels_sdist:
+    name: Build wheels and sdist
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+          pip install setuptools_scm wheel
+
+      - name: Create setuptools_scm env variable
+        shell: bash
+        run: |
+          wget https://gist.github.com/plaplant/0902f09e59166bac742bbd554f3cd2f9/raw/make_dev_version.sh -O ../make_dev_version.sh
+          version=$(bash ../make_dev_version.sh)
+          echo "SETUPTOOLS_SCM_PRETEND_VERSION=$version" >> $GITHUB_ENV
+
+      - name: Build
+        run: |
+          python -m build
+
+      - uses: actions/upload-artifact@v2
+        with:
+          path: dist
+
+  upload_pypi:
+    needs: build_wheels_sdist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: artifact
+          path: dist
+
+      - uses: pypa/gh-action-pypi-publish@v1.4.2
+        name: Deploy to Test PyPi
+        with:
+          user: __token__
+          password: ${{ secrets.test_pypi_password }}
+          repository_url: https://test.pypi.org/legacy/
+
+      - uses: pypa/gh-action-pypi-publish@v1.4.2
+        name: Deploy To PyPI
+        if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
+        with:
+          user: __token__
+          password: ${{ secrets.pypi_password }}

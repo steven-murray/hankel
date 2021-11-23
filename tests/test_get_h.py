@@ -43,7 +43,7 @@ def gammaincc_(a, x):
 )
 def test_nu0(f, anl):
     ans = get_h(f=f, nu=0, hstart=0.5, atol=0, rtol=1e-3, maxiter=20)[1]
-    print("Numerical Result: {ans} (required {anl})".format(ans=ans, anl=anl))
+    print(f"Numerical Result: {ans} (required {anl})")
     # we ensure that the answer is within 5e-3 of the true answer,
     # because the algorithm does not ensure that the result is within that
     # tolerance of the true answer, only the previous iteration.
@@ -65,12 +65,13 @@ def test_nu_varying_powerlaw(s, nu, N, h):
     ans = get_h(f=lambda x: x ** s, nu=nu, K=1, hstart=0.5, atol=1e-3, rtol=1e-3)[1]
 
     anl = 2 ** (s + 1) * gamma(0.5 * (2 + nu + s)) / gamma(0.5 * (nu - s))
-    print("Numerical Result: {ans} (required {anl})".format(ans=ans, anl=anl))
+    print(f"Numerical Result: {ans} (required {anl})")
     assert np.isclose(ans, anl, rtol=1e-3, atol=1e-3)
 
 
 @pytest.mark.parametrize(
-    "s, nu, N, h", [[0.5, 1, 50, 0.05], [0.783, 1, 50, 0.05], [1.0, 0.5, 500, 0.01]],
+    "s, nu, N, h",
+    [[0.5, 1, 50, 0.05], [0.783, 1, 50, 0.05], [1.0, 0.5, 500, 0.01]],
 )
 def test_nu_varying_gamma_mod(s, nu, N, h):
     ans = get_h(
@@ -83,7 +84,7 @@ def test_nu_varying_gamma_mod(s, nu, N, h):
 
     anl = 0.5 ** (2 * s - nu - 1) * gammaincc_(1 - s + nu, 0.25)
 
-    print("Numerical Result: {ans} (required {anl})".format(ans=ans, anl=anl))
+    print(f"Numerical Result: {ans} (required {anl})")
     assert np.isclose(ans, anl, rtol=1e-3, atol=1e-3)
 
 

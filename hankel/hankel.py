@@ -7,10 +7,8 @@ Publications of the Research Institute for Mathematical Sciences,
 vol. 41, no. 4, pp. 949-970, 2005.
 """
 
-import warnings
-from builtins import super
-
 import numpy as np
+import warnings
 from scipy.integrate import quad
 
 from hankel.tools import (
@@ -376,19 +374,6 @@ class HankelTransform:
         return cls.final_term_amplitude(
             f, h, *args, **kwargs
         ) - cls.final_term_amplitude(f, h / 1.1, *args, **kwargs)
-
-    @classmethod
-    def deltaG(cls, f, h, *args, **kwargs):
-        """Alias of :meth:`slope_of_last_term`.
-
-        .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
-        """
-        warnings.warn(
-            "Using deltaG has been deprecated and will be removed in v1.2. Please use "
-            "slope_of_last_term instead.",
-            category=DeprecationWarning,
-        )
-        return cls.slope_of_last_term(f, h, *args, **kwargs)
 
 
 class SymmetricFourierTransform(HankelTransform):
