@@ -17,8 +17,8 @@ repos:
           - id: mixed-line-ending
             args: ['--fix=no']
 
-    - repo: https://gitlab.com/pycqa/flake8
-      rev: 3.9.2
+    - repo: https://github.com/PyCQA/flake8
+      rev: 4.0.1
       hooks:
         - id: flake8
           additional_dependencies:
@@ -31,28 +31,28 @@ repos:
             - flake8-docstrings
 
     - repo: https://github.com/psf/black
-      rev: 21.9b0
+      rev: 21.11b1
       hooks:
           - id: black
 
-    - repo: https://github.com/pre-commit/mirrors-isort
-      rev: v5.9.3
+    - repo: https://github.com/PyCQA/isort
+      rev: 5.10.1
       hooks:
       - id: isort
 
     - repo: https://github.com/pre-commit/pygrep-hooks
-      rev: v1.8.0
+      rev: v1.9.0
       hooks:
         - id: rst-backticks
 
     - repo: https://github.com/asottile/pyupgrade
-      rev: v2.26.0
+      rev: v2.29.1
       hooks:
       - id: pyupgrade
         args: [--py36-plus]
 
     - repo: https://github.com/asottile/setup-cfg-fmt
-      rev: v1.17.0
+      rev: v1.20.0
       hooks:
       - id: setup-cfg-fmt
         args: ['--min-py3-version=3.6']
