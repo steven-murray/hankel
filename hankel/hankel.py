@@ -307,7 +307,7 @@ class HankelTransform:
             The actual x-range under a given choice of parameters.
         """
         r = roots(1, nu)[0]
-        return np.array([np.pi ** 2 * h * r ** 2 / 2 / k, np.pi * np.pi / h / k])
+        return np.array([np.pi**2 * h * r**2 / 2 / k, np.pi * np.pi / h / k])
 
     @classmethod
     def final_term_amplitude(cls, f, h, k=None, *args, **kwargs):

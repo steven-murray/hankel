@@ -58,7 +58,7 @@ def j_lim(nu):
     float
         The factor.
     """
-    return 0.5 ** nu / gamma(nu + 1)
+    return 0.5**nu / gamma(nu + 1)
 
 
 def kernel(x, nu, alt=False):
@@ -123,7 +123,7 @@ def safe_power(x, p):
     array-like
         The result x**p.
     """
-    return np.ones_like(x) if np.isclose(p, 0) else np.array(x ** p)
+    return np.ones_like(x) if np.isclose(p, 0) else np.array(x**p)
 
 
 def get_x(h, zeros):
