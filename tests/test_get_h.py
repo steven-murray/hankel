@@ -27,17 +27,17 @@ def gammaincc_(a, x):
     "f, anl",
     [
         (lambda x: 1, 1),  # Ogata 05
-        (lambda x: x / (x ** 2 + 1), k0(1)),  # Ogata 05
-        (lambda x: x ** 2, -1),  # wikipedia
-        (lambda x: x ** 4, 9),  # wikipedia
+        (lambda x: x / (x**2 + 1), k0(1)),  # Ogata 05
+        (lambda x: x**2, -1),  # wikipedia
+        (lambda x: x**4, 9),  # wikipedia
         (
             lambda x: 1.0 / np.sqrt(x),  # wikipedia
             2 ** (-0.5) * gamma(-1.5 / 2 + 1) / gamma(1.5 / 2),
         ),
-        (lambda x: x / np.sqrt(x ** 2 + 1 ** 2), np.exp(-1)),  # wikipedia
+        (lambda x: x / np.sqrt(x**2 + 1**2), np.exp(-1)),  # wikipedia
         (
-            lambda x: x * np.exp(-0.5 * 2 ** 2 * x ** 2),  # wikipedia
-            1.0 / 2 ** 2 * np.exp(-0.5 / 2 ** 2),
+            lambda x: x * np.exp(-0.5 * 2**2 * x**2),  # wikipedia
+            1.0 / 2**2 * np.exp(-0.5 / 2**2),
         ),
     ],
 )
@@ -56,13 +56,13 @@ def test_nu0(f, anl):
         [0, 1, 50, 0.05],
         [0, 2, 50, 0.05],
         [0.5, 1, 50, 0.05],
-        [-2, 2, 600, 10 ** -2.6],  # This is pretty finnicky
+        [-2, 2, 600, 10**-2.6],  # This is pretty finnicky
         [-0.783, 1, 50, 0.05],
     ],
 )
 def test_nu_varying_powerlaw(s, nu, N, h):
     # For this one we test the transform instead
-    ans = get_h(f=lambda x: x ** s, nu=nu, K=1, hstart=0.5, atol=1e-3, rtol=1e-3)[1]
+    ans = get_h(f=lambda x: x**s, nu=nu, K=1, hstart=0.5, atol=1e-3, rtol=1e-3)[1]
 
     anl = 2 ** (s + 1) * gamma(0.5 * (2 + nu + s)) / gamma(0.5 * (nu - s))
     print(f"Numerical Result: {ans} (required {anl})")
@@ -75,7 +75,7 @@ def test_nu_varying_powerlaw(s, nu, N, h):
 )
 def test_nu_varying_gamma_mod(s, nu, N, h):
     ans = get_h(
-        f=lambda x: x ** (nu - 2 * s + 1) * gammainc_(s, x ** 2),
+        f=lambda x: x ** (nu - 2 * s + 1) * gammainc_(s, x**2),
         nu=nu,
         hstart=0.5,
         atol=1e-3,
@@ -95,12 +95,12 @@ def test_too_large_h():
 
 def test_never_converges_high():
     with pytest.raises(Exception):
-        get_h(f=lambda x: x ** 6, nu=0, maxiter=15)
+        get_h(f=lambda x: x**6, nu=0, maxiter=15)
 
 
 def test_never_converges_low():
     with pytest.raises(Exception):
-        get_h(f=lambda x: x ** -6, nu=0, maxiter=15)
+        get_h(f=lambda x: x**-6, nu=0, maxiter=15)
 
 
 def test_xrange():
@@ -118,10 +118,10 @@ def test_xrange():
 
 
 def test_final_term_amplitude():
-    g1 = HankelTransform.final_term_amplitude(f=lambda x: x ** -4, h=0.5)
-    g2 = HankelTransform.final_term_amplitude(f=lambda x: x ** -4, h=0.1)
+    g1 = HankelTransform.final_term_amplitude(f=lambda x: x**-4, h=0.5)
+    g2 = HankelTransform.final_term_amplitude(f=lambda x: x**-4, h=0.1)
     assert g1 > g2
 
-    g1 = SymmetricFourierTransform.final_term_amplitude(f=lambda x: x ** -4, h=0.5)
-    g2 = SymmetricFourierTransform.final_term_amplitude(f=lambda x: x ** -4, h=0.1)
+    g1 = SymmetricFourierTransform.final_term_amplitude(f=lambda x: x**-4, h=0.5)
+    g2 = SymmetricFourierTransform.final_term_amplitude(f=lambda x: x**-4, h=0.1)
     assert g1 > g2
