@@ -1,6 +1,13 @@
+version: 2
+
 formats:
     - epub
     - pdf
     - htmlzip
 
-requirements_file: docs/requirements.txt
+python:
+  install:
+    - method: pip
+      path: .
+      extra_requirements:
+        - docs

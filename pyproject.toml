@@ -1,4 +1,21 @@
 [build-system]
-requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
+requires = ["setuptools>=44", "wheel", "setuptools_scm[toml]>=3.4.3"]
+build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
+write_to = "hankel/_version.py"
+write_to_template = "__version__ = '{version}'"
+fallback_version = "0.0.0.dev0"
+local_scheme = "no-local-version"
+
+[tool.isort]
+line_length = 88
+indent = '    '
+skip = [".tox", ".venv", "build", "dist"]
+known_standard_library = ["setuptools", "pkg_resources"]
+known_test = "pytest"
+known_first_party = "hankel"
+sections = ["FUTURE", "STDLIB", "COMPAT", "TEST", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+default_section = "THIRDPARTY"
+multi_line_output = 3
+include_trailing_comma = true
