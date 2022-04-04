@@ -31,7 +31,7 @@ repos:
             - flake8-docstrings
 
     - repo: https://github.com/psf/black
-      rev: 22.1.0
+      rev: 22.3.0
       hooks:
           - id: black
 
@@ -52,7 +52,7 @@ repos:
         args: [--py36-plus]
 
     - repo: https://github.com/asottile/setup-cfg-fmt
-      rev: v1.20.0
+      rev: v1.20.1
       hooks:
       - id: setup-cfg-fmt
         args: ['--min-py3-version=3.6']
