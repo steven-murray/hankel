@@ -7,7 +7,6 @@ ignore =
     W503
     F403
     F401
-    N802  # this can be removed once G() is removed
     N803  # I like uppercase single-character names sometimes.
     N806  # Same here
 max-line-length = 88
