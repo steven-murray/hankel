@@ -1,6 +1,18 @@
 Changelog
 =========
 
+v1.2.1
+------
+**Deprecations**
+
+- The ``.G()`` has been removed as planned.
+
+v1.2.0
+------
+**Maintenance**
+
+- Switched to using ``setup.cfg`` instead of ``setup.py`` and various other tooling updates.
+
 v1.1.0
 ------
 **Enhancements**
