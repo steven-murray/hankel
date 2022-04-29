@@ -338,19 +338,6 @@ class HankelTransform:
         return np.sqrt(np.pi / (2 * h)) * f(np.pi * np.pi / h / k)
 
     @classmethod
-    def G(cls, f, h, k=None, *args, **kwargs):
-        """
-        Alias of :meth:`final_term_amplitude`.
-
-        .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
-        """
-        warnings.warn(
-            "Using G has been deprecated and will be removed in v1.2. Please use final_term_amplitude instead.",
-            category=DeprecationWarning,
-        )
-        return cls.final_term_amplitude(f, h, k=k, *args, **kwargs)
-
-    @classmethod
     def slope_of_last_term(cls, f, h, *args, **kwargs):
         """Get the slope (up to a constant) of the last term of the series with h.
 
@@ -502,19 +489,6 @@ class SymmetricFourierTransform(HankelTransform):
             The amplitude of the final term in the sum.
         """
         if k is None:
-            return HankelTransform.G(f, h, k)
+            return HankelTransform.final_term_amplitude(f, h, k)
         fmax = f(cls.xrange_approx(h, ndim, k)[-1])
         return (np.pi / h) ** ((ndim - 1) / 2.0) * fmax
-
-    @classmethod
-    def G(cls, f, h, k=None, ndim=2):
-        """
-        Info about the last term in the series.
-
-        .. deprecated:: Deprecated as of v1. Will be removed in v1.2.
-        """
-        warnings.warn(
-            "Using G has been deprecated and will be removed in v1.2. Please use final_term_amplitude instead.",
-            category=DeprecationWarning,
-        )
-        return cls.G(f, h, k, ndim)
