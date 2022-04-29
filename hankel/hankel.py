@@ -55,7 +55,7 @@ class HankelTransform:
         The step-size of the integration.
     alt : bool, optional
         Whether to use the alternative definition of the hankel transform.
-        should be used. Default: False
+        should be used
     """
 
     def __init__(self, nu=0, N=None, h=0.05, alt=False):
@@ -394,7 +394,7 @@ class SymmetricFourierTransform(HankelTransform):
         The step-size of the integration.
     alt : bool, optional
         State if the alternative definition of the hankel transform
-        should be used. Default: False
+        should be used.
 
     Notes
     -----
