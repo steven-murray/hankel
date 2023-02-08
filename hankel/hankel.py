@@ -59,7 +59,6 @@ class HankelTransform:
     """
 
     def __init__(self, nu=0, N=None, h=0.05, alt=False):
-
         N = int(np.pi / h) if N is None else N
         if not np.isscalar(N):
             raise ValueError("N must be a scalar")
@@ -417,7 +416,6 @@ class SymmetricFourierTransform(HankelTransform):
     """
 
     def __init__(self, ndim=2, a=1, b=1, N=None, h=0.05, alt=True):
-
         super().__init__(nu=dim_to_nu(ndim), N=N, h=h, alt=alt)
 
         self.ndim = ndim
