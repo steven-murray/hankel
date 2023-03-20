@@ -48,7 +48,7 @@ jobs:
           name: artifact
           path: dist
 
-      - uses: pypa/gh-action-pypi-publish@v1.7.1
+      - uses: pypa/gh-action-pypi-publish@v1.8.1
         name: Deploy to Test PyPi
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
@@ -57,7 +57,7 @@ jobs:
           repository_url: https://test.pypi.org/legacy/
           skip_existing: true
 
-      - uses: pypa/gh-action-pypi-publish@v1.7.1
+      - uses: pypa/gh-action-pypi-publish@v1.8.1
         name: Deploy To PyPI
         if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
         with:
