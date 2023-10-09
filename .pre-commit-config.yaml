@@ -2,7 +2,7 @@ exclude: '(^docs/conf.py)'
 
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
-      rev: v4.4.0
+      rev: v4.5.0
       hooks:
           - id: trailing-whitespace
           - id: check-added-large-files
@@ -46,13 +46,13 @@ repos:
         - id: rst-backticks
 
     - repo: https://github.com/asottile/pyupgrade
-      rev: v3.11.0
+      rev: v3.15.0
       hooks:
       - id: pyupgrade
         args: [--py37-plus]
 
     - repo: https://github.com/asottile/setup-cfg-fmt
-      rev: v2.4.0
+      rev: v2.5.0
       hooks:
       - id: setup-cfg-fmt
         args: ['--min-py3-version=3.6']
