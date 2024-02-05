@@ -43,7 +43,7 @@ jobs:
           python -m pytest --cov hankel --cov-report xml:./coverage.xml
 
       - name: "Upload coverage to Codecov"
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v4
         if: matrix.os == 'ubuntu-latest' && success()
         with:
           fail_ci_if_error: true
