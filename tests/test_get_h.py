@@ -48,7 +48,7 @@ def gammaincc_(a, x):
         "1 / sqrt(x)",
         "x / sqrt(x^2 + 1)",
         "exp(1/2 * x^2)",
-    ]
+    ],
 )
 def test_nu0(f, anl):
     ans = get_h(f=f, nu=0, hstart=0.5, atol=0, rtol=1e-3, maxiter=20)[1]
