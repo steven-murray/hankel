@@ -26,7 +26,7 @@ def gammaincc_(a, x):
 @pytest.mark.parametrize(
     "f, anl",
     [
-        (lambda x: 1, 1),  # Ogata 05
+        (lambda x: np.ones_like(x), 1),  # Ogata 05
         (lambda x: x / (x**2 + 1), k0(1)),  # Ogata 05
         (lambda x: x**2, -1),  # wikipedia
         (lambda x: x**4, 9),  # wikipedia
@@ -39,6 +39,15 @@ def gammaincc_(a, x):
             lambda x: x * np.exp(-0.5 * 2**2 * x**2),  # wikipedia
             1.0 / 2**2 * np.exp(-0.5 / 2**2),
         ),
+    ],
+    ids=[
+        "ones",
+        "x / (x^2 + 1)",
+        "x^2",
+        "x^4",
+        "1 / sqrt(x)",
+        "x / sqrt(x^2 + 1)",
+        "exp(1/2 * x^2)",
     ],
 )
 def test_nu0(f, anl):

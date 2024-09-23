@@ -6,17 +6,17 @@ on: [push, pull_request]
 jobs:
   build_wheels_sdist:
     name: Build wheels and sdist
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.8'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
@@ -35,29 +35,16 @@ jobs:
         run: |
           python -m build
 
-      - uses: actions/upload-artifact@v2
-        with:
-          path: dist
-
-  upload_pypi:
-    needs: build_wheels_sdist
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: artifact
-          path: dist
-
-      - uses: pypa/gh-action-pypi-publish@v1.10.0
+      - uses: pypa/gh-action-pypi-publish@v1.10.2
         name: Deploy to Test PyPi
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
           user: __token__
           password: ${{ secrets.test_pypi_password }}
-          repository_url: https://test.pypi.org/legacy/
-          skip_existing: true
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
 
-      - uses: pypa/gh-action-pypi-publish@v1.10.0
+      - uses: pypa/gh-action-pypi-publish@v1.10.2
         name: Deploy To PyPI
         if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
         with:
