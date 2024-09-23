@@ -234,7 +234,7 @@ def get_h(
         i += 1
 
     if i == maxiter:
-        raise Exception("Maxiter reached while checking for non-zero values")
+        raise RuntimeError("Maxiter reached while checking for non-zero values")
 
     if K is None:  # Do a normal integral of f(x)J_nu(x)
         K = 1
@@ -263,7 +263,7 @@ def get_h(
         res = getres(hstart)
 
     if i == maxiter:
-        raise Exception("Maxiter reached while checking convergence")
+        raise RuntimeError("Maxiter reached while checking convergence")
 
     # Can do some more trimming of N potentially, by seeing where f(x)~0.
     def consecutive(data, stepsize=1):
@@ -272,17 +272,14 @@ def get_h(
 
     hstart *= hdecrement
 
-    x = cls(nu, h=hstart, N=int(np.pi / hstart)).x
+    x = np.atleast_1d(cls(nu, h=hstart, N=int(np.pi / hstart)).x)
     lastk = np.where(f(x / np.max(K)) == 0)[0]
     if len(lastk) > 1:
         # if there are any that are zero,
         # and if there are more than 1 in a row
         # (otherwise might just be oscillatory)
         lastk = consecutive(lastk)  # split into arrays of consecutive zeros
-        if len(lastk[-1]) == 1:
-            lastk = int(np.pi / hstart)
-        else:
-            lastk = lastk[-1][0]
+        lastk = int(np.pi / hstart) if len(lastk[-1]) == 1 else lastk[-1][0]
     else:  # otherwise set back to N
         lastk = int(np.pi / hstart)
 
