@@ -35,7 +35,7 @@ jobs:
         run: |
           python -m build
 
-      - uses: pypa/gh-action-pypi-publish@v1.10.2
+      - uses: pypa/gh-action-pypi-publish@v1.10.3
         name: Deploy to Test PyPi
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
@@ -44,7 +44,7 @@ jobs:
           repository-url: https://test.pypi.org/legacy/
           skip-existing: true
 
-      - uses: pypa/gh-action-pypi-publish@v1.10.2
+      - uses: pypa/gh-action-pypi-publish@v1.10.3
         name: Deploy To PyPI
         if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags/v')
         with:
