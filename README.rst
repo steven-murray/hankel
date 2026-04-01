@@ -27,6 +27,23 @@ quadrature method used in this package provides a fast and accurate
 way of performing the integration based on
 locating the zeros of the Bessel function.
 
+Definition
+----------
+
+The Hankel transform pair implemented in this package is
+
+.. math:: F(k) = \int_0^\infty r f(r) J_\nu(kr) dr,
+
+where :math:`J_\nu` is the Bessel function of the first kind of order
+:math:`\nu`. Note that the kernel includes an extra factor of :math:`r`
+compared to some other conventions; when using :func:`~hankel.HankelTransform.transform`
+you should incorporate this into your function (i.e. pass :math:`f(r)`,
+not :math:`r f(r)`).
+
+When using the alternative convention (``alt=True``), the transform is defined as
+
+.. math:: F(k) = \int_0^\infty f(r) \sqrt{kr} J_\nu(kr) dr.
+
 Features
 --------
 
