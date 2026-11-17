@@ -2,9 +2,8 @@ r"""Tools for Hankel transformations."""
 
 import numpy as np
 from mpmath import fp as mpm
-from scipy.special import gamma, j0, j1, jn
+from scipy.special import gamma, j0, j1, jn, jv, yv
 from scipy.special import jn_zeros as _jn_zeros
-from scipy.special import jv, yv
 
 SRPI2 = np.sqrt(np.pi / 2.0)
 
